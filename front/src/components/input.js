@@ -54,9 +54,6 @@ class Input extends React.Component {
 			var error = []
 			for (var i = 1; i < this.props.validation.length; i++) {
 				var regex = new RegExp(this.props.validation[i])
-				console.log(i)
-				console.log(this.props.validation[i])
-				console.log(event.target.value.match(regex))
 				if (event.target.value.match(regex) === null) {
 					if (i === 1 && event.target.name === "email")
 						error.push(event.target.name+": L'email n'est pas valide")

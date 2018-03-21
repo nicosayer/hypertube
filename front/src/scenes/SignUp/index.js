@@ -4,6 +4,7 @@ import { NotificationManager, NotificationContainer} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/input'
+import Erreur from '../../components/erreur'
 
 class SignIn extends Component {
   constructor(props) {
@@ -49,7 +50,8 @@ class SignIn extends Component {
         })
       })
       .catch(error => {
-        NotificationManager.error("There has been an error in sign up, please try again", 'Error!', 5000, () => {});
+        if (error)
+            this.setState({ error })
       })
     }
   }
@@ -89,16 +91,18 @@ class SignIn extends Component {
     if (this.state.isSignedIn) {
       return <Redirect to="/login" />
     }
+    //console.log(this.state.error)
     return (
       <div>
       <form className="inscription" onSubmit={this.handleFormSubmit}>
-        <Input type="text" name="login" placeholder="Pseudo" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
+        <Input type="text" name="login" placeholder="Login" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
         <Input type="text" name="firstname" placeholder="Firstname" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} /><br />
         <Input type="text" name="lastname" placeholder="Lastname" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} /><br />
         <Input type="email" name="email" placeholder="Email" required onChange={this.handleInputChange} error={this.handleError} validation={[6,'^.+@.+\\..+$']} forbiddenChars={[' ']} /><br />
         <Input type="password" name="password" placeholder="Password" required onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
         <button type="submit">Sign Up</button>
       </form>
+      <Erreur error={this.state.error} />
       <NotificationContainer/>
       </div>
     )

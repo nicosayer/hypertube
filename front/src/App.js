@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import Home from './scenes/Home'
 import LogIn from './scenes/LogIn'
 import SignUp from './scenes/SignUp'
+import Reset from './scenes/Reset'
 
 class App extends Component {
   constructor(props) {
@@ -17,8 +18,9 @@ class App extends Component {
         <Router>
           <main>
             <Route exact path="/" component={Home} />
-            <Route path="/connexion" component={LogIn} />
-            <Route path="/inscription" component={SignUp} />
+            <Route path="/login" component={LogIn} />
+            <Route path="/signup" component={SignUp} />
+            <Route path="/reset" component={Reset} />
           </main>
         </Router>
       </Provider>

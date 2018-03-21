@@ -3,45 +3,66 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { logMe} from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
+import Input from '../../components/input'
 
 class LogIn extends Component {
   constructor(props) {
     super(props)
     this.state = {
       login: '',
-      password: ''
+      password: '',
+      error: {}
     }
-
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   handleFormSubmit(event) {
     event.preventDefault()
-    fetchWrap('/login', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        login: this.state.login,
-        password: this.state.password
+    if (Object.keys(this.state.error).length === 0 && this.state.error.constructor === Object) {
+      fetchWrap('/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          login: this.state.login,
+          password: this.state.password
+        })
       })
-    })
-    .then(payload => {
-        this.props.dispatch(logMe(payload))
-    })
-    .catch(error => {
-      alert("error")
-    })
+      .then(payload => {
+          this.props.dispatch(logMe(payload))
+      })
+      .catch(error => {
+        if (error)
+            this.setState({ error })
+      })
+    }
     
   }
 
-  handleInputChange(event) {
+  handleInputChange = (state, value) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [state]: value
     })
+  }
+
+  handleError = (error) => {
+    var tmp;
+    if (typeof error === "string")
+    {
+      tmp = this.state.error
+      delete tmp[error]
+      this.setState({
+        error: tmp
+      })
+    }
+    else
+    {
+      tmp = Object.assign({}, this.state.error, error)
+      this.setState({
+        error: tmp
+      })
+    }
   }
 
   render() {
@@ -52,8 +73,8 @@ class LogIn extends Component {
     return (
         <div>
           <form onSubmit={this.handleFormSubmit} >
-            <input type="text" name="login" placeholder="Login" required value={this.state.login} onChange={this.handleInputChange}/><br />
-            <input type="password" name="password" placeholder="Password" required value={this.state.password} onChange={this.handleInputChange}/>
+            <Input type="text" name="login" placeholder="Login" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
+            <Input type="password" name="password" placeholder="Password" required onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
             <button type="submit">Log in</button>
           </form>
           <Link to='/reset'>Forgot your password?</Link>
