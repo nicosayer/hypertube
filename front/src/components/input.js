@@ -54,9 +54,6 @@ class Input extends React.Component {
 			var error = []
 			for (var i = 1; i < this.props.validation.length; i++) {
 				var regex = new RegExp(this.props.validation[i])
-				console.log(i)
-				console.log(this.props.validation[i])
-				console.log(event.target.value.match(regex))
 				if (event.target.value.match(regex) === null) {
 					if (i === 1 && event.target.name === "email")
 						error.push(event.target.name+": L'email n'est pas valide")
@@ -64,15 +61,12 @@ class Input extends React.Component {
 						error.push(event.target.name+": Minimum 1 chiffre")
 					else if (i === 2)
 						error.push(event.target.name+": Minimum 1 lettre")
-					else if (i === 3)
-						error.push(event.target.name+": Les deux MDP sont differents")
 				}
 			}
 			var ans
 			if ((error.length === 0 && event.target.value.length >= this.props.validation[0]) || event.target.value.length === 0) {
 				this.setState({ valid: true })
-				ans = {}
-				ans[event.target.name] = []
+				ans = event.target.name
 				this.props.error(ans)
 			}
 			else {

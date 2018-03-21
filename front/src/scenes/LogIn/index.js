@@ -3,61 +3,87 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { logMe} from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
+import Input from '../../components/input'
+import Erreur from '../../components/erreur'
 
 class LogIn extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: '',
-      password: ''
+      login: '',
+      password: '',
+      error: {},
+      status: false
     }
-
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
-  handleFormSubmit(event) {
+  handleFormSubmit= event => {
     event.preventDefault()
-    fetchWrap('api/auth', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
+    var error = {}
+    if (this.state.login.length === 0)
+      error.login = ["Login field can't be empty"]
+    if (this.state.password.length === 0)
+      error.password = ["Password field can't be empty"]
+    if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0) || this.state.status) {
+      fetchWrap('/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          login: this.state.login,
+          password: this.state.password
+        })
       })
-    })
-    .then(payload => {
-        this.props.dispatch(logMe(payload))
-    })
-    .catch(error => {
-      alert("error")
-    })
+      .then(payload => {
+          this.props.dispatch(logMe(payload))
+      })
+      .catch(error => {
+        if (error)
+            this.setState({ error })
+      })
+    }
+    else if (Object.keys(this.state.error).length === 0 || this.state.status) {
+      this.setState({ error })
+    }
     
   }
 
-  handleInputChange(event) {
+  handleInputChange = (state, value) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [state]: value
+    })
+  }
+
+  handleError = (error) => {
+    var tmp;
+    if (typeof error === "string")
+    {
+      tmp = this.state.error
+      delete tmp[error]
+    }
+    else
+      tmp = Object.assign({}, this.state.error, error)
+    this.setState({
+      error: tmp, status: false
     })
   }
 
   render() {
-    const { from } = this.props.location.state || { from: { pathname: "/" } }
     if (this.props.isAuthenticated) {
-      return <Redirect to={from} />
+      return <Redirect to="/" />
     }
 
     return (
-        <div className="connexion">
+        <div>
           <form onSubmit={this.handleFormSubmit} >
-            <input type="text" name="username" placeholder="Pseudo" required value={this.state.username} onChange={this.handleInputChange}/><br />
-            <input type="password" name="password" placeholder="Mot de passe" required value={this.state.password} onChange={this.handleInputChange}/>
-            <button type="submit">Se connecter</button>
+            <Input type="text" name="login" placeholder="Login" error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
+            <Input type="password" name="password" placeholder="Password" onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
+            <button type="submit">Log in</button>
           </form>
-          <Link to='/reset'>MDP oublié</Link>
+          <Link to='/reset'>Forgot your password?</Link>
+          <Erreur error={this.state.error} />
         </div>
     )
   }

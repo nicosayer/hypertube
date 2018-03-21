@@ -1,7 +1,7 @@
 var express = require('express');
 
 const MongoClient = require('mongodb').MongoClient; 
-const url = 'mongodb://localhost:27017';
+const url = 'mongodb://localhost:27017/hypertube';
 const dbName = 'hypertube';
 
 var db;
