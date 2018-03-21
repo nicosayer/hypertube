@@ -10,31 +10,32 @@ router.post('/', function(req, res, next) {
 	const collection = db.collection('users');
 
 	if (!post.login || !post.password) {
-		res.json({fields: "Some informations are missing"});
+		res.status(400).json({fields: "Some informations are missing"});
 	}
 	else {
 		post.login = post.login.trim();
 
 		collection.findOne({ $or: [ {email: post.login}, {login: post.login} ] }, function (err, result) {
-			if (err) throw err;
+			if (err) throw err
+			const mongoResult = result
 
-			if (result !== null) {
-				res.json({login: "No user was found with that username"});
+			if (result === null) {
+				res.status(400).json({login: "No user was found with that username"});
 			}
 			else {
-				console.log('result');
-				// const userInfo = result[0];
+				const password = result.password;
 
-				// bcrypt.compare(post.password, userInfo.password, function(error, result) {
-				// 	if (error) throw error;
-				// 	if (result !== true) {
-				// 		res.json({errors:"The password is incorrect"});
-				// 	}
-				// 	else {
-				// 		req.session.login = userInfo.login;
-				// 		res.status(202).json({login: userInfo.login});
-				// 	}
-				// });
+				bcrypt.compare(post.password, password, function(error, result) {
+					if (error) throw error;
+
+					if (result !== true) {
+						res.status(400).json({password: "The password is incorrect"});
+					}
+					else {
+						// req.session.id = mongoResult._id;
+						res.status(202).json(mongoResult);
+					}
+				});
 			}
 		});
 	}
