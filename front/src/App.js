@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import Home from './scenes/Home'
 import LogIn from './scenes/LogIn'
-import SignIn from './scenes/SignIn'
+import SignUp from './scenes/SignUp'
 
 class App extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class App extends Component {
           <main>
             <Route exact path="/" component={Home} />
             <Route path="/connexion" component={LogIn} />
-            <Route path="/inscription" component={SignIn} />
+            <Route path="/inscription" component={SignUp} />
           </main>
         </Router>
       </Provider>

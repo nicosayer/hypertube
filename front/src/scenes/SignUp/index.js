@@ -6,7 +6,6 @@ import { NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/input'
-import Erreur from '../../components/erreur'
 
 class SignIn extends Component {
   constructor(props) {
@@ -87,9 +86,9 @@ class SignIn extends Component {
       <div>
       <form className="inscription" onSubmit={this.handleFormSubmit}>
         <Input type="text" name="username" placeholder="Pseudo" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
-        <Input type="text" name="firstname" placeholder="Prénom" required onChange={this.handleInputChange} /><br />
-        <Input type="text" name="lastname" placeholder="Nom" required onChange={this.handleInputChange} /><br />
-        <Input type="email" name="email" placeholder="Email" required onChange={this.handleInputChange} /><br />
+        <Input type="text" name="firstname" placeholder="Prénom" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} /><br />
+        <Input type="text" name="lastname" placeholder="Nom" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} /><br />
+        <Input type="email" name="email" placeholder="Email" required onChange={this.handleInputChange} error={this.handleError} validation={[6,'^.+@.+\\..+$']} forbiddenChars={[' ']} /><br />
         <Input type="password" name="password" placeholder="Mot de passe" required onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
         <Input type="password" name="password2" placeholder="Confirmation mot de passe" required onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]", "^"+this.state.password+"$"]} />
         <Datepicker 
