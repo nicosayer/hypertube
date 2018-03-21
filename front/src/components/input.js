@@ -64,8 +64,6 @@ class Input extends React.Component {
 						error.push(event.target.name+": Minimum 1 chiffre")
 					else if (i === 2)
 						error.push(event.target.name+": Minimum 1 lettre")
-					else if (i === 3)
-						error.push(event.target.name+": Les deux MDP sont differents")
 				}
 			}
 			var ans

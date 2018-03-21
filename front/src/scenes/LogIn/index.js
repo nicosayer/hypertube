@@ -8,7 +8,7 @@ class LogIn extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: '',
+      login: '',
       password: ''
     }
 
@@ -18,14 +18,14 @@ class LogIn extends Component {
 
   handleFormSubmit(event) {
     event.preventDefault()
-    fetchWrap('api/auth', {
+    fetchWrap('/login', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: this.state.username,
+        login: this.state.login,
         password: this.state.password
       })
     })
@@ -45,19 +45,18 @@ class LogIn extends Component {
   }
 
   render() {
-    const { from } = this.props.location.state || { from: { pathname: "/" } }
     if (this.props.isAuthenticated) {
-      return <Redirect to={from} />
+      return <Redirect to="/" />
     }
 
     return (
-        <div className="connexion">
+        <div>
           <form onSubmit={this.handleFormSubmit} >
-            <input type="text" name="username" placeholder="Pseudo" required value={this.state.username} onChange={this.handleInputChange}/><br />
-            <input type="password" name="password" placeholder="Mot de passe" required value={this.state.password} onChange={this.handleInputChange}/>
-            <button type="submit">Se connecter</button>
+            <input type="text" name="login" placeholder="Login" required value={this.state.login} onChange={this.handleInputChange}/><br />
+            <input type="password" name="password" placeholder="Password" required value={this.state.password} onChange={this.handleInputChange}/>
+            <button type="submit">Log in</button>
           </form>
-          <Link to='/reset'>MDP oublié</Link>
+          <Link to='/reset'>Forgot your password?</Link>
         </div>
     )
   }
