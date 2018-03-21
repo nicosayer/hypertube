@@ -30,7 +30,7 @@ class SignIn extends Component {
   handleFormSubmit(e) {
     alert(this.state.username)
     e.preventDefault();
-    if (this.state.error.length === 0)
+    if (Object.keys(this.state.error).length === 0 && this.state.error.constructor === Object)
     {
       fetchWrap('api/users', {
         method: 'POST',
@@ -39,9 +39,9 @@ class SignIn extends Component {
         },
         credentials: 'same-origin',
         body: JSON.stringify({
-          username: this.state.username,
-          firstname: this.state.firstname,
-          lastname: this.state.lastname,
+          login: this.state.username,
+          first_name: this.state.firstname,
+          last_name: this.state.lastname,
           email: this.state.email,
           password: this.state.password
         })
@@ -71,10 +71,22 @@ class SignIn extends Component {
   }
 
   handleError = (error) => {
-    var test = Object.assign({}, this.state.error, error)
-    this.setState({
-        error: test
+    var tmp;
+    if (typeof error === "string")
+    {
+      tmp = this.state.error
+      delete tmp[error]
+      this.setState({
+        error: tmp
       })
+    }
+    else
+    {
+      tmp = Object.assign({}, this.state.error, error)
+      this.setState({
+        error: tmp
+      })
+    }
   }
       
   render() {

@@ -71,8 +71,7 @@ class Input extends React.Component {
 			var ans
 			if ((error.length === 0 && event.target.value.length >= this.props.validation[0]) || event.target.value.length === 0) {
 				this.setState({ valid: true })
-				ans = {}
-				ans[event.target.name] = []
+				ans = event.target.name
 				this.props.error(ans)
 			}
 			else {
