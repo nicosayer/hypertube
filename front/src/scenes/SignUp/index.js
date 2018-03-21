@@ -12,12 +12,12 @@ class SignIn extends Component {
     this.state = {
       login: '',
       password: '',
-      password2: '',
       firstname: '',
       lastname: '',
       email: '',
       isSignedIn: false,
-      error: {}
+      error: {},
+      status: false
     }
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
@@ -26,9 +26,19 @@ class SignIn extends Component {
   }
 
   handleFormSubmit(e) {
+    var error = {}
+    if (this.state.login.length === 0)
+      error.login = ["Login field can't be empty"]
+    if (this.state.password.length === 0)
+      error.password = ["Password field can't be empty"]
+    if (this.state.firstname.length === 0)
+      error.firstname = ["Firstname field can't be empty"]
+    if (this.state.lastname.length === 0)
+      error.lastname = ["Lastname field can't be empty"]
+    if (this.state.email.length === 0)
+      error.email = ["Email field can't be empty"]
     e.preventDefault();
-    if (Object.keys(this.state.error).length === 0 && this.state.error.constructor === Object)
-    {
+    if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0) || this.state.status) {
       fetchWrap('/signup', {
         method: 'POST',
         headers: {
@@ -51,8 +61,11 @@ class SignIn extends Component {
       })
       .catch(error => {
         if (error)
-            this.setState({ error })
+            this.setState({ error, status: true })
       })
+    }
+    else if (Object.keys(this.state.error).length === 0 || this.state.status) {
+      this.setState({ error })
     }
   }
 
@@ -74,17 +87,14 @@ class SignIn extends Component {
     {
       tmp = this.state.error
       delete tmp[error]
-      this.setState({
-        error: tmp
-      })
     }
+    else if (this.state.status === true)
+      tmp = Object.assign({}, error)
     else
-    {
       tmp = Object.assign({}, this.state.error, error)
-      this.setState({
-        error: tmp
-      })
-    }
+    this.setState({
+      error: tmp, status: false
+    })
   }
       
   render() {
@@ -96,9 +106,9 @@ class SignIn extends Component {
       <div>
       <form className="inscription" onSubmit={this.handleFormSubmit}>
         <Input type="text" name="login" placeholder="Login" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
-        <Input type="text" name="firstname" placeholder="Firstname" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} /><br />
-        <Input type="text" name="lastname" placeholder="Lastname" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} /><br />
-        <Input type="email" name="email" placeholder="Email" required onChange={this.handleInputChange} error={this.handleError} validation={[6,'^.+@.+\\..+$']} forbiddenChars={[' ']} /><br />
+        <Input type="text" name="firstname" placeholder="Firstname" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} forbiddenChars={['[0-9]']} /><br />
+        <Input type="text" name="lastname" placeholder="Lastname" required onChange={this.handleInputChange} error={this.handleError} validation={[2]} forbiddenChars={['[0-9]']} /><br />
+        <Input type="text" name="email" placeholder="Email" required onChange={this.handleInputChange} error={this.handleError} validation={[6,'^.+@.+\\..+$']} forbiddenChars={["[^a-zà-ÿ0-9-_@.]", "gi"]} /><br />
         <Input type="password" name="password" placeholder="Password" required onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
         <button type="submit">Sign Up</button>
       </form>

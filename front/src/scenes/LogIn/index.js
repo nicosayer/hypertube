@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { logMe} from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/input'
+import Erreur from '../../components/erreur'
 
 class LogIn extends Component {
   constructor(props) {
@@ -11,13 +12,19 @@ class LogIn extends Component {
     this.state = {
       login: '',
       password: '',
-      error: {}
+      error: {},
+      status: false
     }
   }
 
-  handleFormSubmit(event) {
+  handleFormSubmit= event => {
     event.preventDefault()
-    if (Object.keys(this.state.error).length === 0 && this.state.error.constructor === Object) {
+    var error = {}
+    if (this.state.login.length === 0)
+      error.login = ["Login field can't be empty"]
+    if (this.state.password.length === 0)
+      error.password = ["Password field can't be empty"]
+    if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0) || this.state.status) {
       fetchWrap('/login', {
         method: 'POST',
         credentials: 'include',
@@ -37,6 +44,9 @@ class LogIn extends Component {
             this.setState({ error })
       })
     }
+    else if (Object.keys(this.state.error).length === 0 || this.state.status) {
+      this.setState({ error })
+    }
     
   }
 
@@ -52,17 +62,12 @@ class LogIn extends Component {
     {
       tmp = this.state.error
       delete tmp[error]
-      this.setState({
-        error: tmp
-      })
     }
     else
-    {
       tmp = Object.assign({}, this.state.error, error)
-      this.setState({
-        error: tmp
-      })
-    }
+    this.setState({
+      error: tmp, status: false
+    })
   }
 
   render() {
@@ -73,11 +78,12 @@ class LogIn extends Component {
     return (
         <div>
           <form onSubmit={this.handleFormSubmit} >
-            <Input type="text" name="login" placeholder="Login" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
-            <Input type="password" name="password" placeholder="Password" required onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
+            <Input type="text" name="login" placeholder="Login" error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
+            <Input type="password" name="password" placeholder="Password" onChange={this.handleInputChange} error={this.handleError} validation={[6,"[0-9]","[a-zA-Z]"]} /><br />
             <button type="submit">Log in</button>
           </form>
           <Link to='/reset'>Forgot your password?</Link>
+          <Erreur error={this.state.error} />
         </div>
     )
   }

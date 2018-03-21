@@ -3,6 +3,7 @@ import { fetchWrap } from '../../services/fetchWrap'
 import {NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import Input from '../../components/input'
+import Erreur from '../../components/erreur'
 
 class Reset extends React.Component {
   
@@ -10,13 +11,17 @@ class Reset extends React.Component {
     super(props)
     this.state = {
       login: '',
-      error: {}
+      error: {},
+      status: false
     }
   }
 
   sendMail = event => {
     event.preventDefault();
-    if (Object.keys(this.state.error).length === 0 && this.state.error.constructor === Object){
+    var error = {}
+    if (this.state.login.length === 0)
+      error.login = ["Login field can't be empty"]
+    if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0) || this.state.status) {
       fetchWrap('/reset', {
         method: 'POST',
         credentials: 'include',
@@ -33,6 +38,9 @@ class Reset extends React.Component {
             this.setState({ error })
         });
     }
+    else if (Object.keys(this.state.error).length === 0 || this.state.status) {
+      this.setState({ error })
+    }
   }
 
   handleInputChange = (state, value) => {
@@ -47,17 +55,12 @@ class Reset extends React.Component {
     {
       tmp = this.state.error
       delete tmp[error]
-      this.setState({
-        error: tmp
-      })
     }
     else
-    {
       tmp = Object.assign({}, this.state.error, error)
-      this.setState({
-        error: tmp
-      })
-    }
+    this.setState({
+      error: tmp, status: false
+    })
   }
 
   render() {
@@ -67,6 +70,7 @@ class Reset extends React.Component {
           <Input type="text" name="login" placeholder="Login" required error={this.handleError} validation={[6]} onChange={this.handleInputChange} /><br />
           <button type="submit">Reset my password</button>
         </form>
+        <Erreur error={this.state.error} />
       </div>
     )
   }

@@ -140,7 +140,7 @@ router.post('/', function(req, res, next) {
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
 							
-							req.session.id = result.ops[0]._id;
+							// req.session.id = result.ops[0]._id;
 							res.sendStatus(201);
 						});
 					});
