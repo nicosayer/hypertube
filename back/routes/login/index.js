@@ -32,7 +32,7 @@ router.post('/', function(req, res, next) {
 						res.status(400).json({password: ["The password is incorrect"]});
 					}
 					else {
-						// req.session.id = mongoResult._id;
+						req.session._id = mongoResult._id;
 						res.status(202).json(mongoResult);
 					}
 				});
