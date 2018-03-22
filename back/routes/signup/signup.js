@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
 		post[key] = post[key].trim();
 	});
 
-	if (!(post.first_name && post.last_name && post.login && post.email && post.password)) {
+	if (!(post.firstName && post.lastName && post.login && post.email && post.password)) {
 		if (errors.fields === undefined)
 			errors.fields = [];
 		errors.fields.push("Please fill all fields");
@@ -40,41 +40,41 @@ router.post('/', function(req, res, next) {
 		errors.login.push("Your login should contain only letters, numbers and underscores");
 	}
 
-	if (post.first_name && post.first_name.length < 2) {
-		if (errors.first_name === undefined)
-			errors.first_name = [];
-		errors.first_name.push("Your first name should be at least 2 characters long");
+	if (post.firstName && post.firstName.length < 2) {
+		if (errors.firstName === undefined)
+			errors.firstName = [];
+		errors.firstName.push("Your first name should be at least 2 characters long");
 	}
 
-	if (post.first_name && post.first_name.length > 20) {
-		if (errors.first_name === undefined)
-			errors.first_name = [];
-		errors.first_name.push("Maximum length for your first name is 20 characters");
+	if (post.firstName && post.firstName.length > 20) {
+		if (errors.firstName === undefined)
+			errors.firstName = [];
+		errors.firstName.push("Maximum length for your first name is 20 characters");
 	}
 
-	if (post.first_name && !(/^[a-z-]+$/i.test(post.first_name))) {
-		if (errors.first_name === undefined)
-			errors.first_name = [];
-		errors.first_name.push("Your first name should contain only letters and dashes");
+	if (post.firstName && !(/^[a-z-]+$/i.test(post.firstName))) {
+		if (errors.firstName === undefined)
+			errors.firstName = [];
+		errors.firstName.push("Your first name should contain only letters and dashes");
 	}
 
 
-	if (post.last_name && post.last_name.length < 2) {
-		if (errors.last_name === undefined)
-			errors.last_name = [];
-		errors.last_name.push("Your last name should be at least 2 characters long");
+	if (post.lastName && post.lastName.length < 2) {
+		if (errors.lastName === undefined)
+			errors.lastName = [];
+		errors.lastName.push("Your last name should be at least 2 characters long");
 	}
 
-	if (post.last_name && post.last_name.length > 20) {
-		if (errors.last_name === undefined)
-			errors.last_name = [];
-		errors.last_name.push("Maximum length for your last name is 20 characters");
+	if (post.lastName && post.lastName.length > 20) {
+		if (errors.lastName === undefined)
+			errors.lastName = [];
+		errors.lastName.push("Maximum length for your last name is 20 characters");
 	}
 
-	if (post.last_name && !(/^[a-z-]+$/i.test(post.last_name))) {
-		if (errors.last_name === undefined)
-			errors.last_name = [];
-		errors.last_name.push("Your last name should contain only letters and dashes");
+	if (post.lastName && !(/^[a-z-]+$/i.test(post.lastName))) {
+		if (errors.lastName === undefined)
+			errors.lastName = [];
+		errors.lastName.push("Your last name should contain only letters and dashes");
 	}
 
 
@@ -134,8 +134,8 @@ router.post('/', function(req, res, next) {
 				bcrypt.genSalt(10, function(err, salt) {
 					bcrypt.hash(post.password, salt, function(err, hash) {
 						post.password = hash;
-						post.first_name = post.first_name.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-						post.last_name = post.last_name.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+						post.firstName = post.firstName.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+						post.lastName = post.lastName.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
