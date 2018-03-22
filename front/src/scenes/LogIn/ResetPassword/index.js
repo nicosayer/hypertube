@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {NotificationManager} from 'react-notifications';
 
 import { fetchWrap } from '../../../services/fetchWrap'
@@ -67,19 +68,20 @@ class ResetPassword extends React.Component {
 
 	render() {
 		return (
-			<div className="connexion">
-			<form onSubmit={(e) => this.sendMail(e)} >
-			<Input
-				type="text"
-				name="login"
-				placeholder="Login"
-				required
-				onChange={this.handleInputChange}
-				/>
-			<br />
-			<button type="submit">Reset my password</button>
-			</form>
-			<Erreur errors={this.state.errors} />
+			<div>
+				<Link to='/'>Back...</Link>
+				<form onSubmit={(e) => this.sendMail(e)} >
+					<Input
+						type="text"
+						name="login"
+						placeholder="Login"
+						required
+						onChange={this.handleInputChange}
+						/>
+					<br />
+					<button type="submit">Reset my password</button>
+				</form>
+				<Erreur errors={this.state.errors} />
 			</div>
 		)
 	}

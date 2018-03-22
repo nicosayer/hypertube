@@ -11,7 +11,7 @@ router.post('/', function(req, res, next) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
-	
+
 	Object.keys(post).filter(function(key, index) {
 		if (key === "password") {
 			return false;
@@ -129,7 +129,7 @@ router.post('/', function(req, res, next) {
 					errors.login = [];
 				errors.login.push("This login is already taken");
 			}
-			
+
 			if (Object.keys(errors).length === 0) {
 				bcrypt.genSalt(10, function(err, salt) {
 					bcrypt.hash(post.password, salt, function(err, hash) {
@@ -139,7 +139,7 @@ router.post('/', function(req, res, next) {
 
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
-							
+
 							// req.session.id = result.ops[0]._id;
 							res.sendStatus(201);
 						});

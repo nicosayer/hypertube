@@ -21,10 +21,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', require('./routes/index'));
-app.use('/users', require('./routes/users'));
+app.use('/login', require('./routes/login/'));
+app.use('/resetPassword', require('./routes/login/resetPassword'));
+
 app.use('/signup', require('./routes/signup/signup'));
-app.use('/login', require('./routes/login/login'));
 
 app.use('/oauth/42', require('./routes/oauth/42'));
 app.use('/oauth/Facebook', require('./routes/oauth/Facebook'));
