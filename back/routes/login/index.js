@@ -1,10 +1,11 @@
 var express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-
 var mongo = require('../../mongo');
 
+
 router.post('/', function(req, res, next) {
+
 	const post = req.body;
 	var db = mongo.getDb();
 	const collection = db.collection('users');
@@ -32,7 +33,7 @@ router.post('/', function(req, res, next) {
 						res.status(400).json({password: ["The password is incorrect"]});
 					}
 					else {
-						// req.session.id = mongoResult._id;
+						req.session._id = mongoResult._id;
 						res.status(202).json(mongoResult);
 					}
 				});
@@ -40,5 +41,6 @@ router.post('/', function(req, res, next) {
 		});
 	}
 });
+
 
 module.exports = router;
