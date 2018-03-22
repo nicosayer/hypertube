@@ -18,9 +18,16 @@ class App extends Component {
 		return (
 			<Provider store={this.props.store}>
 				<Switch>
-					<Route path="/signup" key='signup' component={SignUp} />
-					<Route path="/reset" key='reset' component={ResetPassword} />
-					<Route key='default' component={LogIn} />
+					{
+						this.props.isAuthenticated ?
+						null
+						:
+						[
+							<Route path='/signup' key='signup' component={SignUp} />,
+							<Route path='/reset' key='reset' component={ResetPassword} />,
+							<Route key='default' component={LogIn} />
+						]
+					}
 				</Switch>
 			</Provider>
 		)
