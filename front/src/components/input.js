@@ -1,7 +1,6 @@
 import React from 'react';
 import './index.css'
 
-
 class Input extends React.Component {
 
 	constructor(props) {
@@ -16,9 +15,8 @@ class Input extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-
 	handleKeyDown(event) {
-		if (event.which === 13) {
+		if (event && event.which === 13) {
 			if (this.props.blurOnEnter) {
 				event.target.blur();
 			}
@@ -28,74 +26,72 @@ class Input extends React.Component {
 		}
 	}
 
-
 	handleChange(event) {
-		if (this.props.onChange) {
+		if (this.props.onChange && event && event.target) {
+			const name = event.target.name;
+			const value = event.target.value;
 			if (this.props.forbiddenChars) {
-				const regex = new RegExp(this.props.forbiddenChars[0], this.props.forbiddenChars[1]);
-				event.target.value = event.target.value.replace(regex, '');
+				// const regex = new RegExp(this.props.forbiddenChars[0], this.props.forbiddenChars[1]);
+				event.target.value = value.replace(this.props.forbiddenChars, '');
 			}
-			if (this.props.maxLength) {
-				event.target.value = event.target.value.substring(0, this.props.maxLength);
+			if (this.props.maxLen) {
+				event.target.value = value.substring(0, this.props.maxLength);
 			}
-			this.props.onChange(event.target.name, event.target.value);
+			if (this.props.validation && this.props.validation.validateOnChange) {
+				this.validation(value);
+			}
+			this.props.onChange(name, value);
 			if (this.props.submitOnChange) {
-				this.handleSubmit(event.target.name, event.target.value);
+				this.handleSubmit(name, value);
 			}
 		}
 	}
 
-
 	handleBlur(event) {
-		if (this.props.submitOnBlur) {
-			this.handleSubmit(event.target.name, event.target.value);
+		if (event && event.target) {
+			const name = event.target.name;
+			const value = event.target.value;
+			if (this.props.submitOnBlur) {
+				this.handleSubmit(name, value);
+			}
+			if (this.props.validation && !this.props.validation.validateOnChange) {
+				this.validation(value);
+			}
 		}
-		if (this.props.validation) {
-			var error = []
-			for (var i = 1; i < this.props.validation.length; i++) {
-				var regex = new RegExp(this.props.validation[i])
-				if (event.target.value.match(regex) === null) {
-					if (i === 1 && event.target.name === "email")
-						error.push(event.target.name+": L'email n'est pas valide")
-					else if (i === 1)
-						error.push(event.target.name+": Minimum 1 chiffre")
-					else if (i === 2)
-						error.push(event.target.name+": Minimum 1 lettre")
-				}
+	}
+
+	handleSubmit(name, value) {
+		if (this.props.onSubmit && name && value) {
+			this.props.onSubmit(name, value);
+		}
+	}
+
+	validation(value) {
+		var errors = {};
+		if (value) {
+			if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
+				errors.minLen = true;
 			}
-			var ans
-			if ((error.length === 0 && event.target.value.length >= this.props.validation[0]) || event.target.value.length === 0) {
-				this.setState({ valid: true })
-				ans = event.target.name
-				this.props.error(ans)
+			if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
+				errors.maxLen = true;
 			}
-			else {
-				if (event.target.value.length < this.props.validation[0])
-					error.push(event.target.name+": Minimum "+this.props.validation[0]+" caracteres")
-				ans = {}
-				ans[event.target.name] = error
-				this.props.error(ans)
+			if (this.props.validation.format && !this.props.validation.format.test(value)) {
+				errors.format = true;
+			}
+		}
+		if (Object.keys(errors).length) {
+			if (this.state.valid) {
 				this.setState({ valid: false })
 			}
 		}
-	}
-
-
-	handleSubmit(name, value) {
-		if (this.props.onSubmit  && name) {
-			const body = {
-				name: name,
-				value: value
-			};
-			this.props.onSubmit("/update/" + name, body);
+		else if (!this.state.valid) {
+			this.setState({ valid: true })
 		}
 	}
-
 
 	validateProps() {
 		const validProps = ['id', 'type', 'name', 'value', 'placeholder', 'checked', 'disabled'];
 		var finalProps = {};
-	
 		for (var key in this.props) {
 			if (validProps.includes(key)) {
 				finalProps[key] = this.props[key] ;
@@ -104,7 +100,6 @@ class Input extends React.Component {
 		return (finalProps);
 	}
 
-
 	render() {
 		return (
 			<input
@@ -112,11 +107,10 @@ class Input extends React.Component {
 				onKeyDown={this.handleKeyDown}
 				onChange={this.handleChange}
 				onBlur={this.handleBlur}
-				className={this.state.valid?"":"invalid"}
+				className={this.state.valid && this.props.validation ? this.props.validation.validClass : this.props.validation.invalidClass}
 				/>
 		);
 	}
 }
-
 
 export default Input;

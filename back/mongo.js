@@ -1,6 +1,6 @@
-var express = require('express');
+const express = require('express');
 
-const MongoClient = require('mongodb').MongoClient; 
+const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017/hypertube';
 const dbName = 'hypertube';
 
@@ -19,6 +19,6 @@ module.exports = {
 	},
 
 	getDb() {
-    	return db;
+		return db;
 	}
 }
