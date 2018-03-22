@@ -4,6 +4,7 @@ import { Provider, connect } from 'react-redux'
 
 import LogIn from './scenes/LogIn'
 import SignUp from './scenes/SignUp'
+import LogOut from './scenes/LogOut'
 import ResetPassword from './scenes/LogIn/ResetPassword'
 
 import './style.css'
@@ -21,7 +22,7 @@ class App extends Component {
 					<Switch>
 						{
 							this.props.isAuthenticated ?
-							null
+								<Route key='logout' component={LogOut} />
 							:
 							[
 								<Route path='/signup' key='signup' component={SignUp} />,
