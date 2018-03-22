@@ -26,7 +26,8 @@ class SignIn extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 
-	handleFormSubmit(e) {
+	handleFormSubmit(event) {
+		event.preventDefault();
 		var errors = {}
 		if (this.state.login.length === 0)
 		errors.login = ['Login field can\'t be empty']
@@ -38,7 +39,6 @@ class SignIn extends Component {
 		errors.lastName = ['Lastname field can\'t be empty']
 		if (this.state.email.length === 0)
 		errors.email = ['Email field can\'t be empty']
-		e.preventDefault();
 		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0) || this.state.status) {
 			fetchWrap('/signup', {
 				method: 'POST',
@@ -79,7 +79,7 @@ class SignIn extends Component {
 		})
 	}
 
-	handleError(errors) {
+	handleInputError(errors) {
 		// var tmp;
 		// if (typeof errors === 'string')
 		// {
@@ -114,7 +114,7 @@ class SignIn extends Component {
 							maxLen: 20,
 							format: /^[a-z0-9]+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleError
+							error: this.handleInputError
 						}}
 						trimOnBlur
 						maxLen={20}
@@ -131,7 +131,7 @@ class SignIn extends Component {
 							maxLen: 20,
 							format: /^[a-z -]+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleError
+							error: this.handleInputError
 						}}
 						maxLen={20}
 						trimOnBlur
@@ -148,7 +148,7 @@ class SignIn extends Component {
 							maxLen: 20,
 							format: /^[a-z -]+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleError
+							error: this.handleInputError
 						}}
 						maxLen={20}
 						trimOnBlur
@@ -165,7 +165,7 @@ class SignIn extends Component {
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleError
+							error: this.handleInputError
 						}}
 						maxLen={50}
 						trimOnBlur
@@ -181,13 +181,13 @@ class SignIn extends Component {
 							minLen: 6,
 							maxLen: 50,
 							invalidClass: 'invalidInput',
-							error: this.handleError
+							error: this.handleInputError
 						}}
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
 					<br />
-					<button type='submit'>Sign Up</button>
+					<input type='submit' value="Signup"/>
 				</form>
 				<Erreur errors={this.state.errors} />
 				<NotificationContainer/>

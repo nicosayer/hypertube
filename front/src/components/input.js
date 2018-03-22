@@ -7,11 +7,19 @@ class Input extends React.Component {
 		this.state = {
 			valid: true
 		}
-
+		this.handleFocus = this.handleFocus.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleFocus(event) {
+		if (event) {
+			if (this.props.validation) {
+				this.input.classList.remove(this.props.validation.invalidClass);
+			}
+		}
 	}
 
 	handleKeyDown(event) {
@@ -85,6 +93,7 @@ class Input extends React.Component {
 			if (this.state.valid) {
 				this.setState({ valid: false })
 			}
+			this.input.classList.add(this.props.validation.invalidClass);
 			this.props.validation.error(name, errors)
 		}
 		else if (!this.state.valid) {
@@ -107,10 +116,11 @@ class Input extends React.Component {
 		return (
 			<input
 				{...this.validateProps()}
+				ref={input => { this.input = input; }}
+				onFocus={this.handleFocus}
 				onKeyDown={this.handleKeyDown}
 				onChange={this.handleChange}
 				onBlur={this.handleBlur}
-				className={!this.state.valid && this.props.validation ? this.props.validation.invalidClass : null}
 				/>
 		);
 	}

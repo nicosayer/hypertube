@@ -23,7 +23,7 @@ class LogIn extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 
-	handleFormSubmit = event => {
+	handleFormSubmit(event) {
 		event.preventDefault()
 		var errors = {}
 		if (this.state.login.length === 0)
@@ -61,21 +61,6 @@ class LogIn extends Component {
 		})
 	}
 
-	handleerrors = errors => {
-		var tmp;
-		if (typeof errors === "string") {
-			tmp = this.state.errors
-			delete tmp[errors]
-		}
-		else {
-			tmp = Object.assign({}, this.state.errors, errors)
-		}
-		this.setState({
-			errors: tmp,
-			status: false
-		})
-	}
-
 	render() {
 		if (this.props.isAuthenticated) {
 			return <Redirect to="/" />
@@ -84,7 +69,7 @@ class LogIn extends Component {
 		return (
 			<div>
 				<Link to='/signup'>Create an account</Link>
-				<form onSubmit={this.handleFormSubmit} >
+				<form onSubmit={this.handleFormSubmit}>
 					<Input
 						type="text"
 						name="login"
@@ -99,7 +84,7 @@ class LogIn extends Component {
 						onChange={this.handleInputChange}
 						/>
 					<br />
-					<button type="submit">Log in</button>
+					<input type='submit' value="Log in"/>
 				</form>
 				<Link to='/reset'>Forgot your password?</Link>
 				<Erreur errors={this.state.errors} />

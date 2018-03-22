@@ -19,7 +19,7 @@ class ResetPassword extends React.Component {
 		}
 	}
 
-	sendMail = event => {
+	handleFormSubmit(event) {
 		event.preventDefault();
 		var errors = {}
 		if (this.state.login.length === 0)
@@ -46,23 +46,9 @@ class ResetPassword extends React.Component {
 		}
 	}
 
-	handleInputChange = (state, value) => {
+	handleInputChange(state, value) {
 		this.setState({
 			[state]: value
-		})
-	}
-
-	handleError = (errors) => {
-		var tmp;
-		if (typeof errors === "string")
-		{
-			tmp = this.state.errors
-			delete tmp[errors]
-		}
-		else
-		tmp = Object.assign({}, this.state.errors, errors)
-		this.setState({
-			errors: tmp, status: false
 		})
 	}
 
@@ -70,7 +56,7 @@ class ResetPassword extends React.Component {
 		return (
 			<div>
 				<Link to='/'>Back...</Link>
-				<form onSubmit={(e) => this.sendMail(e)} >
+				<form onSubmit={this.handleFormSubmit} >
 					<Input
 						type="text"
 						name="login"
@@ -79,7 +65,7 @@ class ResetPassword extends React.Component {
 						onChange={this.handleInputChange}
 						/>
 					<br />
-					<button type="submit">Reset my password</button>
+					<input type='submit' value="Reset"/>
 				</form>
 				<Erreur errors={this.state.errors} />
 			</div>
