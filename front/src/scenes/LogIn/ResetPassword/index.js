@@ -25,7 +25,7 @@ class ResetPassword extends React.Component {
 		if (this.state.login.length === 0)
 		errors.login = ["Login field can't be empty"]
 		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0) || this.state.status) {
-			fetchWrap('/reset', {
+			fetchWrap('/resetPassword', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {

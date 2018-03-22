@@ -12,8 +12,8 @@ mongo.connect(error => {
 });
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -24,11 +24,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/login', require('./routes/login/'));
 app.use('/resetPassword', require('./routes/login/resetPassword'));
 
-app.use('/signup', require('./routes/signup/signup'));
+app.use('/signup', require('./routes/signup/'));
 
-app.use('/oauth/42', require('./routes/oauth/42'));
-app.use('/oauth/Facebook', require('./routes/oauth/Facebook'));
-app.use('/oauth/Google', require('./routes/oauth/Google'));
+app.use('/oauth/42', require('./routes/login/oauth/42'));
+app.use('/oauth/Facebook', require('./routes/login/oauth/Facebook'));
+app.use('/oauth/Google', require('./routes/login/oauth/Google'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
