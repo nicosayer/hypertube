@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { Provider } from 'react-redux'
+import { Switch, Route } from 'react-router-dom'
+import { Provider, connect } from 'react-redux'
 
 import LogIn from './scenes/LogIn'
 import SignUp from './scenes/SignUp'
@@ -17,16 +17,21 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={this.props.store}>
-				<Router>
-					<main>
-						<Route exact path="/" component={LogIn} />
-						<Route path="/signup" component={SignUp} />
-						<Route path="/reset" component={ResetPassword} />
-					</main>
-				</Router>
+				<Switch>
+					<Route path="/signup" key='signup' component={SignUp} />
+					<Route path="/reset" key='reset' component={ResetPassword} />
+					<Route key='default' component={LogIn} />
+				</Switch>
 			</Provider>
 		)
 	}
 }
 
-export default App
+function mapStateToProps(state) {
+	const { isAuthenticated } = state.handleMe
+	return ({
+		isAuthenticated
+	})
+}
+
+export default connect(mapStateToProps)(App)

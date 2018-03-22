@@ -19,14 +19,15 @@ class SignIn extends Component {
 			lastName: '',
 			email: '',
 			isSignedIn: false,
-			errors: {},
-			status: false
+			errors: {}
 		}
+		this.handleFormSubmit = this.handleFormSubmit.bind(this)
 		this.handleFormSubmit = this.handleFormSubmit.bind(this)
 		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 
 	handleFormSubmit(event) {
+		console.log(this.state.errors)
 		event.preventDefault();
 		var errors = {}
 		if (this.state.login.length === 0)
@@ -35,11 +36,12 @@ class SignIn extends Component {
 		errors.password = ['Password field can\'t be empty']
 		if (this.state.firstName.length === 0)
 		errors.firstName = ['Firstname field can\'t be empty']
-		if (this.state.lastName.length === 0)
-		errors.lastName = ['Lastname field can\'t be empty']
+		if (this.state.lastName.length === 0) {
+			errors.lastName = ['Lastname field can\'t be empty']
+		}
 		if (this.state.email.length === 0)
 		errors.email = ['Email field can\'t be empty']
-		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0) || this.state.status) {
+		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0)) {
 			fetchWrap('/signup', {
 				method: 'POST',
 				headers: {
@@ -63,8 +65,7 @@ class SignIn extends Component {
 			.catch(errors => {
 				if (errors)
 				this.setState({
-					errors,
-					status: true
+					errors
 				})
 			})
 		}
@@ -79,21 +80,28 @@ class SignIn extends Component {
 		})
 	}
 
-	handleInputError(errors) {
-		// var tmp;
-		// if (typeof errors === 'string')
-		// {
-		// 	tmp = this.state.errors
-		// 	delete tmp[errors]
-		// }
-		// else if (this.state.status === true)
-		// tmp = Object.assign({}, errors)
-		// else
-		// tmp = Object.assign({}, this.state.errors, errors)
-		// this.setState({
-		// 	errors: tmp,
-		// 	status: false
-		// })
+	handleInputError = (name, errors) => {
+		var tmp = [];
+		for (var error in errors) {
+			console.log(error, errors[error])
+			switch(error) {
+				case 'minLen':
+				tmp.push(name + ' Trop court');
+				break;
+				case 'maxLen':
+				tmp.push(name + ' Trop long');
+				break;
+				case 'format':
+				tmp.push(name + ' Mauvais format');
+				break;
+			}
+		}
+		this.setState({
+			errors: {
+				...this.state.errors,
+				[name]: tmp
+			}
+		})
 	}
 
 	render() {
@@ -114,7 +122,7 @@ class SignIn extends Component {
 							maxLen: 20,
 							format: /^[a-z0-9]+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleInputError
+							handleValidation: this.handleInputError
 						}}
 						trimOnBlur
 						maxLen={20}
@@ -131,7 +139,7 @@ class SignIn extends Component {
 							maxLen: 20,
 							format: /^[a-z -]+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleInputError
+							handleValidation: this.handleInputError
 						}}
 						maxLen={20}
 						trimOnBlur
@@ -148,7 +156,7 @@ class SignIn extends Component {
 							maxLen: 20,
 							format: /^[a-z -]+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleInputError
+							handleValidation: this.handleInputError
 						}}
 						maxLen={20}
 						trimOnBlur
@@ -165,7 +173,7 @@ class SignIn extends Component {
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
 							invalidClass: 'invalidInput',
-							error: this.handleInputError
+							handleValidation: this.handleInputError
 						}}
 						maxLen={50}
 						trimOnBlur
@@ -181,13 +189,13 @@ class SignIn extends Component {
 							minLen: 6,
 							maxLen: 50,
 							invalidClass: 'invalidInput',
-							error: this.handleInputError
+							handleValidation: this.handleInputError
 						}}
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
 					<br />
-					<input type='submit' value="Signup"/>
+					<input type='submit' value='Signup'/>
 				</form>
 				<Erreur errors={this.state.errors} />
 				<NotificationContainer/>

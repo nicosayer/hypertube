@@ -77,10 +77,10 @@ class Input extends React.Component {
 		var errors = {};
 		if (value) {
 			if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
-				errors.minLen = true;
+				errors.minLen = this.props.validation.minLen;
 			}
 			if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
-				errors.maxLen = true;
+				errors.maxLen = this.props.validation.maxLen;
 			}
 			if (this.props.validation.format) {
 				const regex = new RegExp(this.props.validation.format);
@@ -94,10 +94,12 @@ class Input extends React.Component {
 				this.setState({ valid: false })
 			}
 			this.input.classList.add(this.props.validation.invalidClass);
-			this.props.validation.error(name, errors)
+			console.log(name, errors)
+			this.props.validation.handleValidation(name, errors)
 		}
 		else if (!this.state.valid) {
 			this.setState({ valid: true })
+			this.props.validation.handleValidation(name)
 		}
 	}
 

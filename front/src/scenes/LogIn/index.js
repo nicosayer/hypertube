@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { logMe} from '../../actions/me'
+import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/Input'
 import Erreur from '../../components/Erreur'
