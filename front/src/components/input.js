@@ -91,20 +91,18 @@ class Input extends React.Component {
 		}
 		if (Object.keys(errors).length) {
 			if (this.state.valid) {
-				this.setState({ valid: false })
+				this.setState({ valid: false });
 			}
 			this.input.classList.add(this.props.validation.invalidClass);
-			console.log(name, errors)
-			this.props.validation.handleValidation(name, errors)
 		}
 		else if (!this.state.valid) {
-			this.setState({ valid: true })
-			this.props.validation.handleValidation(name)
+			this.setState({ valid: true });
 		}
+		this.props.validation.handleValidation(name, errors);
 	}
 
 	validateProps() {
-		const validProps = ['id', 'type', 'name', 'value', 'placeholder', 'checked', 'disabled'];
+		const validProps = ['id', 'type', 'name', 'value', 'placeholder', 'checked', 'disabled', 'className'];
 		var finalProps = {};
 		for (var key in this.props) {
 			if (validProps.includes(key)) {

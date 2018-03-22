@@ -21,26 +21,30 @@ class SignIn extends Component {
 			isSignedIn: false,
 			errors: {}
 		}
-		this.handleFormSubmit = this.handleFormSubmit.bind(this)
-		this.handleFormSubmit = this.handleFormSubmit.bind(this)
-		this.handleInputChange = this.handleInputChange.bind(this)
+		this.handleInputValidation = this.handleInputValidation.bind(this);
+		this.handleFormSubmit = this.handleFormSubmit.bind(this);
+		this.handleFormSubmit = this.handleFormSubmit.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
 	}
 
 	handleFormSubmit(event) {
-		console.log(this.state.errors)
 		event.preventDefault();
 		var errors = {}
-		if (this.state.login.length === 0)
-		errors.login = ['Login field can\'t be empty']
-		if (this.state.password.length === 0)
-		errors.password = ['Password field can\'t be empty']
-		if (this.state.firstName.length === 0)
-		errors.firstName = ['Firstname field can\'t be empty']
-		if (this.state.lastName.length === 0) {
+		if (!this.state.login) {
+			errors.login = ['Login field can\'t be empty']
+		}
+		if (!this.state.password) {
+			errors.password = ['Password field can\'t be empty']
+		}
+		if (!this.state.firstName) {
+			errors.firstName = ['Firstname field can\'t be empty']
+		}
+		if (!this.state.lastName) {
 			errors.lastName = ['Lastname field can\'t be empty']
 		}
-		if (this.state.email.length === 0)
-		errors.email = ['Email field can\'t be empty']
+		if (!this.state.email) {
+			errors.email = ['Email field can\'t be empty']
+		}
 		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0)) {
 			fetchWrap('/signup', {
 				method: 'POST',
@@ -58,18 +62,15 @@ class SignIn extends Component {
 			})
 			.then(() => {
 				NotificationManager.success('Sign up successfull, now let\'s stream!!', 'Signed Up!', 5000, () => {});
-				this.setState({
-					isSignedIn: true
-				})
+				this.setState({ isSignedIn: true })
 			})
 			.catch(errors => {
 				if (errors)
-				this.setState({
-					errors
-				})
+				this.setState({ errors })
 			})
 		}
-		else if (Object.keys(this.state.errors).length === 0 || this.state.status) {
+		else {
+			errors = Object.assign(errors, this.state.errors);
 			this.setState({ errors })
 		}
 	}
@@ -80,28 +81,30 @@ class SignIn extends Component {
 		})
 	}
 
-	handleInputError = (name, errors) => {
+	handleInputValidation(name, errors) {
 		var tmp = [];
 		for (var error in errors) {
-			console.log(error, errors[error])
 			switch(error) {
 				case 'minLen':
-				tmp.push(name + ' Trop court');
+				tmp.push(name + ' is too short');
 				break;
 				case 'maxLen':
-				tmp.push(name + ' Trop long');
+				tmp.push(name + ' is too long');
 				break;
 				case 'format':
-				tmp.push(name + ' Mauvais format');
+				tmp.push(name + ' is in the wrong format');
 				break;
+				default:
 			}
 		}
-		this.setState({
-			errors: {
-				...this.state.errors,
-				[name]: tmp
-			}
-		})
+		errors = this.state.errors;
+		if (tmp[0]) {
+			errors[name] = tmp;
+		}
+		else {
+			delete errors[name];
+		}
+		this.setState({errors});
 	}
 
 	render() {
@@ -117,12 +120,13 @@ class SignIn extends Component {
 						name='login'
 						placeholder='Login'
 						required
+						className={this.state.errors.login ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 20,
 							format: /^[a-z0-9]+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputError
+							handleValidation: this.handleInputValidation
 						}}
 						trimOnBlur
 						maxLen={20}
@@ -134,12 +138,13 @@ class SignIn extends Component {
 						name='firstName'
 						placeholder='Firstname'
 						required
+						className={this.state.errors.firstName ? 'invalidInput' : null}
 						validation={{
 							minLen: 2,
 							maxLen: 20,
 							format: /^[a-z -]+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputError
+							handleValidation: this.handleInputValidation
 						}}
 						maxLen={20}
 						trimOnBlur
@@ -151,12 +156,13 @@ class SignIn extends Component {
 						name='lastName'
 						placeholder='Lastname'
 						required
+						className={this.state.errors.lastName ? 'invalidInput' : null}
 						validation={{
 							minLen: 2,
 							maxLen: 20,
 							format: /^[a-z -]+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputError
+							handleValidation: this.handleInputValidation
 						}}
 						maxLen={20}
 						trimOnBlur
@@ -168,12 +174,13 @@ class SignIn extends Component {
 						name='email'
 						placeholder='Email'
 						required
+						className={this.state.errors.email ? 'invalidInput' : null}
 						validation={{
-							minLen: 6,
+							minLen: 0,
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputError
+							handleValidation: this.handleInputValidation
 						}}
 						maxLen={50}
 						trimOnBlur
@@ -185,11 +192,12 @@ class SignIn extends Component {
 						name='password'
 						placeholder='Password'
 						required
+						className={this.state.errors.password ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 50,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputError
+							handleValidation: this.handleInputValidation
 						}}
 						maxLen={50}
 						onChange={this.handleInputChange}

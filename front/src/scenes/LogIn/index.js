@@ -20,6 +20,7 @@ class LogIn extends Component {
 			errors: {},
 			status: false
 		}
+		this.handleFormSubmit = this.handleFormSubmit.bind(this)
 		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 
@@ -56,9 +57,7 @@ class LogIn extends Component {
 	}
 
 	handleInputChange(state, value) {
-		this.setState({
-			[state]: value
-		})
+		this.setState({ [state]: value })
 	}
 
 	render() {
