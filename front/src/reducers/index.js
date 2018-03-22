@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import { handleMe } from './me'
 
 const rootReducer = combineReducers({
-  handleMe
+	handleMe
 })
 
 export default rootReducer

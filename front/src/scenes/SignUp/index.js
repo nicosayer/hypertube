@@ -110,7 +110,7 @@ class SignIn extends Component {
 		}
 		return (
 			<div>
-				<Link to='/'>You already have an account ?</Link>
+				<Link to={{pathname: '/'}}>You already have an account ?</Link>
 				<form className='inscription' onSubmit={this.handleFormSubmit}>
 					<Input
 						type='text'

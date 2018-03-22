@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider, connect } from 'react-redux'
 
 import LogIn from './scenes/LogIn'
@@ -17,18 +17,20 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={this.props.store}>
-				<Switch>
-					{
-						this.props.isAuthenticated ?
-						null
-						:
-						[
-							<Route path='/signup' key='signup' component={SignUp} />,
-							<Route path='/reset' key='reset' component={ResetPassword} />,
-							<Route key='default' component={LogIn} />
-						]
-					}
-				</Switch>
+				<BrowserRouter>
+					<Switch>
+						{
+							this.props.isAuthenticated ?
+							null
+							:
+							[
+								<Route path='/signup' key='signup' component={SignUp} />,
+								<Route path='/reset' key='reset' component={ResetPassword} />,
+								<Route key='default' component={LogIn} />
+							]
+						}
+					</Switch>
+				</BrowserRouter>
 			</Provider>
 		)
 	}
