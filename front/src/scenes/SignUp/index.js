@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { NotificationManager, NotificationContainer} from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
+
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/input'
 import Erreur from '../../components/erreur'
 
+import 'react-notifications/lib/notifications.css';
+
 class SignIn extends Component {
+
 	constructor(props) {
 		super(props)
 		this.state = {
 			login: '',
 			password: '',
-			firstname: '',
-			lastname: '',
+			firstName: '',
+			lastName: '',
 			email: '',
 			isSignedIn: false,
 			error: {},
 			status: false
 		}
-
 		this.handleFormSubmit = this.handleFormSubmit.bind(this)
 		this.handleInputChange = this.handleInputChange.bind(this)
-		this.handleChange = this.handleChange.bind(this)
 	}
 
 	handleFormSubmit(e) {
@@ -31,10 +32,10 @@ class SignIn extends Component {
 		error.login = ['Login field can\'t be empty']
 		if (this.state.password.length === 0)
 		error.password = ['Password field can\'t be empty']
-		if (this.state.firstname.length === 0)
-		error.firstname = ['Firstname field can\'t be empty']
-		if (this.state.lastname.length === 0)
-		error.lastname = ['Lastname field can\'t be empty']
+		if (this.state.firstName.length === 0)
+		error.firstName = ['Firstname field can\'t be empty']
+		if (this.state.lastName.length === 0)
+		error.lastName = ['Lastname field can\'t be empty']
 		if (this.state.email.length === 0)
 		error.email = ['Email field can\'t be empty']
 		e.preventDefault();
@@ -47,8 +48,8 @@ class SignIn extends Component {
 				credentials: 'include',
 				body: JSON.stringify({
 					login: this.state.login,
-					first_name: this.state.firstname,
-					last_name: this.state.lastname,
+					firstName: this.state.firstName,
+					lastName: this.state.lastName,
 					email: this.state.email,
 					password: this.state.password
 				})
@@ -69,32 +70,27 @@ class SignIn extends Component {
 		}
 	}
 
-	handleChange(date) {
-		this.setState({
-			startDate: date
-		});
-	}
-
-	handleInputChange = (state, value) => {
+	handleInputChange(state, value) {
 		this.setState({
 			[state]: value
 		})
 	}
 
-	handleError = (error) => {
-		var tmp;
-		if (typeof error === 'string')
-		{
-			tmp = this.state.error
-			delete tmp[error]
-		}
-		else if (this.state.status === true)
-		tmp = Object.assign({}, error)
-		else
-		tmp = Object.assign({}, this.state.error, error)
-		this.setState({
-			error: tmp, status: false
-		})
+	handleError(error) {
+		// var tmp;
+		// if (typeof error === 'string')
+		// {
+		// 	tmp = this.state.error
+		// 	delete tmp[error]
+		// }
+		// else if (this.state.status === true)
+		// tmp = Object.assign({}, error)
+		// else
+		// tmp = Object.assign({}, this.state.error, error)
+		// this.setState({
+		// 	error: tmp,
+		// 	status: false
+		// })
 	}
 
 	render() {
@@ -113,11 +109,12 @@ class SignIn extends Component {
 							minLen: 6,
 							maxLen: 20,
 							format: /^[a-z0-9]+$/gi,
-							invalidClass: 'invalid'
+							invalidClass: 'invalidInput',
+							error: this.handleError
 						}}
+						trimOnBlur
 						maxLen={20}
 						onChange={this.handleInputChange}
-						error={this.handleError}
 						/>
 					<br />
 					<Input
@@ -128,12 +125,13 @@ class SignIn extends Component {
 						validation={{
 							minLen: 2,
 							maxLen: 20,
-							format: /^[a-z]+$/gi,
-							invalidClass: 'invalid'
+							format: /^[a-z -]+$/gi,
+							invalidClass: 'invalidInput',
+							error: this.handleError
 						}}
 						maxLen={20}
+						trimOnBlur
 						onChange={this.handleInputChange}
-						error={this.handleError}
 						/>
 					<br />
 					<Input
@@ -144,12 +142,13 @@ class SignIn extends Component {
 						validation={{
 							minLen: 2,
 							maxLen: 20,
-							format: /^[a-z]+$/gi,
-							invalidClass: 'invalid'
+							format: /^[a-z -]+$/gi,
+							invalidClass: 'invalidInput',
+							error: this.handleError
 						}}
 						maxLen={20}
+						trimOnBlur
 						onChange={this.handleInputChange}
-						error={this.handleError}
 						/>
 					<br />
 					<Input
@@ -161,11 +160,12 @@ class SignIn extends Component {
 							minLen: 6,
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
-							invalidClass: 'invalid'
+							invalidClass: 'invalidInput',
+							error: this.handleError
 						}}
 						maxLen={50}
+						trimOnBlur
 						onChange={this.handleInputChange}
-						error={this.handleError}
 						/>
 					<br />
 					<Input
@@ -174,14 +174,13 @@ class SignIn extends Component {
 						placeholder='Password'
 						required
 						validation={{
-							min_len: 6,
-							max_len: 50,
-							invalidClass: 'invalid'
+							minLen: 6,
+							maxLen: 50,
+							invalidClass: 'invalidInput',
+							error: this.handleError
 						}}
 						maxLen={50}
-						validateOnChange
 						onChange={this.handleInputChange}
-						error={this.handleError}
 						/>
 					<br />
 					<button type='submit'>Sign Up</button>

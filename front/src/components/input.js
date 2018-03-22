@@ -1,5 +1,4 @@
 import React from 'react';
-import './index.css'
 
 class Input extends React.Component {
 
@@ -29,20 +28,18 @@ class Input extends React.Component {
 	handleChange(event) {
 		if (this.props.onChange && event && event.target) {
 			const name = event.target.name;
-			const value = event.target.value;
 			if (this.props.forbiddenChars) {
-				// const regex = new RegExp(this.props.forbiddenChars[0], this.props.forbiddenChars[1]);
-				event.target.value = value.replace(this.props.forbiddenChars, '');
+				event.target.value = event.target.value.replace(this.props.forbiddenChars, '');
 			}
 			if (this.props.maxLen) {
-				event.target.value = value.substring(0, this.props.maxLength);
+				event.target.value = event.target.value.substring(0, this.props.maxLen);
 			}
 			if (this.props.validation && this.props.validation.validateOnChange) {
-				this.validation(value);
+				this.validation(name, event.target.value);
 			}
-			this.props.onChange(name, value);
+			this.props.onChange(name, event.target.value);
 			if (this.props.submitOnChange) {
-				this.handleSubmit(name, value);
+				this.handleSubmit(name, event.target.value);
 			}
 		}
 	}
@@ -50,12 +47,14 @@ class Input extends React.Component {
 	handleBlur(event) {
 		if (event && event.target) {
 			const name = event.target.name;
-			const value = event.target.value;
-			if (this.props.submitOnBlur) {
-				this.handleSubmit(name, value);
+			if (this.props.trimOnBlur) {
+				event.target.value = event.target.value.trim()
 			}
 			if (this.props.validation && !this.props.validation.validateOnChange) {
-				this.validation(value);
+				this.validation(name, event.target.value);
+			}
+			if (this.props.submitOnBlur) {
+				this.handleSubmit(name, event.target.value);
 			}
 		}
 	}
@@ -66,7 +65,7 @@ class Input extends React.Component {
 		}
 	}
 
-	validation(value) {
+	validation(name, value) {
 		var errors = {};
 		if (value) {
 			if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
@@ -75,14 +74,18 @@ class Input extends React.Component {
 			if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
 				errors.maxLen = true;
 			}
-			if (this.props.validation.format && !this.props.validation.format.test(value)) {
-				errors.format = true;
+			if (this.props.validation.format) {
+				const regex = new RegExp(this.props.validation.format);
+				if (!regex.test(value)) {
+					errors.format = true;
+				}
 			}
 		}
 		if (Object.keys(errors).length) {
 			if (this.state.valid) {
 				this.setState({ valid: false })
 			}
+			this.props.validation.error(name, errors)
 		}
 		else if (!this.state.valid) {
 			this.setState({ valid: true })
@@ -107,7 +110,7 @@ class Input extends React.Component {
 				onKeyDown={this.handleKeyDown}
 				onChange={this.handleChange}
 				onBlur={this.handleBlur}
-				className={this.state.valid && this.props.validation ? this.props.validation.validClass : this.props.validation.invalidClass}
+				className={!this.state.valid && this.props.validation ? this.props.validation.invalidClass : null}
 				/>
 		);
 	}

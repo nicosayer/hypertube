@@ -20,6 +20,7 @@ class LogIn extends Component {
 			error: {},
 			status: false
 		}
+		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 
 	handleFormSubmit = event => {
@@ -87,25 +88,26 @@ class LogIn extends Component {
 						type="text"
 						name="login"
 						placeholder="Login"
-						validation={[6]}
-						error={this.handleError}
 						onChange={this.handleInputChange}
-						/><br />
+						/>
+					<br />
 					<Input
 						type="password"
 						name="password"
 						placeholder="Password"
-						error={this.handleError}
-						validation={[6,"[0-9]","[a-zA-Z]"]}
 						onChange={this.handleInputChange}
-						/><br />
+						/>
+					<br />
 					<button type="submit">Log in</button>
 				</form>
 				<Link to='/reset'>Forgot your password?</Link>
 				<Erreur error={this.state.error} />
-				<Auth42 /><br/>
-				<AuthFacebook /><br/>
-				<AuthGoogle /><br/>
+				<Auth42 />
+				<br/>
+				<AuthFacebook />
+				<br/>
+				<AuthGoogle />
+				<br/>
 			</div>
 		)
 	}
