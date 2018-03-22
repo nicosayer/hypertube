@@ -1,10 +1,11 @@
 var express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-
 var mongo = require('../../mongo');
 
+
 router.post('/', function(req, res, next) {
+
 	const post = req.body;
 	var db = mongo.getDb();
 	const collection = db.collection('users');
@@ -40,5 +41,6 @@ router.post('/', function(req, res, next) {
 		});
 	}
 });
+
 
 module.exports = router;
