@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { NotificationManager, NotificationContainer} from 'react-notifications';
 
 import { fetchWrap } from '../../services/fetchWrap'
-import Input from '../../components/input'
-import Erreur from '../../components/erreur'
+import Input from '../../components/Input'
+import Erreur from '../../components/Erreur'
 
 import 'react-notifications/lib/notifications.css';
 
@@ -19,7 +19,7 @@ class SignIn extends Component {
 			lastName: '',
 			email: '',
 			isSignedIn: false,
-			error: {},
+			errors: {},
 			status: false
 		}
 		this.handleFormSubmit = this.handleFormSubmit.bind(this)
@@ -27,19 +27,19 @@ class SignIn extends Component {
 	}
 
 	handleFormSubmit(e) {
-		var error = {}
+		var errors = {}
 		if (this.state.login.length === 0)
-		error.login = ['Login field can\'t be empty']
+		errors.login = ['Login field can\'t be empty']
 		if (this.state.password.length === 0)
-		error.password = ['Password field can\'t be empty']
+		errors.password = ['Password field can\'t be empty']
 		if (this.state.firstName.length === 0)
-		error.firstName = ['Firstname field can\'t be empty']
+		errors.firstName = ['Firstname field can\'t be empty']
 		if (this.state.lastName.length === 0)
-		error.lastName = ['Lastname field can\'t be empty']
+		errors.lastName = ['Lastname field can\'t be empty']
 		if (this.state.email.length === 0)
-		error.email = ['Email field can\'t be empty']
+		errors.email = ['Email field can\'t be empty']
 		e.preventDefault();
-		if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0) || this.state.status) {
+		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0) || this.state.status) {
 			fetchWrap('/signup', {
 				method: 'POST',
 				headers: {
@@ -60,13 +60,16 @@ class SignIn extends Component {
 					isSignedIn: true
 				})
 			})
-			.catch(error => {
-				if (error)
-				this.setState({ error, status: true })
+			.catch(errors => {
+				if (errors)
+				this.setState({
+					errors,
+					status: true
+				})
 			})
 		}
-		else if (Object.keys(this.state.error).length === 0 || this.state.status) {
-			this.setState({ error })
+		else if (Object.keys(this.state.errors).length === 0 || this.state.status) {
+			this.setState({ errors })
 		}
 	}
 
@@ -76,19 +79,19 @@ class SignIn extends Component {
 		})
 	}
 
-	handleError(error) {
+	handleError(errors) {
 		// var tmp;
-		// if (typeof error === 'string')
+		// if (typeof errors === 'string')
 		// {
-		// 	tmp = this.state.error
-		// 	delete tmp[error]
+		// 	tmp = this.state.errors
+		// 	delete tmp[errors]
 		// }
 		// else if (this.state.status === true)
-		// tmp = Object.assign({}, error)
+		// tmp = Object.assign({}, errors)
 		// else
-		// tmp = Object.assign({}, this.state.error, error)
+		// tmp = Object.assign({}, this.state.errors, errors)
 		// this.setState({
-		// 	error: tmp,
+		// 	errors: tmp,
 		// 	status: false
 		// })
 	}
@@ -99,6 +102,7 @@ class SignIn extends Component {
 		}
 		return (
 			<div>
+				<Link to='/'>You already have an account ?</Link>
 				<form className='inscription' onSubmit={this.handleFormSubmit}>
 					<Input
 						type='text'
@@ -185,7 +189,7 @@ class SignIn extends Component {
 					<br />
 					<button type='submit'>Sign Up</button>
 				</form>
-				<Erreur error={this.state.error} />
+				<Erreur errors={this.state.errors} />
 				<NotificationContainer/>
 			</div>
 		)

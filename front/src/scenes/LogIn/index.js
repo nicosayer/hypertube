@@ -3,12 +3,12 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { logMe} from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
-import Input from '../../components/input'
-import Erreur from '../../components/erreur'
+import Input from '../../components/Input'
+import Erreur from '../../components/Erreur'
 
-import Auth42 from './OAuth/42'
-import AuthFacebook from './OAuth/Facebook'
-import AuthGoogle from './OAuth/Google'
+import Auth42 from './components/OAuth/42'
+import AuthFacebook from './components/OAuth/Facebook'
+import AuthGoogle from './components/OAuth/Google'
 
 class LogIn extends Component {
 
@@ -17,7 +17,7 @@ class LogIn extends Component {
 		this.state = {
 			login: '',
 			password: '',
-			error: {},
+			errors: {},
 			status: false
 		}
 		this.handleInputChange = this.handleInputChange.bind(this)
@@ -25,12 +25,12 @@ class LogIn extends Component {
 
 	handleFormSubmit = event => {
 		event.preventDefault()
-		var error = {}
+		var errors = {}
 		if (this.state.login.length === 0)
-		error.login = ["Login field can't be empty"]
+		errors.login = ["Login field can't be empty"]
 		if (this.state.password.length === 0)
-		error.password = ["Password field can't be empty"]
-		if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0) || this.state.status) {
+		errors.password = ["Password field can't be empty"]
+		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0) || this.state.status) {
 			fetchWrap('/login', {
 				method: 'POST',
 				credentials: 'include',
@@ -45,13 +45,13 @@ class LogIn extends Component {
 			.then(payload => {
 				this.props.dispatch(logMe(payload))
 			})
-			.catch(error => {
-				if (error)
-				this.setState({ error })
+			.catch(errors => {
+				if (errors)
+				this.setState({ errors })
 			})
 		}
-		else if (Object.keys(this.state.error).length === 0 || this.state.status) {
-			this.setState({ error })
+		else if (Object.keys(this.state.errors).length === 0 || this.state.status) {
+			this.setState({ errors })
 		}
 	}
 
@@ -61,17 +61,17 @@ class LogIn extends Component {
 		})
 	}
 
-	handleError = error => {
+	handleerrors = errors => {
 		var tmp;
-		if (typeof error === "string") {
-			tmp = this.state.error
-			delete tmp[error]
+		if (typeof errors === "string") {
+			tmp = this.state.errors
+			delete tmp[errors]
 		}
 		else {
-			tmp = Object.assign({}, this.state.error, error)
+			tmp = Object.assign({}, this.state.errors, errors)
 		}
 		this.setState({
-			error: tmp,
+			errors: tmp,
 			status: false
 		})
 	}
@@ -83,6 +83,7 @@ class LogIn extends Component {
 
 		return (
 			<div>
+				<Link to='/signup'>Create an account</Link>
 				<form onSubmit={this.handleFormSubmit} >
 					<Input
 						type="text"
@@ -101,7 +102,7 @@ class LogIn extends Component {
 					<button type="submit">Log in</button>
 				</form>
 				<Link to='/reset'>Forgot your password?</Link>
-				<Erreur error={this.state.error} />
+				<Erreur errors={this.state.errors} />
 				<Auth42 />
 				<br/>
 				<AuthFacebook />
