@@ -4,7 +4,7 @@ import {NotificationManager} from 'react-notifications';
 
 import { fetchWrap } from '../../../services/fetchWrap'
 import Input from '../../../components/Input'
-import Erreur from '../../../components/Erreur'
+import Error from '../../../components/Error'
 
 import 'react-notifications/lib/notifications.css';
 
@@ -14,17 +14,19 @@ class ResetPassword extends React.Component {
 		super(props)
 		this.state = {
 			login: '',
-			errors: {},
+			error: {},
 			status: false
 		}
+		this.handleFormSubmit = this.handleFormSubmit.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
 	}
 
 	handleFormSubmit(event) {
 		event.preventDefault();
-		var errors = {}
+		var error = {}
 		if (this.state.login.length === 0)
-		errors.login = ["Login field can't be empty"]
-		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0) || this.state.status) {
+		error.login = ["Login field can't be empty"]
+		if (Object.keys(this.state.error).length === 0) {
 			fetchWrap('/login/resetPassword', {
 				method: 'POST',
 				credentials: 'include',
@@ -35,21 +37,18 @@ class ResetPassword extends React.Component {
 					login: this.state.login
 				})
 			})
-			.then(res => NotificationManager.success("Email sent!!", 'Reset', 5000, () => {}))
-			.catch((errors) => {
-				if (errors)
-				this.setState({ errors })
+			.then(data => {NotificationManager.success("Email sent!!", 'Reset', 5000, () => {})})
+			.catch((error) => {
+				console.log(error)
 			});
 		}
-		else if (Object.keys(this.state.errors).length === 0 || this.state.status) {
-			this.setState({ errors })
+		else {
+			this.setState({ error });
 		}
 	}
 
 	handleInputChange(state, value) {
-		this.setState({
-			[state]: value
-		})
+		this.setState({ [state]: value });
 	}
 
 	render() {
@@ -67,7 +66,7 @@ class ResetPassword extends React.Component {
 					<br />
 					<input type='submit' value="Reset"/>
 				</form>
-				<Erreur errors={this.state.errors} />
+				<Error error={this.state.error} />
 			</div>
 		)
 	}

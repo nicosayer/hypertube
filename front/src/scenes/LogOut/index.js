@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 
 class LogOut extends Component {
-  
-  constructor(props) {
+	
+	constructor(props) {
 		super(props)
-		
+
 		this.logout = this.logout.bind(this)
 	}
 
 	logout() {
-	    fetch('/logout', {
+		fetch('/logout', {
 			method: 'DELETE',
 			credentials: 'include'
 		})
@@ -18,9 +18,9 @@ class LogOut extends Component {
 		})
 	}
 
-  render() {
-    return <input type="submit" value="Logout" onClick={this.logout} />
-  }
+	render() {
+		return <input type="submit" value="Logout" onClick={this.logout} />
+	}
 }
 
 export default LogOut

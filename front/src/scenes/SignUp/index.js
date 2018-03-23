@@ -6,7 +6,7 @@ import { NotificationManager, NotificationContainer} from 'react-notifications';
 import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/Input'
-import Erreur from '../../components/Erreur'
+import Error from '../../components/Error'
 
 import 'react-notifications/lib/notifications.css';
 
@@ -20,7 +20,7 @@ class SignIn extends Component {
 			firstName: '',
 			lastName: '',
 			email: '',
-			errors: {}
+			error: {}
 		}
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -30,23 +30,23 @@ class SignIn extends Component {
 
 	handleFormSubmit(event) {
 		event.preventDefault();
-		var errors = {}
+		var error = {}
 		if (!this.state.login) {
-			errors.login = ['Login field can\'t be empty']
+			error.login = ['Login field can\'t be empty']
 		}
 		if (!this.state.password) {
-			errors.password = ['Password field can\'t be empty']
+			error.password = ['Password field can\'t be empty']
 		}
 		if (!this.state.firstName) {
-			errors.firstName = ['Firstname field can\'t be empty']
+			error.firstName = ['Firstname field can\'t be empty']
 		}
 		if (!this.state.lastName) {
-			errors.lastName = ['Lastname field can\'t be empty']
+			error.lastName = ['Lastname field can\'t be empty']
 		}
 		if (!this.state.email) {
-			errors.email = ['Email field can\'t be empty']
+			error.email = ['Email field can\'t be empty']
 		}
-		if ((Object.keys(this.state.errors).length === 0 && Object.keys(errors).length === 0)) {
+		if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0)) {
 			fetchWrap('/signup', {
 				method: 'POST',
 				headers: {
@@ -66,14 +66,14 @@ class SignIn extends Component {
 				NotificationManager.success('Sign up successfull, now let\'s stream!!', 'Signed Up!', 5000, () => {});
 				this.props.dispatch(logMe(payload))
 			})
-			.catch(errors => {
-				if (errors)
-				this.setState({ errors })
+			.catch(error => {
+				if (error)
+				this.setState({ error })
 			})
 		}
 		else {
-			errors = Object.assign(errors, this.state.errors);
-			this.setState({ errors })
+			error = Object.assign(error, this.state.error);
+			this.setState({ error })
 		}
 	}
 
@@ -83,9 +83,9 @@ class SignIn extends Component {
 		})
 	}
 
-	handleInputValidation(name, errors) {
+	handleInputValidation(name, error) {
 		var tmp = [];
-		for (var error in errors) {
+		for (var error in error) {
 			switch(error) {
 				case 'minLen':
 				tmp.push(name + ' is too short');
@@ -99,14 +99,14 @@ class SignIn extends Component {
 				default:
 			}
 		}
-		errors = this.state.errors;
+		error = this.state.error;
 		if (tmp[0]) {
-			errors[name] = tmp;
+			error[name] = tmp;
 		}
 		else {
-			delete errors[name];
+			delete error[name];
 		}
-		this.setState({errors});
+		this.setState({error});
 	}
 
 	render() {
@@ -123,7 +123,7 @@ class SignIn extends Component {
 						name='login'
 						placeholder='Login'
 						required
-						className={this.state.errors.login ? 'invalidInput' : null}
+						className={this.state.error.login ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 20,
@@ -141,7 +141,7 @@ class SignIn extends Component {
 						name='firstName'
 						placeholder='Firstname'
 						required
-						className={this.state.errors.firstName ? 'invalidInput' : null}
+						className={this.state.error.firstName ? 'invalidInput' : null}
 						validation={{
 							minLen: 2,
 							maxLen: 20,
@@ -159,7 +159,7 @@ class SignIn extends Component {
 						name='lastName'
 						placeholder='Lastname'
 						required
-						className={this.state.errors.lastName ? 'invalidInput' : null}
+						className={this.state.error.lastName ? 'invalidInput' : null}
 						validation={{
 							minLen: 2,
 							maxLen: 20,
@@ -177,7 +177,7 @@ class SignIn extends Component {
 						name='email'
 						placeholder='Email'
 						required
-						className={this.state.errors.email ? 'invalidInput' : null}
+						className={this.state.error.email ? 'invalidInput' : null}
 						validation={{
 							minLen: 0,
 							maxLen: 50,
@@ -195,7 +195,7 @@ class SignIn extends Component {
 						name='password'
 						placeholder='Password'
 						required
-						className={this.state.errors.password ? 'invalidInput' : null}
+						className={this.state.error.password ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 50,
@@ -208,7 +208,7 @@ class SignIn extends Component {
 					<br />
 					<input type='submit' value='Signup'/>
 				</form>
-				<Erreur errors={this.state.errors} />
+				<Error error={this.state.error} />
 				<NotificationContainer/>
 			</div>
 		)

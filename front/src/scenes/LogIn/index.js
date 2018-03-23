@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/Input'
-import Erreur from '../../components/Erreur'
+import Error from '../../components/Error'
 
 import Auth42 from './OAuth/42'
 import AuthFacebook from './OAuth/Facebook'
@@ -18,7 +18,7 @@ class LogIn extends Component {
 		this.state = {
 			login: '',
 			password: '',
-			errors: {}
+			error: {}
 		}
 		this.handleFormSubmit = this.handleFormSubmit.bind(this)
 		this.handleInputChange = this.handleInputChange.bind(this)
@@ -27,14 +27,14 @@ class LogIn extends Component {
 
 	handleFormSubmit(event) {
 		event.preventDefault()
-		var errors = {}
+		var error = {}
 		if (!this.state.login) {
-			errors.login = ['Login field can\'t be empty']
+			error.login = ['Login field can\'t be empty']
 		}
 		if (!this.state.password) {
-			errors.password = ['Password field can\'t be empty']
+			error.password = ['Password field can\'t be empty']
 		}
-		if (Object.keys(errors).length === 0) {
+		if (Object.keys(error).length === 0) {
 			fetchWrap('/login', {
 				method: 'POST',
 				credentials: 'include',
@@ -50,13 +50,13 @@ class LogIn extends Component {
 				//console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
-			.catch(errors => {
-				if (errors)
-					this.setState({ errors })
+			.catch(error => {
+				if (error)
+					this.setState({ error })
 			})
 		}
 		else {
-			this.setState({ errors })
+			this.setState({ error })
 		}
 	}
 
@@ -89,7 +89,7 @@ class LogIn extends Component {
 					<br />
 					<input type='submit' value="Log in"/>
 				</form>
-				<Erreur errors={this.state.errors} />
+				<Error error={this.state.error} />
 				<Auth42 />
 				<br/>
 				<AuthFacebook />
