@@ -36,7 +36,15 @@ router.post('/', function(req, res, next) {
 					42: apiRes.body.id
 				}
 			};
-			signupModule(req, res, next, post, true);
+			
+			new Promise((resolve, reject) => {
+				const result = signupModule(post, true);
+				if (result) {
+					resolve(result);
+				}
+			}).then(data => {
+				res.status(201).json(data);
+			})
 		})
 		.catch(err => res.json(err));
 	}

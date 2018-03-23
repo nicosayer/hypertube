@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 var mongo = require('../mongo');
 
-module.exports = function(req, res, next, post, isOAuth) {
+module.exports = function(post, isOAuth) {
 	var errors = {};
 	var db = mongo.getDb();
 	const collection = db.collection('users');
@@ -20,10 +20,13 @@ module.exports = function(req, res, next, post, isOAuth) {
 		}
 	});
 
+
 	post.firstName = post.firstName.toLowerCase().replace(/\s+/g, ' ');
 	post.lastName = post.lastName.toLowerCase().replace(/\s+/g, ' ');
-	post.email = post.email.toLowerCase();
-
+	
+	if (post.email) {
+		post.email = post.email.toLowerCase();
+	}
 
 	if (!(post.firstName && post.lastName && post.login && post.email && post.password)) {
 		if (errors.fields === undefined)
@@ -113,6 +116,7 @@ module.exports = function(req, res, next, post, isOAuth) {
 		errors.email.push("Maximum length for your email is 50 characters");
 	}
 
+
 	collection.findOne({oauth: post.oauth}, function (err, result) {
 		if (err) throw err;
 
@@ -136,7 +140,7 @@ module.exports = function(req, res, next, post, isOAuth) {
 								if (err) throw err;
 
 								req.session._id = userResult._id;
-								res.status(201).json(result);
+								return (result);
 								resolve(req.session._id);
 							});
 						}
@@ -165,13 +169,13 @@ module.exports = function(req, res, next, post, isOAuth) {
 											if (err) throw err;
 
 											req.session._id = result.ops[0]._id;
-											res.status(201).json(result.ops[0]);
+											return (result.ops[0]);
 										});
 									});
 								});
 							}
 							else {
-								res.status(300).json(errors)
+								return (errors)
 							}
 						});
 					}
@@ -180,7 +184,7 @@ module.exports = function(req, res, next, post, isOAuth) {
 							if (err) throw err;
 
 							req.session._id = result.ops[0]._id;
-							res.status(201).json(result.ops[0]);
+							return (result.ops[0]);
 						});
 					}
 				})
@@ -188,7 +192,7 @@ module.exports = function(req, res, next, post, isOAuth) {
 		}
 		else {
 			req.session._id = result._id;
-			res.status(201).json(result);
+			return (result);
 		}
 	});
 
