@@ -1,0 +1,30 @@
+.tooltiptext {
+	background-color: white;
+	color: black;
+	border: 1px solid red;
+	padding: 5px 10px;
+	margin: 5px 10px;
+	border-radius: 5px;
+	position: absolute;
+	z-index: 1;
+	transition: opacity 0.5s;
+	opacity: 1;	
+	white-space: nowrap;
+}
+
+.tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 100%;
+	margin-top: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent red transparent transparent;
+}
+
+.hideToolTip {
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+}

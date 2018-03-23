@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import { connect } from 'react-redux'
-import { NotificationManager, NotificationContainer} from 'react-notifications';
+import { connect } from 'react-redux';
 
-import { logMe } from '../../actions/me'
-import { fetchWrap } from '../../services/fetchWrap'
-import Input from '../../components/Input'
-import Error from '../../components/Error'
+import { logMe } from '../../actions/me';
 
-import 'react-notifications/lib/notifications.css';
+import { fetchWrap } from '../../services/fetchWrap';
+import Input from '../../components/Input';
+import Tooltip from '../../components/Tooltip/';
+
+const errors = require('../../errors.json');
 
 class SignIn extends Component {
 
@@ -20,7 +20,7 @@ class SignIn extends Component {
 			firstName: '',
 			lastName: '',
 			email: '',
-			error: {}
+			error: []
 		}
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -30,23 +30,23 @@ class SignIn extends Component {
 
 	handleFormSubmit(event) {
 		event.preventDefault();
-		var error = {}
-		if (!this.state.login) {
-			error.login = ['Login field can\'t be empty']
+		var error = this.state.error;
+		if (!this.state.login && !error.includes('login')) {
+			error.push('login');
 		}
-		if (!this.state.password) {
-			error.password = ['Password field can\'t be empty']
+		if (!this.state.password && !error.includes('password')) {
+			error.push('password');
 		}
-		if (!this.state.firstName) {
-			error.firstName = ['Firstname field can\'t be empty']
+		if (!this.state.firstName && !error.includes('firstName')) {
+			error.push('firstName');
 		}
-		if (!this.state.lastName) {
-			error.lastName = ['Lastname field can\'t be empty']
+		if (!this.state.lastName && !error.includes('lastName')) {
+			error.push('lastName');
 		}
-		if (!this.state.email) {
-			error.email = ['Email field can\'t be empty']
+		if (!this.state.email && !error.includes('email')) {
+			error.push('email');
 		}
-		if ((Object.keys(this.state.error).length === 0 && Object.keys(error).length === 0)) {
+		if (!error.length) {
 			fetchWrap('/signup', {
 				method: 'POST',
 				headers: {
@@ -62,8 +62,6 @@ class SignIn extends Component {
 				})
 			})
 			.then((payload) => {
-				console.log(payload)
-				NotificationManager.success('Sign up successfull, now let\'s stream!!', 'Signed Up!', 5000, () => {});
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(error => {
@@ -72,7 +70,6 @@ class SignIn extends Component {
 			})
 		}
 		else {
-			error = Object.assign(error, this.state.error);
 			this.setState({ error })
 		}
 	}
@@ -84,29 +81,15 @@ class SignIn extends Component {
 	}
 
 	handleInputValidation(name, error) {
-		var tmp = [];
-		for (var err in error) {
-			switch(err) {
-				case 'minLen':
-				tmp.push(name + ' is too short');
-				break;
-				case 'maxLen':
-				tmp.push(name + ' is too long');
-				break;
-				case 'format':
-				tmp.push(name + ' is in the wrong format');
-				break;
-				default:
-			}
+		var tmp = this.state.error;
+		if (!Object.keys(error).length) {
+			tmp.splice(tmp.indexOf(name), 1);
+			this.setState({ error: tmp });
 		}
-		error = this.state.error;
-		if (tmp[0]) {
-			error[name] = tmp;
+		else if (!tmp.includes(name)) {
+			tmp.push(name);
+			this.setState({ error: tmp });
 		}
-		else {
-			delete error[name];
-		}
-		this.setState({error});
 	}
 
 	render() {
@@ -122,94 +105,97 @@ class SignIn extends Component {
 						type='text'
 						name='login'
 						placeholder='Login'
-						required
-						className={this.state.error.login ? 'invalidInput' : null}
+						className={this.state.error.includes('login') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 20,
 							format: /^[a-z0-9]+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
 						}}
 						trimOnBlur
 						maxLen={20}
 						onChange={this.handleInputChange}
 						/>
+					<Tooltip text={errors.signup.login} visible={this.state.error.includes('login') ? true : false}/>
 					<br />
 					<Input
 						type='text'
 						name='firstName'
-						placeholder='Firstname'
-						required
-						className={this.state.error.firstName ? 'invalidInput' : null}
+						placeholder='First name'
+						className={this.state.error.includes('firstName') ? 'invalidInput' : null}
 						validation={{
-							minLen: 2,
+							minLen: 1,
 							maxLen: 20,
-							format: /^[a-z -]+$/gi,
+							format: /^[a-z ]+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
 						}}
 						maxLen={20}
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
+					<Tooltip text={errors.signup.firstName} visible={this.state.error.includes('firstName') ? true : false}/>
 					<br />
-					<Input
-						type='text'
-						name='lastName'
-						placeholder='Lastname'
-						required
-						className={this.state.error.lastName ? 'invalidInput' : null}
-						validation={{
-							minLen: 2,
-							maxLen: 20,
-							format: /^[a-z -]+$/gi,
-							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation
-						}}
-						maxLen={20}
-						trimOnBlur
-						onChange={this.handleInputChange}
-						/>
+						<Input
+							type='text'
+							name='lastName'
+							placeholder='Last name'
+							className={this.state.error.includes('lastName') ? 'invalidInput' : null}
+							validation={{
+								minLen: 1,
+								maxLen: 20,
+								format: /^[a-z ]+$/gi,
+								invalidClass: 'invalidInput',
+								handleValidation: this.handleInputValidation,
+								validateOnChange: true
+							}}
+							maxLen={20}
+							trimOnBlur
+							onChange={this.handleInputChange}
+							/>
+						<Tooltip text={errors.signup.lastName} visible={this.state.error.includes('lastName') ? true : false}/>
 					<br />
 					<Input
 						type='text'
 						name='email'
 						placeholder='Email'
-						required
-						className={this.state.error.email ? 'invalidInput' : null}
+						className={this.state.error.includes('email') ? 'invalidInput' : null}
 						validation={{
 							minLen: 0,
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
 						}}
 						maxLen={50}
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
+					<Tooltip text={errors.signup.email} visible={this.state.error.includes('email') ? true : false}/>
 					<br />
 					<Input
 						type='password'
 						name='password'
 						placeholder='Password'
-						required
-						className={this.state.error.password ? 'invalidInput' : null}
+						className={this.state.error.includes('password') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 50,
 							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
 						}}
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
+					<Tooltip text={errors.signup.password} visible={this.state.error.includes('password') ? true : false}/>
 					<br />
 					<input type='submit' value='Signup'/>
 				</form>
-				<Error error={this.state.error} />
-				<NotificationContainer/>
 			</div>
 		)
 	}

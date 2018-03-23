@@ -1,0 +1,16 @@
+{
+	"signup": {
+		"login" : "Enter a combination of at least six letters and numbers",
+		"firstName": "Enter your first name with letters and spaces only",
+		"lastName": "Enter your last name with letters and spaces only",
+		"email": "Enter your email in the correct format",
+		"password": "Enter a combination of at least six characters"
+	},
+	"login": {
+		"login": "Enter your login or email",
+		"password": "Enter your password"
+	},
+	"resetPassword": {
+		"login": "Enter your login or email"
+	}
+}

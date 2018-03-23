@@ -13,7 +13,9 @@ a {
 	text-decoration: none;
 }
 
-div {
+div, p {
+	margin: 0;
+	padding: 0;
 	display: inline-block;
 }
 
@@ -24,6 +26,7 @@ input {
 	margin: 5px 10px;
 	border: 0px;
 	border-radius: 5px;
+	border: 1px solid lightgrey;
 }
 
 .formBox {
@@ -32,7 +35,7 @@ input {
 }
 
 .invalidInput {
-	border: solid 5px red;
+	border: solid 1px red;
 }
 
 .fontBig {
@@ -53,4 +56,12 @@ input {
 
 .block {
 	display: block;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.test {
+	border: 1px solid red;
 }

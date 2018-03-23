@@ -4,12 +4,15 @@ import { connect } from 'react-redux'
 
 import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
-import Input from '../../components/Input'
-import Error from '../../components/Error'
 
 import Auth42 from './OAuth/42'
 import AuthFacebook from './OAuth/Facebook'
 import AuthGoogle from './OAuth/Google'
+
+import Input from '../../components/Input'
+import Tooltip from '../../components/Tooltip/';
+
+const errors = require('../../errors.json');
 
 class LogIn extends Component {
 
@@ -18,23 +21,25 @@ class LogIn extends Component {
 		this.state = {
 			login: '',
 			password: '',
-			error: {}
+			error: []
 		}
-		this.handleFormSubmit = this.handleFormSubmit.bind(this)
-		this.handleInputChange = this.handleInputChange.bind(this)
-		this.handleFormSubmit = this.handleFormSubmit.bind(this)
+		this.handleFormSubmit = this.handleFormSubmit.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleInputValidation = this.handleInputValidation.bind(this);
 	}
 
 	handleFormSubmit(event) {
-		event.preventDefault()
-		var error = {}
-		if (!this.state.login) {
-			error.login = ['Login field can\'t be empty']
+		if (event) {
+			event.preventDefault()
 		}
-		if (!this.state.password) {
-			error.password = ['Password field can\'t be empty']
+		var error = this.state.error;
+		if (!this.state.login && !error.includes('login')) {
+			error.push('login');
 		}
-		if (Object.keys(error).length === 0) {
+		if (!this.state.password && !error.includes('password')) {
+			error.push('password');
+		}
+		if (!error.length) {
 			fetchWrap('/login', {
 				method: 'POST',
 				credentials: 'include',
@@ -51,8 +56,10 @@ class LogIn extends Component {
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(error => {
-				if (error)
+				console.log(error);
+				if (error) {
 					this.setState({ error })
+				}
 			})
 		}
 		else {
@@ -62,6 +69,12 @@ class LogIn extends Component {
 
 	handleInputChange(state, value) {
 		this.setState({ [state]: value })
+	}
+
+	handleInputValidation(name, error) {
+		var tmp = this.state.error;
+		tmp.splice(tmp.indexOf(name), 1);
+		this.setState({ error: tmp });
 	}
 
 	render() {
@@ -74,22 +87,33 @@ class LogIn extends Component {
 					<Input
 						type="text"
 						name="login"
-						placeholder="Login"
+						placeholder="Login or email"
+						validation={{
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
+					<Tooltip text={errors.login.login} visible={this.state.error.includes('login') ? true : false}/>
 					<br />
 					<Input
 						type="password"
 						name="password"
 						placeholder="Password"
+						validation={{
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
+					<Tooltip text={errors.login.password} visible={this.state.error.includes('password') ? true : false}/>
 					<br />
 					<Link to='/reset'>Forgot your password?</Link>
 					<br />
 					<input type='submit' value="Log in"/>
 				</form>
-				<Error error={this.state.error} />
 				<Auth42 />
 				<br/>
 				<AuthFacebook />
