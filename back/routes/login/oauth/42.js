@@ -38,7 +38,7 @@ router.post('/', function(req, res, next) {
 			};
 			
 			new Promise((resolve, reject) => {
-				const result = signupModule(post, true);
+				const result = signupModule(req, post, true);
 				if (result) {
 					resolve(result);
 				}

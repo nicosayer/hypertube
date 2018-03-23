@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 var mongo = require('../mongo');
 
-module.exports = function(post, isOAuth) {
+module.exports = function(req, post, isOAuth) {
 	var errors = {};
 	var db = mongo.getDb();
 	const collection = db.collection('users');
