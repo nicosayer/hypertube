@@ -62,7 +62,7 @@ class SignIn extends Component {
 				})
 			})
 			.then((payload) => {
-				//console.log(payload)
+				console.log(payload)
 				NotificationManager.success('Sign up successfull, now let\'s stream!!', 'Signed Up!', 5000, () => {});
 				this.props.dispatch(logMe(payload))
 			})
