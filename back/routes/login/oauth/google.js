@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
 		}
 	})
 	.then(apiRes => {
-		res.json(apiRes.body);
+		res.status(200).json(apiRes.body);
 	})
 	.catch(err => res.json(err));
 

@@ -32,7 +32,7 @@ router.post('/', function(req, res, next) {
 			}
 			else {
 				const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));
-				
+
 				let mailOptions = {
 					from: '"Jean Marc Morandini" <ericnicogor@gmail.com>',
 					to: mongoResult.email,

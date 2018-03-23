@@ -14,7 +14,7 @@ router.post('/', function(req, res, next) {
 		'&access_token=' + JSON.parse(apiRes.body).access_token);
 	})
 	.then(apiRes => {
-		res.json(JSON.parse(apiRes.body));
+		res.status(200).json(JSON.parse(apiRes.body));
 	})
 	.catch(err => res.json(err));
 

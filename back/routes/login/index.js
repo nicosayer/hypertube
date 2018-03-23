@@ -1,17 +1,17 @@
-var express = require('express');
+const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-var mongo = require('../../mongo');
+const mongo = require('../../mongo');
 
 
 router.post('/', function(req, res, next) {
 
 	const post = req.body;
-	var db = mongo.getDb();
+	const db = mongo.getDb();
 	const collection = db.collection('users');
 
 	if (!post.login || !post.password) {
-		res.sendStatus(400).json({fields: ["Some informations are missing"]});
+		res.status(400).json({fields: ["Some informations are missing"]});
 	}
 	else {
 		post.login = post.login.trim();
@@ -27,7 +27,7 @@ router.post('/', function(req, res, next) {
 			const mongoResult = result
 
 			if (result === null) {
-				res.sendStatus(400).json({login: ["No user was found with that username"]});
+				res.status(400).json({login: ["No user was found with that username"]});
 			}
 			else {
 				const password = result.password;
@@ -36,11 +36,11 @@ router.post('/', function(req, res, next) {
 					if (error) throw error;
 
 					if (result !== true) {
-						res.sendStatus(400).json({password: ["The password is incorrect"]});
+						res.status(400).json({password: ["The password is incorrect"]});
 					}
 					else {
 						req.session._id = mongoResult._id;
-						res.sendStatus(202).json(mongoResult);
+						res.status(202).json(mongoResult);
 					}
 				});
 			}

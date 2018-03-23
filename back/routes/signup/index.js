@@ -143,17 +143,17 @@ router.post('/', function(req, res, next) {
 				bcrypt.genSalt(10, function(err, salt) {
 					bcrypt.hash(post.password, salt, function(err, hash) {
 						post.password = hash;
-						
+
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
 
 							req.session._id = result.ops[0]._id;
-							res.sendStatus(202).json(result.ops[0]);
+							res.status(202).json(result.ops[0]);
 						});
 					});
 				});
 			} else {
-				res.sendStatus(400).json(errors)
+				res.status(400).json(errors)
 			}
 
 		});

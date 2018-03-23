@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 		})
 	}
 	else {
-		res.sendStatus(403).json({error: 'User not connected'});
+		res.status(403).json({error: 'User not connected'});
 	}
 });
 
