@@ -9,7 +9,6 @@ module.exports = function(req, res, next, post, isOAuth) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
-	console.log(post)
 	Object.keys(post).filter(function(key, index) {
 		if (key === "password") {
 			return false;
@@ -114,11 +113,10 @@ module.exports = function(req, res, next, post, isOAuth) {
 		errors.email.push("Maximum length for your email is 50 characters");
 	}
 
-	collection.findOne({oauth: {[post.oauth]: post.oauthId}}, function (err, result) {
+	collection.findOne({oauth: post.oauth}, function (err, result) {
 		if (err) throw err;
 
 		if (result === null) {
-			console.log(1)
 			collection.findOne({email: post.email}, function (err, result) {
 				if (err) throw err;
 				const userResult = result;
@@ -187,6 +185,10 @@ module.exports = function(req, res, next, post, isOAuth) {
 					}
 				})
 			});
+		}
+		else {
+			req.session._id = result._id;
+			res.status(201).json(result);
 		}
 	});
 
