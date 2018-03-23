@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 var mongo = require('../mongo');
 
-module.exports = function(req, post, isOAuth) {
+module.exports = function(req, post, isOAuth, callback) {
 	var errors = {};
 	var db = mongo.getDb();
 	const collection = db.collection('users');
@@ -140,7 +140,7 @@ module.exports = function(req, post, isOAuth) {
 								if (err) throw err;
 
 								req.session._id = userResult._id;
-								return (result);
+								callback(result);
 								resolve(req.session._id);
 							});
 						}
@@ -169,13 +169,13 @@ module.exports = function(req, post, isOAuth) {
 											if (err) throw err;
 
 											req.session._id = result.ops[0]._id;
-											return (result.ops[0]);
+											callback(result.ops[0]);
 										});
 									});
 								});
 							}
 							else {
-								return (errors)
+								callback(errors)
 							}
 						});
 					}
@@ -184,7 +184,7 @@ module.exports = function(req, post, isOAuth) {
 							if (err) throw err;
 
 							req.session._id = result.ops[0]._id;
-							return (result.ops[0]);
+							callback(result.ops[0]);
 						});
 					}
 				})
@@ -192,7 +192,7 @@ module.exports = function(req, post, isOAuth) {
 		}
 		else {
 			req.session._id = result._id;
-			return (result);
+			callback(result);
 		}
 	});
 

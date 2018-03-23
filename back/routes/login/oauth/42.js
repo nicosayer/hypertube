@@ -37,14 +37,10 @@ router.post('/', function(req, res, next) {
 				}
 			};
 			
-			new Promise((resolve, reject) => {
-				const result = signupModule(req, post, true);
-				if (result) {
-					resolve(result);
-				}
-			}).then(data => {
-				res.status(201).json(data);
-			})
+			signupModule(req, post, true, (result) => {
+				console.log(result)
+				res.status(201).json(result);
+			});
 		})
 		.catch(err => res.json(err));
 	}
