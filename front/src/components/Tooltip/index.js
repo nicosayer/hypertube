@@ -9,7 +9,7 @@ class Tooltip extends React.Component {
 				<span className={this.props.visible ? 'tooltiptext' : 'hideToolTip'}>
 					{ this.props.text ? this.props.text : null }
 				</span>
-		);
+		); 
 	}
 }
 
