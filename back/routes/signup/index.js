@@ -12,8 +12,10 @@ router.post('/', function(req, res, next) {
 	}
 	else {
 		const post = req.body;
-		console.log(post);
-		signupModule(req, res, next, post, false);
+
+		signupModule(req, post, true, (result) => {
+			res.status(201).json(result);
+		});
 	}
 });
 
