@@ -8,6 +8,12 @@ import { fetchWrap } from '../../../../services/fetchWrap'
 
 class AuthGoogle extends Component {
 
+	constructor(props) {
+		super(props)
+		
+		this.clicked = this.clicked.bind(this);
+	}
+
 	componentDidMount() {
 		if (queryString.parse(window.location.hash).state === 'googleOAuth2') {
 			fetchWrap('/login/oauth/google/', {
@@ -22,6 +28,12 @@ class AuthGoogle extends Component {
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(() => {})
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated){
+			this.props.history.push('/')		
 		}
 	}
 

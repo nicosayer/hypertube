@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router';
 
 import { logMe } from '../../../../actions/me'
 
@@ -8,20 +9,32 @@ import { fetchWrap } from '../../../../services/fetchWrap'
 
 class Auth42 extends Component {
 
+	constructor(props) {
+		super(props)
+		
+		this.clicked = this.clicked.bind(this);
+	}
+
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === '42OAuth2') {
 			fetchWrap('/login/oauth/42/', {
 				method: 'POST',
+				credentials: 'include',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
 					code: queryString.parse(window.location.search).code
 				})
 			})
 			.then(payload => {
-				console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(() => {})
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated){
+			this.props.history.push('/')		
 		}
 	}
 
@@ -48,4 +61,4 @@ function mapStateToProps(state) {
 	})
 }
 
-export default connect(mapStateToProps)(Auth42)
+export default withRouter(connect(mapStateToProps)(Auth42))
