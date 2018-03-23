@@ -34,11 +34,12 @@ router.post('/', function(req, res, next) {
 				post.email = infos.email;
 			}
 
-			signupModule(req, post, true, (result) => {
-				console.log(result)
-				console.log(req.session._id)
-				
-				res.status(201).json(result);
+			signupModule(req, post, true, (result, error = 0) => {
+				if (error) {
+					res.status(300).json(result);
+				} else {
+					res.status(201).json(result);
+				}
 			});
 		})
 		.catch(err => res.json(err));
