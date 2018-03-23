@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider, connect } from 'react-redux'
 
+import Home from './scenes/Home'
 import LogIn from './scenes/LogIn'
 import SignUp from './scenes/SignUp'
-import LogOut from './scenes/LogOut'
 import ResetPassword from './scenes/LogIn/ResetPassword'
 
 import './style.css'
@@ -22,12 +22,12 @@ class App extends Component {
 					<Switch>
 						{
 							this.props.isAuthenticated ?
-								<Route key='logout' component={LogOut} />
+								<Route key='home' component={Home} />
 							:
 							[
 								<Route path='/signup' key='signup' component={SignUp} />,
 								<Route path='/reset' key='reset' component={ResetPassword} />,
-								<Route key='default' component={LogIn} />
+								<Route key='login' component={LogIn} />
 							]
 						}
 					</Switch>
