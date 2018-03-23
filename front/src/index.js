@@ -17,7 +17,7 @@ fetchWrap('/isUserLoggedIn', {
 	store.dispatch(logMe(payload))
 	ReactDOM.render(<App store={store}/>, document.getElementById('root'));
 })
-.catch(() => {
+.catch((error) => {
 	ReactDOM.render(<App store={store}/>, document.getElementById('root'));
 })
 registerServiceWorker();

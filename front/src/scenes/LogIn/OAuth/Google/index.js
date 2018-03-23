@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
+import { connect } from 'react-redux'
+
+import { logMe } from '../../../../actions/me'
+
+import { fetchWrap } from '../../../../services/fetchWrap'
 
 class AuthGoogle extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.hash).state === 'googleOAuth2') {
-			fetch('/login/oauth/google/', {
+			fetchWrap('/login/oauth/google/', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
 					access_token: queryString.parse(window.location.hash).access_token
 				})
 			})
-			.then(res => res.json())
-			.then(res => console.log(res));
+			.then(payload => {
+				console.log(payload)
+				this.props.dispatch(logMe(payload))
+			})
+			.catch(() => {})
 		}
 	}
 
@@ -33,4 +41,11 @@ class AuthGoogle extends Component {
 	}
 }
 
-export default AuthGoogle;
+function mapStateToProps(state) {
+	const { isAuthenticated } = state.handleMe
+	return ({
+		isAuthenticated
+	})
+}
+
+export default connect(mapStateToProps)(AuthGoogle)

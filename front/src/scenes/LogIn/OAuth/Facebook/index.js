@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
+import { connect } from 'react-redux'
+
+import { logMe } from '../../../../actions/me'
+
+import { fetchWrap } from '../../../../services/fetchWrap'
 
 class AuthFacebook extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === 'facebookOAuth2') {
-			fetch('/login/oauth/facebook/', {
+			fetchWrap('/login/oauth/facebook/', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
 					code: queryString.parse(window.location.search).code
 				})
 			})
-			.then(res => res.json())
-			.then(res => console.log(res));
+			.then(payload => {
+				console.log(payload)
+				this.props.dispatch(logMe(payload))
+			})
+			.catch(() => {})
 		}
 	}
 
@@ -32,4 +40,11 @@ class AuthFacebook extends Component {
 	}
 }
 
-export default AuthFacebook;
+function mapStateToProps(state) {
+	const { isAuthenticated } = state.handleMe
+	return ({
+		isAuthenticated
+	})
+}
+
+export default connect(mapStateToProps)(AuthFacebook)
