@@ -33,12 +33,13 @@ router.post('/', function(req, res, next) {
 				email: apiRes.body.email,
 				profilePic: apiRes.body.image_url,
 				oauth: {
-					42: apiRes.body.id
+					"42": toString(apiRes.body.id)
 				}
 			};
 			
 			signupModule(req, post, true, (result) => {
 				console.log(result)
+				console.log(req.session._id)
 				res.status(201).json(result);
 			});
 		})

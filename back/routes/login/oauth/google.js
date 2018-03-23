@@ -35,6 +35,8 @@ router.post('/', function(req, res, next) {
 			
 			signupModule(req, post, true, (result) => {
 				console.log(result)
+				console.log(req.session._id)
+				
 				res.status(201).json(result);
 			});
 		})

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const got = require('got');
 
+const signupModule = require("../../../src/signupModule");
+
 router.post('/', function(req, res, next) {
 	if (req.session && req.session._id) {
 		res.sendStatus(300);
@@ -18,7 +20,26 @@ router.post('/', function(req, res, next) {
 			'&access_token=' + JSON.parse(apiRes.body).access_token);
 		})
 		.then(apiRes => {
-			res.status(200).json(JSON.parse(apiRes.body));
+			const infos = JSON.parse(apiRes.body);
+			const post = {
+				firstName: infos.first_name,
+				lastName: infos.last_name,
+				profilePic: infos.picture.data.url,
+				oauth: {
+					facebook: infos.id
+				}
+			};
+
+			if (infos.email) {
+				post.email = infos.email;
+			}
+
+			signupModule(req, post, true, (result) => {
+				console.log(result)
+				console.log(req.session._id)
+				
+				res.status(201).json(result);
+			});
 		})
 		.catch(err => res.json(err));
 	}
