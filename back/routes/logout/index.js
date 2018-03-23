@@ -8,7 +8,7 @@ router.delete('/', function(req, res, next) {
 		res.status(202).end();
 	}
 	else {
-		res.sendStatus(401);
+		res.sendStatus(300);
 	}
 });
 

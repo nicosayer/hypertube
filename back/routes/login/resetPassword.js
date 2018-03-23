@@ -8,55 +8,61 @@ const transporter = require('../../src/mailer');
 
 
 router.post('/', function(req, res, next) {
-
-	const post = req.body;
-	var db = mongo.getDb();
-	const collection = db.collection('users');
-
-	if (!post.login) {
-		res.json({error: "Login is missing"});
+	if (req.session && req.session._id) {
+		res.sendStatus(300);
 	}
 	else {
-		collection.findOne(
-		{ $or:
-			[
-				{email: {$regex: new RegExp("^" + post.login + "$", "i")}},
-				{login: {$regex: new RegExp("^" + post.login + "$", "i")}}
-			]
-		}, function (err, result) {
-			if (err) throw err
-			const mongoResult = result
+		const post = req.body;
+		var db = mongo.getDb();
+		const collection = db.collection('users');
 
-			if (result === null) {
-				res.status(400).json({error: "No user found"});
-			}
-			else {
-				const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));
+		if (!post.login) {
+			res.json({error: "Login is missing"});
+		}
+		else {
+			collection.findOne(
+				{ $or:
+					[
+						{email: {$regex: new RegExp("^" + post.login + "$", "i")}},
+						{login: {$regex: new RegExp("^" + post.login + "$", "i")}}
+					]
+				}, function (err, result) {
+					if (err) throw err
+					const mongoResult = result
 
-				let mailOptions = {
-					from: '"Jean Marc Morandini" <ericnicogor@gmail.com>',
-					to: mongoResult.email,
-					subject: 'Hypertube - Nouveau mot de passe',
-					text: 'Voici ton nouveau mot de passe : ' + newPassword,
-					html: '<b>Voici ton nouveau mot de passe : </b>' + newPassword
-				};
+					if (result === null) {
+						res.status(300).json({error: "No user found"});
+					}
+					else {
+						const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));
 
-				transporter.sendMail(mailOptions, (error, info) => {
-					if (error) throw error;
+						let mailOptions = {
+							from: '"Jean Marc Morandini" <ericnicogor@gmail.com>',
+							to: mongoResult.email,
+							subject: 'Hypertube - Nouveau mot de passe',
+							text: 'Voici ton nouveau mot de passe : ' + newPassword,
+							html: '<b>Voici ton nouveau mot de passe : </b>' + newPassword
+						};
 
-					bcrypt.genSalt(10, function(err, salt) {
-						bcrypt.hash(newPassword, salt, function(err, hash) {
-							collection.update(
-								{ $or: [ {email: post.login}, {login: post.login} ] },
-								{ $set: {password: hash}}, function (err, result) {
-								if (err) throw err;
-								res.sendStatus(202);
+						transporter.sendMail(mailOptions, (error, info) => {
+							if (error) throw error;
+
+							bcrypt.genSalt(10, function(err, salt) {
+								bcrypt.hash(newPassword, salt, function(err, hash) {
+									collection.update(
+										{ $or: [ {email: post.login}, {login: post.login} ] },
+										{ $set: {password: hash}}, function (err, result) {
+											if (err) throw err;
+											res.sendStatus(202);
+										}
+									);
+								});
 							});
 						});
-					});
-				});
-			}
-		});
+					}
+				}
+			);
+		}
 	}
 });
 

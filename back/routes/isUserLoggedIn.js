@@ -11,10 +11,11 @@ router.get('/', function(req, res, next) {
 
 		collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 			if (error) throw error;
-			res.status(202).json(result);
+			res.status(200).json(result);
 		})
-	} else {
-		res.sendStatus(403);
+	}
+	else {
+		res.sendStatus(300);
 	}
 });
 
