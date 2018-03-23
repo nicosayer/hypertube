@@ -5,7 +5,7 @@ class AuthFacebook extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === 'facebookOAuth2') {
-			fetch('/oauth/facebook/', {
+			fetch('/login/oauth/facebook/', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({

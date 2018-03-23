@@ -7,9 +7,9 @@ import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/Input'
 import Erreur from '../../components/Erreur'
 
-import Auth42 from './components/OAuth/42'
-import AuthFacebook from './components/OAuth/Facebook'
-import AuthGoogle from './components/OAuth/Google'
+import Auth42 from './OAuth/42'
+import AuthFacebook from './OAuth/Facebook'
+import AuthGoogle from './OAuth/Google'
 
 class LogIn extends Component {
 

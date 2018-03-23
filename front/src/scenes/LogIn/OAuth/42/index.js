@@ -5,7 +5,7 @@ class Auth42 extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === '42OAuth2') {
-			fetch('/oauth/42/', {
+			fetch('/login/oauth/42/', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({

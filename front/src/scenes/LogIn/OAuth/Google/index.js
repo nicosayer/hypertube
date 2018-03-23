@@ -5,7 +5,7 @@ class AuthGoogle extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.hash).state === 'googleOAuth2') {
-			fetch('/oauth/google/', {
+			fetch('/login/oauth/google/', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
