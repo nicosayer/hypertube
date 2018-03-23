@@ -85,8 +85,8 @@ class SignIn extends Component {
 
 	handleInputValidation(name, error) {
 		var tmp = [];
-		for (var error in error) {
-			switch(error) {
+		for (var err in error) {
+			switch(err) {
 				case 'minLen':
 				tmp.push(name + ' is too short');
 				break;
