@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
 		const collection = db.collection('users');
 
 		if (!post.login) {
-			res.json({login: ["Login is missing"]});
+			res.json(['login']);
 		}
 		else {
 			collection.findOne(
@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
 					const mongoResult = result
 
 					if (result === null) {
-						res.status(300).json({login: ["No user found"]});
+						res.status(300).json(['login']);
 					}
 					else {
 						const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));
