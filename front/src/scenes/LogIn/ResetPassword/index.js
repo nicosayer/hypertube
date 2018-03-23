@@ -24,9 +24,10 @@ class ResetPassword extends React.Component {
 	handleFormSubmit(event) {
 		event.preventDefault();
 		var error = {}
-		if (this.state.login.length === 0)
-		error.login = ["Login field can't be empty"]
-		if (Object.keys(this.state.error).length === 0) {
+		if (this.state.login.length === 0) {
+			error.login = ["Login field can't be empty"]
+		}
+		if (Object.keys(error).length === 0) {
 			fetchWrap('/login/resetPassword', {
 				method: 'POST',
 				credentials: 'include',
@@ -37,9 +38,13 @@ class ResetPassword extends React.Component {
 					login: this.state.login
 				})
 			})
-			.then(data => {NotificationManager.success("Email sent!!", 'Reset', 5000, () => {})})
+			.then(data => {
+				NotificationManager.success("Email sent!!", 'Reset', 5000, () => {})
+				this.props.history.push(`/login`)
+			})
 			.catch((error) => {
-				console.log(error)
+				if (error)
+					this.setState({ error })
 			});
 		}
 		else {
