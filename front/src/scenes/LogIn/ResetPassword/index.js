@@ -15,7 +15,8 @@ class ResetPassword extends React.Component {
 		this.state = {
 			login: '',
 			error: {},
-			status: false
+			status: false,
+			loading: false
 		}
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -28,6 +29,7 @@ class ResetPassword extends React.Component {
 			error.login = ["Login field can't be empty"]
 		}
 		if (Object.keys(error).length === 0) {
+			this.setState({ loading: true })
 			fetchWrap('/login/resetPassword', {
 				method: 'POST',
 				credentials: 'include',
@@ -45,6 +47,7 @@ class ResetPassword extends React.Component {
 			.catch((error) => {
 				if (error)
 					this.setState({ error })
+				this.setState({ loading: false })
 			});
 		}
 		else {
@@ -59,6 +62,7 @@ class ResetPassword extends React.Component {
 	render() {
 		return (
 			<div>
+			 <div>
 				<Link to='/'>Back...</Link>
 				<form onSubmit={this.handleFormSubmit} >
 					<Input
@@ -72,7 +76,11 @@ class ResetPassword extends React.Component {
 					<input type='submit' value="Reset"/>
 				</form>
 				<Error error={this.state.error} />
+				</div>
+				{this.state.loading && <h1>Chargement...</h1> }
 			</div>
+			
+			
 		)
 	}
 }
