@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 import { logMe } from '../../actions/me'
@@ -47,8 +47,8 @@ class LogIn extends Component {
 				})
 			})
 			.then(payload => {
+				//console.log(payload)
 				this.props.dispatch(logMe(payload))
-				this.setState({ errors: {} })
 			})
 			.catch(errors => {
 				if (errors)
@@ -65,9 +65,6 @@ class LogIn extends Component {
 	}
 
 	render() {
-		if (this.props.isAuthenticated) {
-			return <Redirect to="/" />
-		}
 
 		return (
 			<div className="formBox marginTop">
