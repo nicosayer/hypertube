@@ -17,7 +17,13 @@ router.post('/', function(req, res, next) {
 		res.json({error: "Login is missing"});
 	}
 	else {
-		collection.findOne({ $or: [ {email: post.login}, {login: post.login} ] }, function (err, result) {
+		collection.findOne(
+		{ $or:
+			[
+				{email: {$regex: new RegExp("^" + post.login + "$", "i")}},
+				{login: {$regex: new RegExp("^" + post.login + "$", "i")}}
+			]
+		}, function (err, result) {
 			if (err) throw err
 			const mongoResult = result
 

@@ -11,17 +11,23 @@ router.post('/', function(req, res, next) {
 	const collection = db.collection('users');
 
 	if (!post.login || !post.password) {
-		res.status(400).json({fields: ["Some informations are missing"]});
+		res.sendStatus(400).json({fields: ["Some informations are missing"]});
 	}
 	else {
 		post.login = post.login.trim();
 
-		collection.findOne({ $or: [ {email: post.login}, {login: post.login} ] }, function (err, result) {
+		collection.findOne(
+		{ $or:
+			[
+				{email: {$regex: new RegExp("^" + post.login + "$", "i")}},
+				{login: {$regex: new RegExp("^" + post.login + "$", "i")}}
+			]
+		}, function (err, result) {
 			if (err) throw err
 			const mongoResult = result
 
 			if (result === null) {
-				res.status(400).json({login: ["No user was found with that username"]});
+				res.sendStatus(400).json({login: ["No user was found with that username"]});
 			}
 			else {
 				const password = result.password;
@@ -30,11 +36,11 @@ router.post('/', function(req, res, next) {
 					if (error) throw error;
 
 					if (result !== true) {
-						res.status(400).json({password: ["The password is incorrect"]});
+						res.sendStatus(400).json({password: ["The password is incorrect"]});
 					}
 					else {
 						req.session._id = mongoResult._id;
-						res.status(202).json(mongoResult);
+						res.sendStatus(202).json(mongoResult);
 					}
 				});
 			}

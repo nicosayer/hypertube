@@ -11,6 +11,8 @@ router.post('/', function(req, res, next) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
+
+
 	Object.keys(post).filter(function(key, index) {
 		if (key === "password") {
 			return false;
@@ -19,6 +21,12 @@ router.post('/', function(req, res, next) {
 	}).map(function(key, index) {
 		post[key] = post[key].trim();
 	});
+
+	post.firstName = post.firstName.toLowerCase().replace(/\s+/g, ' ');
+	post.lastName = post.lastName.toLowerCase().replace(/\s+/g, ' ');
+	post.email = post.email.toLowerCase();
+
+
 
 	if (!(post.firstName && post.lastName && post.login && post.email && post.password)) {
 		if (errors.fields === undefined)
@@ -111,6 +119,8 @@ router.post('/', function(req, res, next) {
 	   post[key] = htmlspecialchars(post[key]);
 	});
 
+
+
 	collection.findOne({email: post.email}, function (err, result) {
 		if (err) throw err;
 
@@ -133,20 +143,17 @@ router.post('/', function(req, res, next) {
 				bcrypt.genSalt(10, function(err, salt) {
 					bcrypt.hash(post.password, salt, function(err, hash) {
 						post.password = hash;
-						post.firstName = post.firstName.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-						post.lastName = post.lastName.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-						post.firstName = post.firstName.replace(/\s+/g, ' ');
-						post.lastName = post.lastName.replace(/\s+/g, ' ');
+						
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
 
 							req.session._id = result.ops[0]._id;
-							res.status(202).json(result.ops[0]);
+							res.sendStatus(202).json(result.ops[0]);
 						});
 					});
 				});
 			} else {
-				res.status(400).json(errors)
+				res.sendStatus(400).json(errors)
 			}
 
 		});
