@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
 				email: apiRes.body.email,
 				profilePic: apiRes.body.image_url,
 				oauth: {
-					"42": toString(apiRes.body.id)
+					"42": apiRes.body.id
 				}
 			};
 			
