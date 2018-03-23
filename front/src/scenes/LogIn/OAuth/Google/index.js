@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router';
 
 import { logMe } from '../../../../actions/me'
 
@@ -18,6 +19,7 @@ class AuthGoogle extends Component {
 		if (queryString.parse(window.location.hash).state === 'googleOAuth2') {
 			fetchWrap('/login/oauth/google/', {
 				method: 'POST',
+				credentials: 'include',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
 					access_token: queryString.parse(window.location.hash).access_token
@@ -60,4 +62,4 @@ function mapStateToProps(state) {
 	})
 }
 
-export default connect(mapStateToProps)(AuthGoogle)
+export default withRouter(connect(mapStateToProps)(AuthGoogle))

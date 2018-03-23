@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router';
 
 import { logMe } from '../../../../actions/me'
 
@@ -59,4 +60,4 @@ function mapStateToProps(state) {
 	})
 }
 
-export default connect(mapStateToProps)(AuthFacebook)
+export default withRouter(connect(mapStateToProps)(AuthFacebook))

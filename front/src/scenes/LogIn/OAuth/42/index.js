@@ -47,7 +47,12 @@ class Auth42 extends Component {
 		const scope = 'public';
 		const state = '42OAuth2';
 		const response_type = 'code';
-		window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&state=' + state + '&response_type=' + response_type;
+		const url = 'https://api.intra.42.fr/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&state=' + state + '&response_type=' + response_type;
+
+		window.open(url, '_blank', 'toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=500, width=720, height=628');
+		
+		// window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&state=' + state + '&response_type=' + response_type;
+	
 	}
 
 	render() {
