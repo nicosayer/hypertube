@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-var mongo = require('../../mongo');
+var mongo = require('../mongo');
 const mongodb = mongo.getMongodb();
 
 router.get('/', function(req, res, next) {
