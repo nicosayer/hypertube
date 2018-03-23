@@ -37,9 +37,9 @@ app.use('/login/oauth/42', require('./routes/login/oauth/42'));
 app.use('/login/oauth/Facebook', require('./routes/login/oauth/Facebook'));
 app.use('/login/oauth/Google', require('./routes/login/oauth/Google'));
 
-app.use('/signup', require('./routes/signup/'));
+app.use('/signup', require('./routes/signup'));
 
-app.use('/logout', require('./routes/logout/'));
+app.use('/logout', require('./routes/logout'));
 
 app.use('/home/getUserInfos', require('./routes/home/getUserInfos'));
 
