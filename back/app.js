@@ -32,7 +32,7 @@ app.use(session({
 app.use('/isUserLoggedIn', require('./routes/isUserLoggedIn'));
 
 app.use('/login', require('./routes/login/'));
-app.use('/resetPassword', require('./routes/login/resetPassword'));
+app.use('/login/resetPassword', require('./routes/login/resetPassword'));
 app.use('/login/oauth/42', require('./routes/login/oauth/42'));
 app.use('/login/oauth/Facebook', require('./routes/login/oauth/Facebook'));
 app.use('/login/oauth/Google', require('./routes/login/oauth/Google'));
