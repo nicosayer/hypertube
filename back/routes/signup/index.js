@@ -11,7 +11,6 @@ router.post('/', function(req, res, next) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
-
 	Object.keys(post).filter(function(key, index) {
 		if (key === "password") {
 			return false;
@@ -34,7 +33,7 @@ router.post('/', function(req, res, next) {
 	}
 
 
-	if (post.login && !(/^[a-z0-9_]+$/i.test(post.login))) {
+	if (post.login && !(/^[a-zà-ÿ0-9_]+$/i.test(post.login))) {
 		if (errors.login === undefined)
 			errors.login = [];
 		errors.login.push("Your login should contain only letters, numbers and underscores");
@@ -52,7 +51,7 @@ router.post('/', function(req, res, next) {
 		errors.firstName.push("Maximum length for your first name is 20 characters");
 	}
 
-	if (post.firstName && !(/^[a-z-]+$/i.test(post.firstName))) {
+	if (post.firstName && !(/^[a-zà-ÿ ]+$/i.test(post.firstName))) {
 		if (errors.firstName === undefined)
 			errors.firstName = [];
 		errors.firstName.push("Your first name should contain only letters and dashes");
@@ -71,7 +70,7 @@ router.post('/', function(req, res, next) {
 		errors.lastName.push("Maximum length for your last name is 20 characters");
 	}
 
-	if (post.lastName && !(/^[a-z-]+$/i.test(post.lastName))) {
+	if (post.lastName && !(/^[a-zà-ÿ ]+$/i.test(post.lastName))) {
 		if (errors.lastName === undefined)
 			errors.lastName = [];
 		errors.lastName.push("Your last name should contain only letters and dashes");
@@ -136,12 +135,13 @@ router.post('/', function(req, res, next) {
 						post.password = hash;
 						post.firstName = post.firstName.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 						post.lastName = post.lastName.trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-
+						post.firstName = post.firstName.replace(/\s+/g, ' ');
+						post.lastName = post.lastName.replace(/\s+/g, ' ');
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
 
 							req.session._id = result.ops[0]._id;
-							res.sendStatus(201);
+							res.status(202).json(result);
 						});
 					});
 				});
