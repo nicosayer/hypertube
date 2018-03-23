@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mongo = require('../../mongo');
-const mongodb = mongo.getMongodb()
+const mongodb = mongo.getMongodb();
 
 router.get('/', function(req, res, next) {
 
@@ -13,11 +13,11 @@ router.get('/', function(req, res, next) {
 
 		collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 			if (error) throw error;
-			res.status(200).json(result);
+			res.sendStatus(202).json(result);
 		})
 	}
 	else {
-		res.status(403).json({error: 'User not connected'});
+		res.sendStatus(403).json({error: 'User not connected'});
 	}
 });
 
