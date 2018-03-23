@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 import { logMe } from '../../actions/me'
@@ -18,8 +18,7 @@ class LogIn extends Component {
 		this.state = {
 			login: '',
 			password: '',
-			errors: {},
-			status: false
+			errors: {}
 		}
 		this.handleFormSubmit = this.handleFormSubmit.bind(this)
 		this.handleInputChange = this.handleInputChange.bind(this)
@@ -28,7 +27,14 @@ class LogIn extends Component {
 
 	handleFormSubmit(event) {
 		event.preventDefault()
-		if (Object.keys(this.state.errors).length === 0 || this.state.status) {
+		var errors = {}
+		if (!this.state.login) {
+			errors.login = ['Login field can\'t be empty']
+		}
+		if (!this.state.password) {
+			errors.password = ['Password field can\'t be empty']
+		}
+		if (Object.keys(errors).length === 0) {
 			fetchWrap('/login', {
 				method: 'POST',
 				credentials: 'include',
@@ -41,12 +47,16 @@ class LogIn extends Component {
 				})
 			})
 			.then(payload => {
+				//console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(errors => {
 				if (errors)
-				this.setState({ errors })
+					this.setState({ errors })
 			})
+		}
+		else {
+			this.setState({ errors })
 		}
 	}
 
@@ -55,6 +65,7 @@ class LogIn extends Component {
 	}
 
 	render() {
+
 		return (
 			<div className="formBox marginTop">
 				<span className='fontBig block'>Log In</span>
