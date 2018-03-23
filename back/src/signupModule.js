@@ -9,6 +9,7 @@ module.exports = function(req, post, isOAuth, callback) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
+
 	Object.keys(post).filter(function(key, index) {
 		if (key === "password") {
 			return false;
@@ -19,7 +20,6 @@ module.exports = function(req, post, isOAuth, callback) {
 			post[key] = post[key].trim();
 		}
 	});
-
 
 	post.firstName = post.firstName.toLowerCase().replace(/\s+/g, ' ');
 	post.lastName = post.lastName.toLowerCase().replace(/\s+/g, ' ');

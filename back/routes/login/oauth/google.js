@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const got = require('got');
 
+const signupModule = require("../../../src/signupModule");
+
 router.post('/', function(req, res, next) {
 	if (req.session && req.session._id) {
 		res.sendStatus(300);
@@ -19,7 +21,22 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		.then(apiRes => {
-			res.status(200).json(apiRes.body);
+			const id = apiRes.body.resourceName.substring(7);
+
+			const post = {
+				firstName: apiRes.body.names[0].givenName,
+				lastName: apiRes.body.names[0].familyName,
+				email: apiRes.body.emailAddresses[0].value,
+				profilePic: apiRes.body.photos[0].url,
+				oauth: {
+					google: id
+				}
+			};
+			
+			signupModule(req, post, true, (result) => {
+				console.log(result)
+				res.status(201).json(result);
+			});
 		})
 		.catch(err => res.json(err));
 	}
