@@ -17,6 +17,7 @@ class Auth42 extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === '42OAuth2') {
+
 			fetchWrap('/login/oauth/42/', {
 				method: 'POST',
 				credentials: 'include',
@@ -26,6 +27,7 @@ class Auth42 extends Component {
 				})
 			})
 			.then(payload => {
+				console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(() => {})
@@ -33,7 +35,8 @@ class Auth42 extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.isAuthenticated && nextProps.isAuthenticated){
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.search).state === '42OAuth2'){
+			console.log(this.props.history)
 			this.props.history.push('/')		
 		}
 	}

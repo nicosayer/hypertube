@@ -32,7 +32,7 @@ class AuthFacebook extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.isAuthenticated && nextProps.isAuthenticated){
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.search).state === 'facebookOAuth2'){
 			this.props.history.push('/')		
 		}
 	}

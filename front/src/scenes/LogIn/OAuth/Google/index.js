@@ -32,7 +32,7 @@ class AuthGoogle extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.isAuthenticated && nextProps.isAuthenticated){
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.hash).state === 'googleOAuth2'){
 			this.props.history.push('/')		
 		}
 	}
