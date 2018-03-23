@@ -141,7 +141,7 @@ router.post('/', function(req, res, next) {
 							if (err) throw err;
 
 							req.session._id = result.ops[0]._id;
-							res.status(202).json(result);
+							res.status(202).json(result.ops[0]);
 						});
 					});
 				});
