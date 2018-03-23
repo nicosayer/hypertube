@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 
 		collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 			if (error) throw error;
-			res.sendStatus(202).json(result);
+			res.status(202).json(result);
 		})
 	}
 	else {
