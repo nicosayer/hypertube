@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 import { NotificationManager, NotificationContainer} from 'react-notifications';
 
+import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/Input'
 import Erreur from '../../components/Erreur'
@@ -18,7 +20,6 @@ class SignIn extends Component {
 			firstName: '',
 			lastName: '',
 			email: '',
-			isSignedIn: false,
 			errors: {}
 		}
 		this.handleInputValidation = this.handleInputValidation.bind(this);
@@ -60,9 +61,10 @@ class SignIn extends Component {
 					password: this.state.password
 				})
 			})
-			.then(() => {
+			.then((payload) => {
+				//console.log(payload)
 				NotificationManager.success('Sign up successfull, now let\'s stream!!', 'Signed Up!', 5000, () => {});
-				this.setState({ isSignedIn: true })
+				this.props.dispatch(logMe(payload))
 			})
 			.catch(errors => {
 				if (errors)
@@ -213,4 +215,11 @@ class SignIn extends Component {
 	}
 }
 
-export default SignIn
+function mapStateToProps(state) {
+	const { isAuthenticated } = state.handleMe
+	return ({
+		isAuthenticated
+	})
+}
+
+export default connect(mapStateToProps)(SignIn)
