@@ -128,14 +128,14 @@ router.post('/', function(req, res, next) {
 
 		collection.findOne({email: post.email}, function (err, result) {
 			if (err) throw err;
-
+			
 			if (result !== null) {
 				if (errors.email === undefined)
 				errors.email = [];
 				errors.email.push("This email is already taken");
 			}
 
-			collection.findOne({login: post.login}, function (err, result) {
+			collection.findOne({login: {$regex: new RegExp("^" + post.login + "$", "i")}}, function (err, result) {
 				if (err) throw err;
 
 				if (result !== null) {

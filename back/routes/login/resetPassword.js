@@ -9,7 +9,7 @@ const transporter = require('../../src/mailer');
 
 router.post('/', function(req, res, next) {
 	if (req.session && req.session._id) {
-		res.sendStatus(300);
+		res.sendStatus(400);
 	}
 	else {
 		const post = req.body;
@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
 		const collection = db.collection('users');
 
 		if (!post.login) {
-			res.json({error: "Login is missing"});
+			res.json({login: ["Login is missing"]});
 		}
 		else {
 			collection.findOne(
@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
 					const mongoResult = result
 
 					if (result === null) {
-						res.status(300).json({error: "No user found"});
+						res.status(400).json({login: ["No user found"}]);
 					}
 					else {
 						const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));
