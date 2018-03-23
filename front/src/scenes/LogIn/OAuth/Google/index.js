@@ -8,6 +8,12 @@ import { fetchWrap } from '../../../../services/fetchWrap'
 
 class AuthGoogle extends Component {
 
+	constructor(props) {
+		super(props)
+		
+		this.clicked = this.clicked.bind(this);
+	}
+
 	componentDidMount() {
 		if (queryString.parse(window.location.hash).state === 'googleOAuth2') {
 			fetchWrap('/login/oauth/google/', {
@@ -25,11 +31,17 @@ class AuthGoogle extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated){
+			this.props.history.push('/')		
+		}
+	}
+
 	clicked() {
 		const client_id = '414902509468-bhe8pbagi4j8hsa0i7ole5s3h52ng7aj.apps.googleusercontent.com';
 		const redirect_uri = 'https://localhost:3000'
 		const response_type = 'token'
-		const scope = 'https://www.googleapis.com/auth/userinfo.profile';
+		const scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
 		const state = 'googleOAuth2'
 		window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&response_type=' + response_type + '&scope=' + scope + '&state=' + state;
 	}
