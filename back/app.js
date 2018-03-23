@@ -40,6 +40,8 @@ app.use('/oauth/42', require('./routes/login/oauth/42'));
 app.use('/oauth/Facebook', require('./routes/login/oauth/Facebook'));
 app.use('/oauth/Google', require('./routes/login/oauth/Google'));
 
+app.use('/home/getUserInfos', require('./routes/home/getUserInfos'));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404));

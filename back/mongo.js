@@ -1,6 +1,7 @@
 const express = require('express');
 
-const MongoClient = require('mongodb').MongoClient;
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
 const url = 'mongodb://localhost:27017/hypertube';
 const dbName = 'hypertube';
 
@@ -20,5 +21,9 @@ module.exports = {
 
 	getDb() {
 		return db;
+	},
+
+	getMongodb() {
+		return mongodb;
 	}
 }
