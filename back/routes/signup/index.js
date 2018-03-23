@@ -13,7 +13,7 @@ router.post('/', function(req, res, next) {
 	else {
 		const post = req.body;
 
-		signupModule(req, post, true, (result) => {
+		signupModule(req, post, false, (result) => {
 			res.status(201).json(result);
 		});
 	}
