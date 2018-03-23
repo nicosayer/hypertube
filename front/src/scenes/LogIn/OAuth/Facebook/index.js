@@ -19,6 +19,7 @@ class AuthFacebook extends Component {
 		if (queryString.parse(window.location.search).state === 'facebookOAuth2') {
 			fetchWrap('/login/oauth/facebook/', {
 				method: 'POST',
+				credentials: 'include',
 				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({
 					code: queryString.parse(window.location.search).code
