@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux'
+
 import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'
 import Input from '../../components/Input'
@@ -59,7 +60,8 @@ class LogIn extends Component {
 		}
 
 		return (
-			<div>
+			<div className="formBox marginTop">
+				<span className='fontBig block'>Log In</span>
 				<Link to='/signup'>Create an account</Link>
 				<form onSubmit={this.handleFormSubmit}>
 					<Input
@@ -76,9 +78,10 @@ class LogIn extends Component {
 						onChange={this.handleInputChange}
 						/>
 					<br />
+					<Link to='/reset'>Forgot your password?</Link>
+					<br />
 					<input type='submit' value="Log in"/>
 				</form>
-				<Link to='/reset'>Forgot your password?</Link>
 				<Erreur errors={this.state.errors} />
 				<Auth42 />
 				<br/>

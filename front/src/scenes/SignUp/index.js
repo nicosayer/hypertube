@@ -112,9 +112,10 @@ class SignIn extends Component {
 			return <Redirect to='/login' />
 		}
 		return (
-			<div>
+			<div className='formBox marginTop'>
+				<span className='fontBig block'>Sign up</span>
 				<Link to={{pathname: '/'}}>You already have an account ?</Link>
-				<form className='inscription' onSubmit={this.handleFormSubmit}>
+				<form onSubmit={this.handleFormSubmit}>
 					<Input
 						type='text'
 						name='login'

@@ -1,3 +1,56 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+	background: #1A1D23;
+	color: #f1f1f1;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+div {
+	display: inline-block;
+}
+
+input {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 100%;
+	padding: 5px 10px;
+	margin: 5px 10px;
+	border: 0px;
+	border-radius: 5px;
+}
+
+.formBox {
+	background: #2A292F;
+	padding: 10px 40px;
+}
+
 .invalidInput {
 	border: solid 5px red;
+}
+
+.fontBig {
+	font-size: 200%;
+}
+
+.fontSmall {
+	font-size: 50%;
+}
+
+.marginTop {
+	margin-top: 10px;
+}
+
+.marginLeft {
+	margin-left: 10px;
+}
+
+.block {
+	display: block;
 }
