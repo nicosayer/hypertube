@@ -29,6 +29,9 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+const socketIO = require('socket.io');
+const io = socketIO.listen(server);
+file1 = require('../routes/video')(io)
 /**
  * Normalize a port into a number, string, or false.
  */
