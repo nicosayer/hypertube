@@ -1,39 +1,90 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-//import ss from 'socket.io-stream'
+import ss from 'socket.io-stream'
 
 class Video extends Component {
 
 	constructor(props) {
 		super(props)
+		this.state = {
+			result: []
+		}
 	}
 
-	componentDidMount = () => {
+	componentWillReceiveProps(nextProps) {
 		
-		var video = document.querySelector('video');
-	
-		this.props.socket.on('stream', (link) => {
-			//console.log(link)
-			video.src = link
-		})
+		
+		
+		if (nextProps.isConnect)
+		{
+			var video = document.querySelector('video');
+			var mediaSource = new MediaSource;
+			var sourceBuffer
+			  //console.log(mediaSource.readyState); // closed
+			  video.src = URL.createObjectURL(mediaSource);
+			  mediaSource.addEventListener('sourceopen', () => {
+			  	sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+			  })
+		  var video = document.querySelector('video');
+			nextProps.socket.on('stream', (link) => {
+				//console.log(link)
+				video.src = link
+				video.play()
+			})
+			nextProps.socket.on('searchResult', (torrents) => {
+				console.log(torrents)
+				this.setState({ result: torrents })
+			})
+			ss(nextProps.socket).on('test', function(stream) {
+			  console.log("test")
+			  stream.on('data', (chunk) => {
+			  	console.log(chunk)
+				  	if (!sourceBuffer.updating)
+				  		sourceBuffer.appendBuffer(chunk);
+				  });
+			  })
+		}
 	}
 
-	
+	/*componentWillReceiveProps(nextProps) {
+		if (!this.props.isConnect && nextProps.isConnect)
+		{
+			var video = document.querySelector('video');
+			nextProps.socket.on('stream', (link) => {
+				//console.log(link)
+				video.src = link
+				video.play()
+			})
+			nextProps.socket.on('searchResult', (torrents) => {
+				console.log(torrents)
+				this.setState({ result: torrents })
+			})
+		}
+	}*/
 
 	click = (e) => {
-		alert(e.target.value)
-		this.props.socket.emit('search', e.target.value)
+		e.preventDefault()
+		this.props.socket.emit('search', this.textInput.value)
+	}
+
+	truc = (key) => {
+		this.props.socket.emit('torrent', key)
 	}
 
 	render() {
-
-		const result = this.state.result.map((item,key))
+		console.log(this.state.result)
+		const result = this.state.result.map((item,key) => 
+			<div id={key} key={key} onClick={() => this.truc(key)} >{item.title}</div>
+		)
 
 		return (
 			<div  >
-			<input type="text" />
-			<input type="submit" value="search" onClick={(e) => this.click(e)} />
+			<form onSubmit={(e) => this.click(e)}>
+			<input type="text" ref={(input) => { this.textInput = input; }}/>
+			<input type="submit" value="search"  /><br />
+			</form>
+			{this.state.result.length !==0 && <div>{result}</div>}
 			<video controls width="80%"></video>
 			</div>
 		)
