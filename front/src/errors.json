@@ -18,5 +18,8 @@
 	},
 	"resetPassword": {
 		"login": "Enter your login or email"
+	},
+	"profile": {
+		"oldPassword": "Your password doesn't match"
 	}
 }

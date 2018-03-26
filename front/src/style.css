@@ -126,3 +126,7 @@ div, p {
 	box-sizing: border-box;
 	width: 100%;
 }
+
+.capital {
+    text-transform: capitalize;   
+  }

@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {NotificationManager} from 'react-notifications';
@@ -78,7 +80,7 @@ class ResetPassword extends React.Component {
 					<span className='lignBottom fontBig block'>Reset Password</span>
 					<form className='fontLeft' onSubmit={this.handleFormSubmit} >
 						<div className='fontGrey block fontSmall'>
-							<label for='login'>Login or email</label>
+							<label htmlFor='login'>Login or email</label>
 						</div>
 						<Input
 							id='login'

@@ -46,6 +46,7 @@ class SignUp extends Component {
 		if (!this.state.email) {
 			error.email = 'default';
 		}
+		
 		if (!Object.keys(error).length) {
 			console.log(1)
 			fetchWrap('/signup', {
@@ -103,7 +104,7 @@ class SignUp extends Component {
 				<span className='lignBottom fontBig block'>Sign up</span>
 				<form className='fontLeft' onSubmit={this.handleFormSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label for='login'>Login</label>
+						<label htmlFor='login'>Login</label>
 					</div>
 					<Input
 						id='login'
@@ -129,7 +130,7 @@ class SignUp extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='firstName'>First Name</label>
+						<label htmlFor='firstName'>First Name</label>
 					</div>
 					<Input
 						id='firstName'
@@ -155,7 +156,7 @@ class SignUp extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='lastName' className='block'>Last Name</label>
+						<label htmlFor='lastName' className='block'>Last Name</label>
 					</div>
 					<Input
 						id='lastName'
@@ -181,7 +182,7 @@ class SignUp extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='email'>Email</label>
+						<label htmlFor='email'>Email</label>
 					</div>
 					<Input
 						id='email'
@@ -207,7 +208,7 @@ class SignUp extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='password'>Password</label>
+						<label htmlFor='password'>Password</label>
 					</div>
 					<Input
 						id='password'

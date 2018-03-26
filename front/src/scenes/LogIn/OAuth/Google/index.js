@@ -26,7 +26,6 @@ class AuthGoogle extends Component {
 				})
 			})
 			.then(payload => {
-				console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(() => {})

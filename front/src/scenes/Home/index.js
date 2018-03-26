@@ -42,20 +42,7 @@ class Home extends Component {
 
 	handleSaveSubmit(event) {
 		event.preventDefault();
-		var error = this.state.error;
-		if (!this.state.login) {
-			error.login = 'default';
-		}
-		if (!this.state.firstName) {
-			error.firstName = 'default';
-		}
-		if (!this.state.lastName) {
-			error.lastName = 'default';
-		}
-		if (!this.state.email) {
-			error.email = 'default';
-		}
-		if (!Object.keys(error).length) {
+		if (!Object.keys(this.state.error).length) {
 			fetchWrap('/changeInfos', {
 				method: 'POST',
 				headers: {
@@ -72,14 +59,11 @@ class Home extends Component {
 			.then((payload) => {
 			})
 			.catch(error => {
-				this.setState({ error: {
-					login:'default',
-					email: 'default'
-				} })
+				// this.setState({ error: {
+				// 	login:'default',
+				// 	email: 'default'
+				// } })
 			})
-		}
-		else {
-			this.setState({ error })
 		}
 	}
 
@@ -139,19 +123,19 @@ class Home extends Component {
 		return (
 			<div className='formBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
-				<form className='fontLeft' onSubmit={this.handleSaveSubmit}>
+				
+				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label for='firstName'>First Name</label>
+						<label htmlFor='firstName'>First Name</label>
 					</div>
 					<Input
 						id='firstName'
 						type='text'
 						name='firstName'
-						placeholder="First Name"
 						value={this.state.firstName}
-						className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
+						className='capital'
 						validation={{
-							minLen: 1,
+							minLen: 2,
 							maxLen: 20,
 							format: /^[a-z ]+$/gi,
 							emptyIsValid: true,
@@ -170,17 +154,16 @@ class Home extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='lastName'>Last Name</label>
+						<label htmlFor='lastName'>Last Name</label>
 					</div>
 					<Input
 						id='lastName'
 						type='text'
 						name='lastName'
-						placeholder="Last name"
 						value={this.state.lastName}
-						className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
+						className='capital'
 						validation={{
-							minLen: 1,
+							minLen: 2,
 							maxLen: 20,
 							format: /^[a-z ]+$/gi,
 							emptyIsValid: true,
@@ -199,15 +182,13 @@ class Home extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='login'>Login</label>
+						<label htmlFor='login'>Login</label>
 					</div>
 					<Input
 						id='login'
 						type='text'
 						name='login'
-						placeholder='Login'
 						value={this.state.login}
-						className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 20,
@@ -228,16 +209,15 @@ class Home extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label for='email'>Email</label>
+						<label htmlFor='email'>Email</label>
 					</div>
 					<Input
 						id='email'
 						type='text'
 						name='email'
-						placeholder="Email"
 						value={this.state.email}
 						validation={{
-							minLen: 0,
+							minLen:5,
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
 							emptyIsValid: true,
@@ -263,42 +243,50 @@ class Home extends Component {
 				</form>
 				<form className='fontLeft' onSubmit={this.handlePasswordChangeSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label for='oldPassword'>Old password</label>
+						<label htmlFor='oldPassword'>Old password</label>
 					</div>
 					<Input
 						id='oldPassword'
 						type='password'
 						name='oldPassword'
-						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 50,
+							emptyIsValid: true,
 							invalidClass: 'invalidInput',
-							validateOnChange: true
-						}}
-						maxLen={50}
-						onChange={this.handleInputChange}
-						/>
-					<div className='fontGrey block fontSmall'>
-						<label for='newPassword'>New password</label>
-					</div>
-					<Input
-						id='newPassword'
-						type='password'
-						name='newPassword'
-						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
-						validation={{
-							minLen: 6,
-							maxLen: 50,
-							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
 							validateOnChange: true
 						}}
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
 					{
-						this.state.error.hasOwnProperty('password') ?
-						<Tooltip text={errors.signup.password[this.state.error.password]} visible={true}/>
+						this.state.error.hasOwnProperty('oldPassword') ?
+						<Tooltip text={errors.signup.password} visible={true} />
+						:
+						null
+					}
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='newPassword'>New password</label>
+					</div>
+					<Input
+						id='newPassword'
+						type='password'
+						name='newPassword'
+						validation={{
+							minLen: 6,
+							maxLen: 50,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={50}
+						onChange={this.handleInputChange}
+						/>
+					{
+						this.state.error.hasOwnProperty('newPassword') ?
+						<Tooltip text={errors.signup.password} visible={true} />
 						:
 						null
 					}
