@@ -106,12 +106,12 @@ div, p {
 }
 
 @-webkit-keyframes rotation {
-		from {
-				-webkit-transform: rotate(0deg);
-		}
-		to {
-				-webkit-transform: rotate(359deg);
-		}
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(359deg);
+	}
 }
 
 .button {
@@ -128,5 +128,17 @@ div, p {
 }
 
 .capital {
-    text-transform: capitalize;   
-  }
+	text-transform: capitalize;
+}
+
+.circle {
+	border-radius: 50%;
+}
+
+.floatClear {
+	clear: both;
+}
+
+.floatLeft {
+	float: left;
+}

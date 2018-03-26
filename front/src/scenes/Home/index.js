@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { fetchWrap } from '../../services/fetchWrap'
-
 import Logout from './../LogOut';
 import Input from '../../components/Input';
 import Tooltip from '../../components/Tooltip/';
+
+import { fetchWrap } from '../../services/fetchWrap'
+
+import './style.css'
 
 const errors = require('../../errors.json');
 
@@ -123,9 +125,15 @@ class Home extends Component {
 		return (
 			<div className='formBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
-				
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
-					<div className='fontGrey block fontSmall'>
+					<img className='circle profileImg floatLeft' src='https://d34jodf30bmh8b.cloudfront.net/pictures/5720/5863/profile-1496846605-b0d01e0807dbaa4d93dfc9288e00405f.jpg' />
+					<div>
+						<span className='fontGrey fontSmall block'>
+							Your Photo
+						</span>
+						<div className='changePhotoButton'>Change photo</div>
+					</div>
+					<div className='fontGrey block fontSmall floatClear'>
 						<label htmlFor='firstName'>First Name</label>
 					</div>
 					<Input
@@ -237,7 +245,7 @@ class Home extends Component {
 					}
 					<div className='block fontRight'>
 						<div>
-							<input className='spaceTop' type='submit' value='Save'/>
+							<input className='spaceTop' type='submit' value='Save informations'/>
 						</div>
 					</div>
 				</form>
@@ -292,7 +300,7 @@ class Home extends Component {
 					}
 					<div className='block fontRight'>
 						<div>
-							<input className='spaceTop' type='submit' value='Change'/>
+							<input className='spaceTop' type='submit' value='Change my password'/>
 						</div>
 					</div>
 				</form>
