@@ -43,6 +43,8 @@ app.use('/signup', require('./routes/signup'));
 app.use('/logout', require('./routes/logout'));
 
 app.use('/home/getUserInfos', require('./routes/home/getUserInfos'));
+app.use('/home/changeInfos', require('./routes/home/changeInfos'));
+app.use('/home/changePassword', require('./routes/home/changePassword'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

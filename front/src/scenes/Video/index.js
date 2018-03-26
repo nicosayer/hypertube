@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+/*import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ss from 'socket.io-stream'
@@ -40,14 +40,14 @@ class Video extends Component {
 			  console.log("test")
 			  stream.on('data', (chunk) => {
 			  	console.log(chunk)
-				  	if (!sourceBuffer.updating)
+				  	//if (!sourceBuffer.updating)
 				  		sourceBuffer.appendBuffer(chunk);
 				  });
 			  })
 		}
 	}
 
-	/*componentWillReceiveProps(nextProps) {
+	/componentWillReceiveProps(nextProps) {
 		if (!this.props.isConnect && nextProps.isConnect)
 		{
 			var video = document.querySelector('video');
@@ -61,7 +61,7 @@ class Video extends Component {
 				this.setState({ result: torrents })
 			})
 		}
-	}*/
+	}
 
 	click = (e) => {
 		e.preventDefault()
@@ -103,7 +103,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(Video)
 
-/*var video = document.querySelector('video');
+var video = document.querySelector('video');
 if (!window.MediaSource) {
     console.log('No Media Source API available');
     return;
@@ -141,9 +141,9 @@ ss(this.props.socket).on('test', function(stream) {
 	  }
 
   })
-});*/
+});
 
-/*this.props.socket.on('data', (chunk) => {
+this.props.socket.on('data', (chunk) => {
 	//console.log((new Uint8Array(chunk)))
 	//arrayBuffer.push(chunk);
 	//video.webkitSourceAppend(new Uint8Array(chunk));
@@ -153,9 +153,9 @@ this.props.socket.on('end', () => {
 	//var video = new Blob([new Uint8Array(arrayBuffer)], { type: "video/mkv" });
 	//video.src = (window.URL || window.webkitURL).createObjectURL(video);
 	//video.webkitSourceAppend(new Uint8Array(chunk));
-})*/
+})
 
- /*stream.on('end', () => {
+ stream.on('end', () => {
   	console.log('end')
   	var testvideo = new Blob(arrayBuffer, { type: "video/mkv" });
   	console.log(video)
