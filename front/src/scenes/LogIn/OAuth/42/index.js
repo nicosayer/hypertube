@@ -11,7 +11,16 @@ class Auth42 extends Component {
 
 	constructor(props) {
 		super(props)
-
+		if (queryString.parse(window.location.search).state === '42OAuth2') {
+			this.state = {
+				loading: true
+			};
+		}
+		else {
+			this.state = {
+				loading: false
+			};
+		}
 		this.clicked = this.clicked.bind(this);
 	}
 
@@ -51,7 +60,14 @@ class Auth42 extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span>
+			<div>
+				{
+					this.state.loading ?
+					<div className='loading'><i className="fas fa-spinner"></i></div>
+					:
+					<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span>
+				}
+			</div>
 		);
 	}
 }

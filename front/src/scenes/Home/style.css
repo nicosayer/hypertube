@@ -3,13 +3,19 @@
 	height: 100px;
 	object-fit: cover;
 	margin: 0px 20px 20px 0px;
+	box-sizing: border-box;
 }
 
 .changePhotoButton {
+	font-size: 85%;
 	border: 1px solid lightgrey;
 	padding: 2px 5px;
 	background: #1A1D23;
 	border-radius: 3px;
 	margin-top: 10px;
 	cursor: pointer;
+}
+
+.profileBox {
+	width: 50vw;
 }

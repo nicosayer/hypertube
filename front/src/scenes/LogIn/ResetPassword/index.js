@@ -21,7 +21,7 @@ class ResetPassword extends React.Component {
 			login: '',
 			loading: false,
 			error: {}
-		}
+		};
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleInputValidation = this.handleInputValidation.bind(this);
