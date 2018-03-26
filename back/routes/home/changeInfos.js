@@ -4,108 +4,123 @@ const router = express.Router();
 const mongo = require('../../mongo');
 const mongodb = mongo.getMongodb();
 
-router.get('/', function(req, res, next) {
+router.post('/', function(req, res, next) {
+	console.log(req.body)
+	const { login, firstName, lastName, email } = req.body
 
-	const { login, firstname, lastname, email } = req.body
+	var errors = {}
 
-	var error = []
-
-	if (typeof login == undefined || typeof firstname == undefined || typeof lastname == undefined || typeof email == undefined) {
-		error.error = 'default';
+	if (typeof login === 'undefined' || typeof firstName === 'undefined' || typeof lastName === 'undefined' || typeof email === 'undefined') {
+		errors.error = 'default';
 	}
 	else {
+		console.log(email)
+		console.log(firstName)
+		console.log(lastName)
+		console.log(errors)
+		/*email = email.toLowerCase();
+		firstName = firstName.toLowerCase();
+		lastName = lastName.toLowerCase();
 
-		email = email.toLowerCase();
-		firstname = firstname.toLowerCase();
-		lastname = lastname.toLowerCase();
+		firstName = firstName.replace(/\s+/g, ' ');
+		lastName = lastName.replace(/\s+/g, ' ');*/
 
-		firstname = firstname.replace(/\s+/g, ' ');
-		lastname = lastname.replace(/\s+/g, ' ');
+		console.log(errors)
 
-
-		if (login.length < 4) {
-			error.login = 'default';
+		if (login.length> 0 && login.length < 4) {
+			errors.login = 'default';
 		}
 		if (login.length > 20) {
-			error.login = 'default';
+			errors.login = 'default';
 		}
 		if (!(/^[a-zà-ÿ0-9]+$/i.test(login))) {
-			error.login = 'default';
+			errors.login = 'default';
 		}
+console.log(errors)
 
-		if (email.length < 4) {
-			error.email = 'default';
+		if (email.length> 0 && email.length < 4) {
+			errors.email = 'default';
 		}
 		if (email.length > 50) {
-			error.email = 'default';
+			errors.email = 'default';
 		}
 		if (!(/^.+@.+\..+$/.test(email))) {
-			error.email = 'default';
+			errors.email = 'default';
+		}
+console.log(errors)
+
+		if (firstName.length> 0 && firstName.length < 1) {
+			errors.firstName = 'default'
+		}
+		if (firstName.length > 20) {
+			errors.firstName = 'default'
+		}
+		if (!(/^[a-zà-ÿ ]+$/i.test(firstName))) {
+			errors.firstName = 'default'
 		}
 
-
-		if (firstname.length < 1) {
-			error.firstname = 'default'
+console.log(errors)
+		if (lastName.length> 0 && lastName.length < 1) {
+			errors.lastName = 'default'
 		}
-		if (firstname.length > 20) {
-			error.firstname = 'default'
+		if (lastName.length > 20) {
+			errors.lastName = 'default'
 		}
-		if (!(/^[a-zà-ÿ ]+$/i.test(firstname))) {
-			error.firstname = 'default'
+		if (!(/^[a-zà-ÿ ]+$/i.test(lastName))) {
+			errors.lastName = 'default'
 		}
-
-
-		if (lastname.length < 1) {
-			error.lastname = 'default'
-		}
-		if (lastname.length > 20) {
-			error.lastname = 'default'
-		}
-		if (!(/^[a-zà-ÿ ]+$/i.test(lastname))) {
-			error.lastname = 'default'
-		}
-
+		console.log(errors)
 
 		/*if (change[1].length < 6) {
-			error.password = 'default'
+			errors.password = 'default'
 		}
 		if (change[1].length > 50) {
-			error.password = 'default'
+			errors.password = 'default'
 		}
 		if (!(/[a-zA-Z]/i.test(change[1]))) {
-			error.password = 'default'
+			errors.password = 'default'
 		}
 		if (!(/[0-9]/i.test(change[1]))) {
-			error.password = 'default'
+			errors.password = 'default'
 		}*/
 	}
 
 	if (!req.session || !req.session._id){
-		error.auth = 'default'
+		errors.auth = 'default'
 	}
 
-	if (error.length == 0) {
+	if (Object.keys(errors).length === 0) {
 
 		const db = mongo.getDb();
 		const collection = db.collection('users');
 
-		collection.findOne({email: email, function (error, result) {
+		var update = {}
+		if (login.length > 0)
+			update.login = login
+		if (firstName.length > 0)
+			update.firstName = firstName
+		if (lastName.length > 0)
+			update.lastName = lastName
+		console.log(update)
+
+		collection.findOne({email: email}, function (error, result) {
 			if (error) throw error;
 			
-			if (result) {
+			if (result && email.length > 0) {
 				collection.update(
 					{_id: new mongodb.ObjectId(req.session._id)},
-					{$set: {login: login, firstname: firstname, lastname: lastname}}, function (err, result) {
+					{$set: update}, function (err, result) {
 					if (err) throw err;
 
-					error.email = 'duplicate'
-					res.status(300).json(error);
+					errors.email = 'duplicate'
+					res.status(300).json(errors);
 				});
 			}
 			else {
+				update.email = email
 				collection.update(
 					{_id: new mongodb.ObjectId(req.session._id)},
-					{$set: {login: login, firstname: firstname, lastname: lastname, email: email}}, function (err, result) {
+					{$set: update}, function (err, result) {
 					if (err) throw err;
 
 					res.status(202)
@@ -114,31 +129,10 @@ router.get('/', function(req, res, next) {
 		})
 	}
 	else {
-		res.status(300).json(error);
+		res.status(300).json(errors);
 	}
 });
 
 
 module.exports = router;
 
-
-/*collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
-				if (error) throw error;
-				bcrypt.compare(change[0], result.password, function(error, result) {
-					if (error) throw error;
-
-					if (result !== true) {
-						error.password = 'wrong'
-						res.status(300).json(error);
-					}
-					else {
-						collection.update(
-							{_id: new mongodb.ObjectId(req.session._id)},
-							{$set: {password: change[1]}}, function (err, result) {
-							if (err) throw err;
-
-							res.status(202)
-						});
-					}
-				});
-			})*/
