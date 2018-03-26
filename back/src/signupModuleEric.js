@@ -123,7 +123,7 @@ module.exports = function(req, post, isOAuth, callback) {
 
 				const userResult = result;
 
-				if (result.oauth) {
+				if (result && result.oauth) {
 					var objTmp = Object.assign({}, result.oauth, post.oauth);
 				} else {
 					var objTmp = Object.assign({}, post.oauth);
