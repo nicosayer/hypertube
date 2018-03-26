@@ -107,7 +107,8 @@ class Home extends Component {
 				<Input
 					type='text'
 					name='firstName'
-					placeholder={this.state.firstName}
+					placeholder="First Name"
+					value={this.state.firstName}
 					className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
 					validation={{
 						minLen: 1,
@@ -131,7 +132,8 @@ class Home extends Component {
 				<Input
 					type='text'
 					name='lastName'
-					placeholder={this.state.lastName}
+					placeholder="Last name"
+					value={this.state.lastName}
 					className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
 					validation={{
 						minLen: 1,
@@ -151,11 +153,12 @@ class Home extends Component {
 						null
 					}
 				<br />
-				Login : {this.state.login}
+				Login : 
 				<Input
 					type='text'
 					name='login'
 					placeholder='Login'
+					value={this.state.login}
 					className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
 					validation={{
 						minLen: 6,
@@ -180,7 +183,8 @@ class Home extends Component {
 				<Input
 					type='text'
 					name='email'
-					placeholder={this.state.email}
+					placeholder="Email"
+					value={this.state.email}
 					validation={{
 						minLen: 0,
 						maxLen: 50,
@@ -217,12 +221,6 @@ class Home extends Component {
 					maxLen={50}
 					onChange={this.handleInputChange}
 					/>
-					{
-						this.state.error.hasOwnProperty('password') ?
-						<Tooltip text={errors.signup.password} visible={true}/>
-						:
-						null
-					}
 				<Input
 					type='password'
 					name='newPassword'
@@ -237,6 +235,12 @@ class Home extends Component {
 					maxLen={50}
 					onChange={this.handleInputChange}
 					/>
+					{
+						this.state.error.hasOwnProperty('password') ?
+						<Tooltip text={errors.signup.password[this.state.error.password]} visible={true}/>
+						:
+						null
+					}
 				<br />
 				<button onSubmit={this.handlePasswordChangeSubmit}>Change Password</button>
 				<br />
