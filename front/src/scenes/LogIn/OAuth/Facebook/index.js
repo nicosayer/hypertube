@@ -49,7 +49,7 @@ class AuthFacebook extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Login with Facebook</span>
+			<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span>
 		);
 	}
 }

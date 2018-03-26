@@ -232,7 +232,7 @@ class SignUp extends Component {
 					}
 					<div className='block fontRight'>
 						<div>
-							<input type='submit' value='Signup'/>
+							<input type='submit' value='Sign up'/>
 						</div>
 					</div>
 				</form>

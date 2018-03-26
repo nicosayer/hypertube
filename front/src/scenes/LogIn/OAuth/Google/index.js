@@ -50,7 +50,7 @@ class AuthGoogle extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fab fa-google spaceRight"></i>Login with Google</span>
+			<span onClick={this.clicked}><i className="fab fa-google spaceRight"></i>Connect with Google</span>
 		);
 	}
 }

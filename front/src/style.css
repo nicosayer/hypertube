@@ -33,6 +33,10 @@ div, p {
 	font-size: 200%;
 }
 
+.fontMedium {
+	font-size: 150%;
+}
+
 .fontSmall {
 	font-size: 85%;
 }
@@ -47,6 +51,10 @@ div, p {
 
 .fontLeft {
 	text-align: left;
+}
+
+.fontCenter {
+	text-align: center;
 }
 
 .fontRight {
