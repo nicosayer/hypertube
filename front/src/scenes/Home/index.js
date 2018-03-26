@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import {NotificationManager} from 'react-notifications';
 
 import Logout from './../LogOut';
 import Input from '../../components/Input';
@@ -8,6 +9,7 @@ import Tooltip from '../../components/Tooltip/';
 import { fetchWrap } from '../../services/fetchWrap'
 
 import './style.css'
+import 'react-notifications/lib/notifications.css';
 
 const errors = require('../../errors.json');
 
@@ -56,12 +58,27 @@ class Home extends Component {
 					login: this.state.login,
 					firstName: this.state.firstName,
 					lastName: this.state.lastName,
-					email: this.state.email,
+					email: this.state.email
 				})
 			})
 			.then((payload) => {
+				console.log(payload)
+				this.setState({
+					login: payload.login,
+					firstName: payload.firstName,
+					lastName: payload.lastName,
+					email: payload.email,
+				})
+				NotificationManager.success('Email sent!!', 'Reset', 5000, () => {})
 			})
 			.catch(error => {
+				console.log(error)
+				this.setState({
+					login: error.user.login,
+					firstName: error.user.firstName,
+					lastName: error.user.lastName,
+					email: error.user.email,
+				})
 				// this.setState({ error: {
 				// 	login:'default',
 				// 	email: 'default'
@@ -94,7 +111,8 @@ class Home extends Component {
 				console.log(payload)
 			})
 			.catch(error => {
-				this.setState({ error })
+				console.log(error)
+				//this.setState({ error })
 			})
 		}
 		else {

@@ -104,12 +104,12 @@ console.log(errors)
 						update.email = email
 					if (login.length > 0)
 						update.login = login
-					collection.update(
-						{_id: new mongodb.ObjectId(req.session._id)},
-						{$set: update}, function (err, result) {
+					collection.findAndModify(
+						{_id: new mongodb.ObjectId(req.session._id)}, [],
+						{$set: update}, {new: true}, function (err, result) {
 						if (err) throw err;
-
-						res.status(202)
+console.log(result)
+						res.status(202).json(result.value)
 					});
 				}
 				else {
@@ -117,19 +117,22 @@ console.log(errors)
 						update.email = email
 					if (typeof errors.login == 'undefined' && login.length > 0)
 						update.login = login
-					collection.update(
-						{_id: new mongodb.ObjectId(req.session._id)},
-						{$set: update}, function (err, result) {
+					collection.findAndModify(
+						{_id: new mongodb.ObjectId(req.session._id)}, [],
+						{$set: update}, {new: true}, function (err, result) {
 						if (err) throw err;
 
-						res.status(300).json(errors)
+						res.status(300).json({errors: errors, user: result.value})
 					});
 				}
 			})
 		})
 	}
 	else {
-		res.status(300).json(errors);
+		collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
+			if (error) throw error;
+			res.status(300).json({errors: errors, user: result});
+		});
 	}
 });
 

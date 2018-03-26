@@ -48,7 +48,10 @@ console.log(errors)
 				if (result !== true) {
 					errors.password = 'wrong'
 					console.log(errors)
-					res.status(300).json(errors);
+					collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
+						if (error) throw error;
+						res.status(300).json({errors: errors, user: result});
+					});
 				}
 				else {
 					bcrypt.genSalt(10, function(err, salt) {
@@ -57,8 +60,8 @@ console.log(errors)
 								{_id: new mongodb.ObjectId(req.session._id)},
 								{$set: {password: hash}}, function (err, result) {
 								if (err) throw err;
-
-								res.status(202)
+								console.log(result)
+								res.sendStatus(202)
 							});
 						});
 					});
