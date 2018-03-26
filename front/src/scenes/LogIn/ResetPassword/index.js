@@ -48,7 +48,7 @@ class ResetPassword extends React.Component {
 				})
 			})
 			.then(data => {
-				NotificationManager.success('Email sent!!', 'Reset', 5000, () => {})
+				NotificationManager.success('Email sent')
 				this.props.history.push('/login')
 			})
 			.catch((error) => {

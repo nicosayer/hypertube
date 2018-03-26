@@ -61,7 +61,7 @@ class Home extends Component {
 					email: this.state.email
 				})
 			})
-			.then((payload) => {
+			.then(payload => {
 				console.log(payload)
 				this.setState({
 					login: payload.login,
@@ -69,7 +69,7 @@ class Home extends Component {
 					lastName: payload.lastName,
 					email: payload.email,
 				})
-				NotificationManager.success('Email sent!!', 'Reset', 5000, () => {})
+				NotificationManager.success('Information Saved');
 			})
 			.catch(error => {
 				console.log(error)
@@ -79,10 +79,7 @@ class Home extends Component {
 					lastName: error.user.lastName,
 					email: error.user.email,
 				})
-				// this.setState({ error: {
-				// 	login:'default',
-				// 	email: 'default'
-				// } })
+				NotificationManager.warning('Some informations are invalid');
 			})
 		}
 	}
@@ -145,7 +142,7 @@ class Home extends Component {
 			<div className='formBox profileBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
-						<img className='circle profileImg floatLeft' src='https://d34jodf30bmh8b.cloudfront.net/pictures/5720/5863/profile-1496846605-b0d01e0807dbaa4d93dfc9288e00405f.jpg' />
+						<img alt="Profile Picture" className='circle profileImg floatLeft' src='https://d34jodf30bmh8b.cloudfront.net/pictures/5720/5863/profile-1496846605-b0d01e0807dbaa4d93dfc9288e00405f.jpg' />
 					<div>
 						<span className='fontGrey fontSmall block'>
 							Your Photo
