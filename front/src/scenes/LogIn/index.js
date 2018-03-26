@@ -80,14 +80,14 @@ class LogIn extends Component {
 	render() {
 
 		return (
-			<div className="formBox marginTop">
-				<span className='fontBig block'>Log In</span>
+			<div className='formBox'>
+				<span className='lignBottom fontBig block'>Log In</span>
 				<Link to='/signup'>Create an account</Link>
 				<form onSubmit={this.handleFormSubmit}>
 					<Input
-						type="text"
-						name="login"
-						placeholder="Login or email"
+						type='text'
+						name='login'
+						placeholder='Login or email'
 						validation={{
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -98,9 +98,9 @@ class LogIn extends Component {
 					<Tooltip text={errors.login.login} visible={this.state.error.includes('login') ? true : false}/>
 					<br />
 					<Input
-						type="password"
-						name="password"
-						placeholder="Password"
+						type='password'
+						name='password'
+						placeholder='Password'
 						validation={{
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -112,7 +112,7 @@ class LogIn extends Component {
 					<br />
 					<Link to='/reset'>Forgot your password?</Link>
 					<br />
-					<input type='submit' value="Log in"/>
+					<input type='submit' value='Log in'/>
 				</form>
 				<Auth42 />
 				<br/>
