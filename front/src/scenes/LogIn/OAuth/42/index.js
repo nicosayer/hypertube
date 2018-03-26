@@ -11,7 +11,7 @@ class Auth42 extends Component {
 
 	constructor(props) {
 		super(props)
-		
+
 		this.clicked = this.clicked.bind(this);
 	}
 
@@ -37,7 +37,7 @@ class Auth42 extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.search).state === '42OAuth2'){
 			console.log(this.props.history)
-			this.props.history.push('/')		
+			this.props.history.push('/')
 		}
 	}
 
@@ -49,10 +49,8 @@ class Auth42 extends Component {
 		const response_type = 'code';
 		const url = 'https://api.intra.42.fr/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&state=' + state + '&response_type=' + response_type;
 
-		window.open(url, '_blank', 'toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=500, width=720, height=628');
-		
-		// window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&state=' + state + '&response_type=' + response_type;
-	
+		// window.open(url, '_blank', 'toolbar=yes, scrollbars=yes, resizable=yes, top=100, left=500, width=720, height=628');
+		window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&state=' + state + '&response_type=' + response_type;
 	}
 
 	render() {

@@ -82,7 +82,6 @@ class LogIn extends Component {
 		return (
 			<div className='formBox'>
 				<span className='lignBottom fontBig block'>Log In</span>
-				<Link to='/signup'>Create an account</Link>
 				<form onSubmit={this.handleFormSubmit}>
 					<Input
 						type='text'
@@ -110,16 +109,23 @@ class LogIn extends Component {
 						/>
 					<Tooltip text={errors.login.password} visible={this.state.error.includes('password') ? true : false}/>
 					<br />
-					<Link to='/reset'>Forgot your password?</Link>
-					<br />
-					<input type='submit' value='Log in'/>
+					<div className='block fontSmall'>
+						<Link to='/reset'>Forgot your password?</Link>
+					</div>
+					<input className='spaceTop' type='submit' value='Log in'/>
 				</form>
+				<div className='spaceTop block'>
 				<Auth42 />
-				<br/>
+				</div>
+				<div className='spaceTop block'>
 				<AuthFacebook />
-				<br/>
+				</div>
+				<div className='spaceTop block'>
 				<AuthGoogle />
-				<br/>
+				</div>
+				<div className='lignTop block fontSmall'>
+					<Link to='/signup'>You want to create an account ?</Link>
+				</div>
 			</div>
 		)
 	}

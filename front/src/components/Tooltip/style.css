@@ -1,14 +1,15 @@
 .tooltiptext {
-	background-color: white;
-	color: black;
-	border: 1px solid red;
-	padding: 5px 10px;
+	background: #BE4B49;
+	color: white;
+	font-size: 75%;
+	border: 1px solid #993538;
+	padding: 10px 20px;
 	margin: 5px 10px;
-	border-radius: 5px;
+	border-radius: 3px;
 	position: absolute;
 	z-index: 1;
 	transition: opacity 0.5s;
-	opacity: 1;	
+	opacity: 1;
 	white-space: nowrap;
 }
 
@@ -17,10 +18,10 @@
 	position: absolute;
 	top: 50%;
 	right: 100%;
-	margin-top: -5px;
-	border-width: 5px;
+	margin-top: -7px;
+	border-width: 7px;
 	border-style: solid;
-	border-color: transparent red transparent transparent;
+	border-color: transparent #BE4B49 transparent transparent;
 }
 
 .hideToolTip {

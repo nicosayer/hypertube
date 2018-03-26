@@ -17,7 +17,6 @@ class ResetPassword extends React.Component {
 		super(props)
 		this.state = {
 			login: '',
-			error: {},
 			loading: false,
 			error: []
 		}
