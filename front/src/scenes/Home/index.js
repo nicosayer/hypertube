@@ -83,15 +83,35 @@ class Home extends Component {
 		}
 	}
 
-	handlePasswordChangeSubmit(event) {
+	handlePasswordChangeClick(event) {
 		event.preventDefault();
 		var error = this.state.error;
 
-		if (!this.state.oldPassword) {
+		if (!this.state.oldPassword || !this.state.newPassword) {
 			error.password = 'default';
 		}
-		if (!this.state.newPassword) {
-			error.password = 'default';
+
+		if (!Object.keys(error).length) {
+			fetchWrap('/changePassword', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include',
+				body: JSON.stringify({
+					oldPassword: this.state.oldPassword,
+					newPassword: this.state.newPassword,
+				})
+			})
+			.then((payload) => {
+				console.log(payload)
+			})
+			.catch(error => {
+				this.setState({ error })
+			})
+		}
+		else {
+			this.setState({ error })
 		}
 	}
 
@@ -229,65 +249,65 @@ class Home extends Component {
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
-						{
-							this.state.error.hasOwnProperty('email') ?
-							<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
-							:
-							null
-						}
-						<div className='block fontRight'>
-							<div>
-								<input className='spaceTop' type='submit' value='Save'/>
-							</div>
+					{
+						this.state.error.hasOwnProperty('email') ?
+						<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
+						:
+						null
+					}
+					<div className='block fontRight'>
+						<div>
+							<input className='spaceTop' type='submit' value='Save'/>
 						</div>
+					</div>
 				</form>
 				<form className='fontLeft' onSubmit={this.handlePasswordChangeSubmit}>
 					<div className='fontGrey block fontSmall'>
 						<label for='oldPassword'>Old password</label>
 					</div>
-				<Input
-					id='oldPassword'
-					type='password'
-					name='oldPassword'
-					className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
-					validation={{
-						minLen: 6,
-						maxLen: 50,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={50}
-					onChange={this.handleInputChange}
-					/>
+					<Input
+						id='oldPassword'
+						type='password'
+						name='oldPassword'
+						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
+						validation={{
+							minLen: 6,
+							maxLen: 50,
+							invalidClass: 'invalidInput',
+							validateOnChange: true
+						}}
+						maxLen={50}
+						onChange={this.handleInputChange}
+						/>
 					<div className='fontGrey block fontSmall'>
 						<label for='newPassword'>New password</label>
 					</div>
-				<Input
-					id='newPassword'
-					type='password'
-					name='newPassword'
-					className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
-					validation={{
-						minLen: 6,
-						maxLen: 50,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={50}
-					onChange={this.handleInputChange}
-					/>
-				{
-					this.state.error.hasOwnProperty('password') ?
-					<Tooltip text={errors.signup.password[this.state.error.password]} visible={true}/>
-					:
-					null
-				}
-				<div className='block fontRight'>
-					<div>
-						<input className='spaceTop' type='submit' value='Change'/>
+					<Input
+						id='newPassword'
+						type='password'
+						name='newPassword'
+						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
+						validation={{
+							minLen: 6,
+							maxLen: 50,
+							invalidClass: 'invalidInput',
+							validateOnChange: true
+						}}
+						maxLen={50}
+						onChange={this.handleInputChange}
+						/>
+					{
+						this.state.error.hasOwnProperty('password') ?
+						<Tooltip text={errors.signup.password[this.state.error.password]} visible={true}/>
+						:
+						null
+					}
+					<div className='block fontRight'>
+						<div>
+							<input className='spaceTop' type='submit' value='Change'/>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
 				<Logout />
 			</div>
 		)
