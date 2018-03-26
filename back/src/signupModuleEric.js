@@ -119,33 +119,34 @@ module.exports = function(req, post, isOAuth, callback) {
 
 			if (!result) {
 				collection.findOne({email: post.email}, function (err, result) {
-				if (err) throw err;
+					if (err) throw err;
 
-				const userResult = result;
+					if (result) {
+						const userResult = result;
+						var objTmp = Object.assign({}, result.oauth, post.oauth);
 
-				if (result && result.oauth) {
-					var objTmp = Object.assign({}, result.oauth, post.oauth);
-				} else {
-					var objTmp = Object.assign({}, post.oauth);
-				}
+						collection.update(
+							{email: post.email},
+							{$set: {oauth: objTmp}}, function (err, result) {
+							if (err) throw err;
 
-				collection.update(
-					{email: post.email},
-					{$set: {oauth: objTmp}}, function (err, result) {
-						if (err) throw err;
+							req.session._id = userResult._id;
+							callback(result);
+						});
+					}
+					else {
+						collection.insert(post, function (err, result) {
+							if (err) throw err;
 
-						req.session._id = userResult._id;
-						callback(result);
-					});
+							req.session._id = result.ops[0]._id;
+							callback(result.ops[0]);
+						});
+					}
 				});
 			}
 			else {
-				collection.insert(post, function (err, result) {
-					if (err) throw err;
-
-					req.session._id = result.ops[0]._id;
-					callback(result.ops[0]);
-				});
+				req.session._id = result._id;
+				callback(result);
 			}
 		});
 	}
