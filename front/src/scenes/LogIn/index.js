@@ -21,7 +21,7 @@ class LogIn extends Component {
 		this.state = {
 			login: '',
 			password: '',
-			error: []
+			error: {}
 		}
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -33,13 +33,13 @@ class LogIn extends Component {
 			event.preventDefault()
 		}
 		var error = this.state.error;
-		if (!this.state.login && !error.includes('login')) {
-			error.push('login');
+		if (!this.state.login) {
+			error.login = 'default';
 		}
-		if (!this.state.password && !error.includes('password')) {
-			error.push('password');
+		if (!this.state.password) {
+			error.password = 'default';
 		}
-		if (!error.length) {
+		if (!Object.keys(error).length) {
 			fetchWrap('/login', {
 				method: 'POST',
 				credentials: 'include',
@@ -52,11 +52,9 @@ class LogIn extends Component {
 				})
 			})
 			.then(payload => {
-				//console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(error => {
-				console.log(error);
 				if (error) {
 					this.setState({ error })
 				}
@@ -73,7 +71,7 @@ class LogIn extends Component {
 
 	handleInputValidation(name, error) {
 		var tmp = this.state.error;
-		tmp.splice(tmp.indexOf(name), 1);
+		delete tmp[name];
 		this.setState({ error: tmp });
 	}
 
@@ -94,7 +92,12 @@ class LogIn extends Component {
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
-					<Tooltip text={errors.login.login} visible={this.state.error.includes('login') ? true : false}/>
+						{
+							this.state.error.hasOwnProperty('login') ?
+							<Tooltip text={errors.login.login} visible={true} />
+							:
+							null
+						}
 					<br />
 					<Input
 						type='password'
@@ -107,10 +110,15 @@ class LogIn extends Component {
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
-					<Tooltip text={errors.login.password} visible={this.state.error.includes('password') ? true : false}/>
+						{
+							this.state.error.hasOwnProperty('password') ?
+							<Tooltip text={errors.login.password} visible={true} />
+							:
+							null
+						}
 					<br />
 					<div className='block fontSmall'>
-						<Link to='/reset'>Forgot your password?</Link>
+						<Link to='/reset'>Forgot your password ?</Link>
 					</div>
 					<input className='spaceTop' type='submit' value='Log in'/>
 				</form>

@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
 					const mongoResult = result
 
 					if (result === null) {
-						res.status(300).json(['login']);
+						res.status(300).json({login: 'default'});
 					}
 					else {
 						const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));

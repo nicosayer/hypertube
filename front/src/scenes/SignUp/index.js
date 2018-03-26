@@ -10,7 +10,7 @@ import Tooltip from '../../components/Tooltip/';
 
 const errors = require('../../errors.json');
 
-class SignIn extends Component {
+class SignUp extends Component {
 
 	constructor(props) {
 		super(props)
@@ -20,7 +20,7 @@ class SignIn extends Component {
 			firstName: '',
 			lastName: '',
 			email: '',
-			error: []
+			error: {}
 		}
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -31,22 +31,23 @@ class SignIn extends Component {
 	handleFormSubmit(event) {
 		event.preventDefault();
 		var error = this.state.error;
-		if (!this.state.login && !error.includes('login')) {
-			error.push('login');
+		if (!this.state.login) {
+				error.login = 'default';
 		}
-		if (!this.state.password && !error.includes('password')) {
-			error.push('password');
+		if (!this.state.password) {
+			error.password = 'default';
 		}
-		if (!this.state.firstName && !error.includes('firstName')) {
-			error.push('firstName');
+		if (!this.state.firstName) {
+			error.firstName = 'default';
 		}
-		if (!this.state.lastName && !error.includes('lastName')) {
-			error.push('lastName');
+		if (!this.state.lastName) {
+			error.lastName = 'default';
 		}
-		if (!this.state.email && !error.includes('email')) {
-			error.push('email');
+		if (!this.state.email) {
+			error.email = 'default';
 		}
-		if (!error.length) {
+		if (!Object.keys(error).length) {
+			console.log(1)
 			fetchWrap('/signup', {
 				method: 'POST',
 				headers: {
@@ -62,11 +63,11 @@ class SignIn extends Component {
 				})
 			})
 			.then((payload) => {
-				console.log(payload)
+				console.log(2)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(error => {
-				if (error)
+				console.log(3);
 				this.setState({ error })
 			})
 		}
@@ -84,11 +85,13 @@ class SignIn extends Component {
 	handleInputValidation(name, error) {
 		var tmp = this.state.error;
 		if (!Object.keys(error).length) {
-			tmp.splice(tmp.indexOf(name), 1);
-			this.setState({ error: tmp });
+			if (tmp.hasOwnProperty(name)) {
+				delete tmp[name];
+				this.setState({ error: tmp });
+			}
 		}
-		else if (!tmp.includes(name)) {
-			tmp.push(name);
+		else if (!tmp.hasOwnProperty(name)) {
+			tmp[name] = 'default';
 			this.setState({ error: tmp });
 		}
 	}
@@ -105,7 +108,7 @@ class SignIn extends Component {
 						type='text'
 						name='login'
 						placeholder='Login'
-						className={this.state.error.includes('login') ? 'invalidInput' : null}
+						className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 20,
@@ -118,15 +121,20 @@ class SignIn extends Component {
 						maxLen={20}
 						onChange={this.handleInputChange}
 						/>
-					<Tooltip text={errors.signup.login} visible={this.state.error.includes('login') ? true : false}/>
+					{
+						this.state.error.hasOwnProperty('login') ?
+						<Tooltip text={errors.signup.login[this.state.error.login]} visible={true} />
+						:
+						null
+					}
 					<br />
 					<Input
 						type='text'
 						name='firstName'
 						placeholder='First name'
-						className={this.state.error.includes('firstName') ? 'invalidInput' : null}
+						className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
 						validation={{
-							minLen: 1,
+							minLen: 2,
 							maxLen: 20,
 							format: /^[a-z ]+$/gi,
 							invalidClass: 'invalidInput',
@@ -137,15 +145,20 @@ class SignIn extends Component {
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
-					<Tooltip text={errors.signup.firstName} visible={this.state.error.includes('firstName') ? true : false}/>
+						{
+							this.state.error.hasOwnProperty('firstName') ?
+							<Tooltip text={errors.signup.firstName} visible={true} />
+							:
+							null
+						}
 					<br />
 						<Input
 							type='text'
 							name='lastName'
 							placeholder='Last name'
-							className={this.state.error.includes('lastName') ? 'invalidInput' : null}
+							className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
 							validation={{
-								minLen: 1,
+								minLen: 2,
 								maxLen: 20,
 								format: /^[a-z ]+$/gi,
 								invalidClass: 'invalidInput',
@@ -156,13 +169,18 @@ class SignIn extends Component {
 							trimOnBlur
 							onChange={this.handleInputChange}
 							/>
-						<Tooltip text={errors.signup.lastName} visible={this.state.error.includes('lastName') ? true : false}/>
+							{
+								this.state.error.hasOwnProperty('lastName') ?
+								<Tooltip text={errors.signup.lastName} visible={true}/>
+								:
+								null
+							}
 					<br />
 					<Input
 						type='text'
 						name='email'
 						placeholder='Email'
-						className={this.state.error.includes('email') ? 'invalidInput' : null}
+						className={this.state.error.hasOwnProperty('email') ? 'invalidInput' : null}
 						validation={{
 							minLen: 0,
 							maxLen: 50,
@@ -175,13 +193,18 @@ class SignIn extends Component {
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
-					<Tooltip text={errors.signup.email} visible={this.state.error.includes('email') ? true : false}/>
+						{
+							this.state.error.hasOwnProperty('email') ?
+							<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
+							:
+							null
+						}
 					<br />
 					<Input
 						type='password'
 						name='password'
 						placeholder='Password'
-						className={this.state.error.includes('password') ? 'invalidInput' : null}
+						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
 							maxLen: 50,
@@ -192,7 +215,12 @@ class SignIn extends Component {
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
-					<Tooltip text={errors.signup.password} visible={this.state.error.includes('password') ? true : false}/>
+						{
+							this.state.error.hasOwnProperty('password') ?
+							<Tooltip text={errors.signup.password} visible={true}/>
+							:
+							null
+						}
 					<br />
 					<input type='submit' value='Signup'/>
 				</form>
@@ -211,4 +239,4 @@ function mapStateToProps(state) {
 	})
 }
 
-export default connect(mapStateToProps)(SignIn)
+export default connect(mapStateToProps)(SignUp)

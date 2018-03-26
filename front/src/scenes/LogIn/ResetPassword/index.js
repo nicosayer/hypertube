@@ -18,7 +18,7 @@ class ResetPassword extends React.Component {
 		this.state = {
 			login: '',
 			loading: false,
-			error: []
+			error: {}
 		}
 		this.handleFormSubmit = this.handleFormSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -30,10 +30,10 @@ class ResetPassword extends React.Component {
 			event.preventDefault();
 		}
 		var error = this.state.error;
-		if (!this.state.login && !error.includes('login')) {
-			error.push('login');
+		if (!this.state.login) {
+			error.login = 'default';
 		}
-		if (!error.length) {
+		if (!Object.keys(error).length) {
 			this.setState({ loading: true })
 			fetchWrap('/login/resetPassword', {
 				method: 'POST',
@@ -67,15 +67,15 @@ class ResetPassword extends React.Component {
 
 	handleInputValidation(name, error) {
 		var tmp = this.state.error;
-		tmp.splice(tmp.indexOf(name), 1);
+		delete tmp[name];
 		this.setState({ error: tmp });
 	}
 
 	render() {
 		return (
 			<div>
-				<div>
-					<Link to='/'>Back...</Link>
+				<div className='formBox'>
+					<span className='lignBottom fontBig block'>Reset Password</span>
 					<form onSubmit={this.handleFormSubmit} >
 						<Input
 							type='text'
@@ -89,15 +89,25 @@ class ResetPassword extends React.Component {
 							maxLen={50}
 							onChange={this.handleInputChange}
 							/>
-						<Tooltip text={errors.resetPassword.login} visible={this.state.error.includes('login') ? true : false}/>
+							{
+								this.state.error.hasOwnProperty('login') ?
+								<Tooltip text={errors.resetPassword.login} visible={true} />
+								:
+								null
+							}
 						<br />
-						<input type='submit' value='Reset'/>
+						{
+							this.state.loading ?
+							<h2 className='loading'><i className="fas fa-spinner"></i></h2>
+							:
+							<input type='submit' value='Send email'/>
+						}
 					</form>
+					<div className='lignTop block fontSmall'>
+						<Link to='/'>Back to login page</Link>
+					</div>
 				</div>
-				{this.state.loading && <h1>Chargement...</h1> }
 			</div>
-
-
 		)
 	}
 }

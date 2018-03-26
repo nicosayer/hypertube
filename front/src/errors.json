@@ -1,9 +1,15 @@
 {
 	"signup": {
-		"login" : "Enter a combination of at least six letters and numbers",
+		"login" : {
+			"default": "Enter a combination of at least six letters and numbers",
+			"alreadyTaken": "This login is already taken"
+		},
 		"firstName": "Enter your first name with letters and spaces only",
 		"lastName": "Enter your last name with letters and spaces only",
-		"email": "Enter your email in the correct format",
+		"email" : {
+			"default": "Enter your email in the correct format",
+			"alreadyTaken": "This email is already taken"
+		},
 		"password": "Enter a combination of at least six characters"
 	},
 	"login": {

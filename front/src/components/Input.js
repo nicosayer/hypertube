@@ -16,9 +16,6 @@ class Input extends React.Component {
 
 	handleFocus(event) {
 		if (event) {
-			if (this.props.validation) {
-				this.input.classList.remove(this.props.validation.invalidClass);
-			}
 		}
 	}
 
@@ -58,7 +55,7 @@ class Input extends React.Component {
 			if (this.props.trimOnBlur) {
 				event.target.value = event.target.value.trim()
 			}
-			if (this.props.validation && !this.props.validation.validateOnChange) {
+			if (this.props.validation) {
 				this.validation(name, event.target.value);
 			}
 			if (this.props.submitOnBlur) {
@@ -75,7 +72,6 @@ class Input extends React.Component {
 
 	validation(name, value) {
 		var errors = {};
-		if (value) {
 			if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
 				errors.minLen = this.props.validation.minLen;
 			}
@@ -88,7 +84,6 @@ class Input extends React.Component {
 					errors.format = true;
 				}
 			}
-		}
 		if (Object.keys(errors).length) {
 			if (this.state.valid) {
 				this.setState({ valid: false });

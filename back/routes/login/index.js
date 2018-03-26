@@ -14,7 +14,7 @@ router.post('/', function(req, res, next) {
 		const collection = db.collection('users');
 
 		if (!post.login || !post.password) {
-			res.status(300).json(['default']);
+			res.status(300).json({default: 'default'});
 		}
 		else {
 			post.login = post.login.trim();
@@ -30,7 +30,7 @@ router.post('/', function(req, res, next) {
 					const mongoResult = result
 
 					if (result === null) {
-						res.status(300).json(['login']);
+						res.status(300).json({login: 'default'});
 					}
 					else {
 						const password = result.password;
@@ -39,7 +39,7 @@ router.post('/', function(req, res, next) {
 							if (error) throw error;
 
 							if (result !== true) {
-								res.status(300).json(['password']);
+								res.status(300).json({password: 'default'});
 							}
 							else {
 								req.session._id = mongoResult._id;
