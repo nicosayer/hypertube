@@ -24,7 +24,6 @@ class Input extends React.Component {
 	handleKeyDown(event) {
 		if (event && event.which === 13) {
 			if (this.props.blurOnEnter) {
-				event.target.blur();
 			}
 			if (this.props.submitOnEnter) {
 				this.handleSubmit(event.target.name, event.target.value);
@@ -44,6 +43,7 @@ class Input extends React.Component {
 			if (this.props.validation && this.props.validation.validateOnChange) {
 				this.validation(name, event.target.value);
 			}
+
 			this.props.onChange(name, event.target.value);
 			if (this.props.submitOnChange) {
 				this.handleSubmit(name, event.target.value);
@@ -55,7 +55,8 @@ class Input extends React.Component {
 		if (event && event.target) {
 			const name = event.target.name;
 			if (this.props.trimOnBlur) {
-				event.target.value = event.target.value.trim()
+				event.target.value = event.target.value.trim();
+				console.log('[' + this.input.value +']');
 			}
 			if (this.props.validation) {
 				this.validation(name, event.target.value);
@@ -75,19 +76,20 @@ class Input extends React.Component {
 	validation(name, value) {
 		var errors = {};
 
-		if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
-			errors.minLen = this.props.validation.minLen;
-		}
-		if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
-			errors.maxLen = this.props.validation.maxLen;
-		}
-		if (this.props.validation.format) {
-			const regex = new RegExp(this.props.validation.format);
-			if (!regex.test(value)) {
-				errors.format = true;
+		if (value || !this.props.validation.emptyIsValid) {
+			if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
+				errors.minLen = this.props.validation.minLen;
+			}
+			if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
+				errors.maxLen = this.props.validation.maxLen;
+			}
+			if (this.props.validation.format) {
+				const regex = new RegExp(this.props.validation.format);
+				if (!regex.test(value)) {
+					errors.format = true;
+				}
 			}
 		}
-
 		if (Object.keys(errors).length) {
 			if (this.state.valid) {
 				this.setState({ valid: false });

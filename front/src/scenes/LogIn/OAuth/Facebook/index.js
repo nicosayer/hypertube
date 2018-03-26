@@ -26,7 +26,6 @@ class AuthFacebook extends Component {
 				})
 			})
 			.then(payload => {
-				console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(() => {})
@@ -49,7 +48,7 @@ class AuthFacebook extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Login with Facebook</span>
+			<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span>
 		);
 	}
 }

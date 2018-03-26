@@ -4,7 +4,7 @@ import { Provider, connect } from 'react-redux'
 import {NotificationContainer} from 'react-notifications';
 
 import Home from './scenes/Home'
-import Video from './scenes/Video'
+// import Video from './scenes/Video'
 import LogIn from './scenes/LogIn'
 import SignUp from './scenes/SignUp'
 import ResetPassword from './scenes/LogIn/ResetPassword'
@@ -28,7 +28,7 @@ class App extends Component {
 							{
 								this.props.isAuthenticated ?
 								[
-									<Route path='/video' key='video' component={Video} />,
+									// <Route path='/video' key='video' component={Video} />,
 									<Route key='home' component={Home} />,
 								]
 								:

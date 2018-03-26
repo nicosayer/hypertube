@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {NotificationManager} from 'react-notifications';
@@ -76,11 +78,14 @@ class ResetPassword extends React.Component {
 			<div>
 				<div className='formBox'>
 					<span className='lignBottom fontBig block'>Reset Password</span>
-					<form onSubmit={this.handleFormSubmit} >
+					<form className='fontLeft' onSubmit={this.handleFormSubmit} >
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='login'>Login or email</label>
+						</div>
 						<Input
+							id='login'
 							type='text'
 							name='login'
-							placeholder='Login or email'
 							trimOnBlur
 							validation={{
 								handleValidation: this.handleInputValidation,
@@ -108,7 +113,7 @@ class ResetPassword extends React.Component {
 						}
 					</form>
 					<div className='lignTop block fontSmall'>
-						<Link to='/'>Login to your account</Link>
+						<Link to='/'>Back to sign in</Link>
 					</div>
 				</div>
 			</div>

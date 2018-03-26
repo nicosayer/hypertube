@@ -27,7 +27,6 @@ class Auth42 extends Component {
 				})
 			})
 			.then(payload => {
-				console.log(payload)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(() => {})
@@ -52,7 +51,7 @@ class Auth42 extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Login with 42</span>
+			<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span>
 		);
 	}
 }

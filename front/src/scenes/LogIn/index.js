@@ -79,12 +79,15 @@ class LogIn extends Component {
 
 		return (
 			<div className='formBox'>
-				<span className='lignBottom fontBig block'>Log In</span>
-				<form onSubmit={this.handleFormSubmit}>
+				<span className='lignBottom fontBig block'>Log in</span>
+				<form className='fontLeft' onSubmit={this.handleFormSubmit}>
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='login'>Login or email</label>
+					</div>
 					<Input
+						id='login'
 						type='text'
 						name='login'
-						placeholder='Login or email'
 						validation={{
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -98,11 +101,13 @@ class LogIn extends Component {
 						:
 						null
 					}
-					<br />
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='password'>Password</label>
+						</div>
 					<Input
+						id='password'
 						type='password'
 						name='password'
-						placeholder='Password'
 						validation={{
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -117,7 +122,7 @@ class LogIn extends Component {
 						null
 					}
 					<br />
-					<div className='block fontSmall'>
+					<div className='block fontXSmall fontCenter'>
 						<Link to='/reset'>Forgot your password ?</Link>
 					</div>
 					<div className='block fontRight'>

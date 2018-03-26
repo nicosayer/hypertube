@@ -23,6 +23,8 @@ class Home extends Component {
 		}
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleSaveSubmit = this.handleSaveSubmit.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleInputValidation = this.handleInputValidation.bind(this);
 	}
 
 	componentDidMount() {
@@ -40,22 +42,7 @@ class Home extends Component {
 
 	handleSaveSubmit(event) {
 		event.preventDefault();
-		var error = this.state.error;
-
-		if (!this.state.login) {
-			error.login = 'default';
-		}
-		if (!this.state.firstName) {
-			error.firstName = 'default';
-		}
-		if (!this.state.lastName) {
-			error.lastName = 'default';
-		}
-		if (!this.state.email) {
-			error.email = 'default';
-		}
-
-		if (!Object.keys(error).length) {
+		if (!Object.keys(this.state.error).length) {
 			fetchWrap('/changeInfos', {
 				method: 'POST',
 				headers: {
@@ -70,6 +57,37 @@ class Home extends Component {
 				})
 			})
 			.then((payload) => {
+			})
+			.catch(error => {
+				// this.setState({ error: {
+				// 	login:'default',
+				// 	email: 'default'
+				// } })
+			})
+		}
+	}
+
+	handlePasswordChangeClick(event) {
+		event.preventDefault();
+		var error = this.state.error;
+
+		if (!this.state.oldPassword || !this.state.newPassword) {
+			error.password = 'default';
+		}
+
+		if (!Object.keys(error).length) {
+			fetchWrap('/changePassword', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include',
+				body: JSON.stringify({
+					oldPassword: this.state.oldPassword,
+					newPassword: this.state.newPassword,
+				})
+			})
+			.then((payload) => {
 				console.log(payload)
 			})
 			.catch(error => {
@@ -81,170 +99,203 @@ class Home extends Component {
 		}
 	}
 
-	handlePasswordChangeSubmit(event) {
-		event.preventDefault();
-		var error = this.state.error;
-
-		if (!this.state.oldPassword) {
-			error.password = 'default';
-		}
-		if (!this.state.newPassword) {
-			error.password = 'default';
-		}
-	}
-
 	handleInputChange(state, value) {
 		this.setState({
 			[state]: value
 		})
 	}
 
+	handleInputValidation(name, error) {
+		var tmp = this.state.error;
+		if (!Object.keys(error).length) {
+			if (tmp.hasOwnProperty(name)) {
+				delete tmp[name];
+				this.setState({ error: tmp });
+			}
+		}
+		else if (!tmp.hasOwnProperty(name)) {
+			tmp[name] = 'default';
+			this.setState({ error: tmp });
+		}
+	}
+
 	render() {
 		return (
-			<div>
-				<h1>Change your profile infos</h1>
-				First Name :  
-				<Input
-					type='text'
-					name='firstName'
-					placeholder="First Name"
-					value={this.state.firstName}
-					className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
-					validation={{
-						minLen: 1,
-						maxLen: 20,
-						format: /^[a-z ]+$/gi,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={20}
-					trimOnBlur
-					onChange={this.handleInputChange}
-					/>
+			<div className='formBox'>
+				<span className='lignBottom fontBig block'>Profile</span>
+				
+				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='firstName'>First Name</label>
+					</div>
+					<Input
+						id='firstName'
+						type='text'
+						name='firstName'
+						value={this.state.firstName}
+						className='capital'
+						validation={{
+							minLen: 2,
+							maxLen: 20,
+							format: /^[a-z ]+$/gi,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={20}
+						trimOnBlur
+						onChange={this.handleInputChange}
+						/>
 					{
 						this.state.error.hasOwnProperty('firstName') ?
 						<Tooltip text={errors.signup.firstName} visible={true} />
 						:
 						null
 					}
-				<br />
-				Last Name : 
-				<Input
-					type='text'
-					name='lastName'
-					placeholder="Last name"
-					value={this.state.lastName}
-					className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
-					validation={{
-						minLen: 1,
-						maxLen: 20,
-						format: /^[a-z ]+$/gi,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={20}
-					trimOnBlur
-					onChange={this.handleInputChange}
-					/>
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='lastName'>Last Name</label>
+					</div>
+					<Input
+						id='lastName'
+						type='text'
+						name='lastName'
+						value={this.state.lastName}
+						className='capital'
+						validation={{
+							minLen: 2,
+							maxLen: 20,
+							format: /^[a-z ]+$/gi,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={20}
+						trimOnBlur
+						onChange={this.handleInputChange}
+						/>
 					{
 						this.state.error.hasOwnProperty('lastName') ?
 						<Tooltip text={errors.signup.lastName} visible={true}/>
 						:
 						null
 					}
-				<br />
-				Login : 
-				<Input
-					type='text'
-					name='login'
-					placeholder='Login'
-					value={this.state.login}
-					className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
-					validation={{
-						minLen: 6,
-						maxLen: 20,
-						format: /^[a-z0-9]+$/gi,
-						invalidClass: 'invalidInput',
-						handleValidation: this.handleInputValidation,
-						validateOnChange: true
-					}}
-					trimOnBlur
-					maxLen={20}
-					onChange={this.handleInputChange}
-					/>
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='login'>Login</label>
+					</div>
+					<Input
+						id='login'
+						type='text'
+						name='login'
+						value={this.state.login}
+						validation={{
+							minLen: 6,
+							maxLen: 20,
+							format: /^[a-z0-9]+$/gi,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						trimOnBlur
+						maxLen={20}
+						onChange={this.handleInputChange}
+						/>
 					{
 						this.state.error.hasOwnProperty('login') ?
 						<Tooltip text={errors.signup.login[this.state.error.login]} visible={true} />
 						:
 						null
 					}
-				<br />
-				Email : 
-				<Input
-					type='text'
-					name='email'
-					placeholder="Email"
-					value={this.state.email}
-					validation={{
-						minLen: 0,
-						maxLen: 50,
-						format: /^.+@.+\..+$/gi,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={50}
-					trimOnBlur
-					onChange={this.handleInputChange}
-					/>
-				<br />
-				<button onSubmit={this.handleSaveSubmit}>Save</button>
-				{
-					this.state.error.hasOwnProperty('email') ?
-					<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
-					:
-					null
-				}
-				<br />
-				<br />
-				Password : 
-				<Input
-					type='password'
-					name='oldPassword'
-					placeholder='Old Password'
-					className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
-					validation={{
-						minLen: 6,
-						maxLen: 50,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={50}
-					onChange={this.handleInputChange}
-					/>
-				<Input
-					type='password'
-					name='newPassword'
-					placeholder='New Password'
-					className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
-					validation={{
-						minLen: 6,
-						maxLen: 50,
-						invalidClass: 'invalidInput',
-						validateOnChange: true
-					}}
-					maxLen={50}
-					onChange={this.handleInputChange}
-					/>
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='email'>Email</label>
+					</div>
+					<Input
+						id='email'
+						type='text'
+						name='email'
+						value={this.state.email}
+						validation={{
+							minLen:5,
+							maxLen: 50,
+							format: /^.+@.+\..+$/gi,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={50}
+						trimOnBlur
+						onChange={this.handleInputChange}
+						/>
 					{
-						this.state.error.hasOwnProperty('password') ?
-						<Tooltip text={errors.signup.password[this.state.error.password]} visible={true}/>
+						this.state.error.hasOwnProperty('email') ?
+						<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
 						:
 						null
 					}
-				<br />
-				<button onSubmit={this.handlePasswordChangeSubmit}>Change Password</button>
-				<br />
-				<br />
+					<div className='block fontRight'>
+						<div>
+							<input className='spaceTop' type='submit' value='Save'/>
+						</div>
+					</div>
+				</form>
+				<form className='fontLeft' onSubmit={this.handlePasswordChangeSubmit}>
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='oldPassword'>Old password</label>
+					</div>
+					<Input
+						id='oldPassword'
+						type='password'
+						name='oldPassword'
+						validation={{
+							minLen: 6,
+							maxLen: 50,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={50}
+						onChange={this.handleInputChange}
+						/>
+					{
+						this.state.error.hasOwnProperty('oldPassword') ?
+						<Tooltip text={errors.signup.password} visible={true} />
+						:
+						null
+					}
+					<div className='fontGrey block fontSmall'>
+						<label htmlFor='newPassword'>New password</label>
+					</div>
+					<Input
+						id='newPassword'
+						type='password'
+						name='newPassword'
+						validation={{
+							minLen: 6,
+							maxLen: 50,
+							emptyIsValid: true,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={50}
+						onChange={this.handleInputChange}
+						/>
+					{
+						this.state.error.hasOwnProperty('newPassword') ?
+						<Tooltip text={errors.signup.password} visible={true} />
+						:
+						null
+					}
+					<div className='block fontRight'>
+						<div>
+							<input className='spaceTop' type='submit' value='Change'/>
+						</div>
+					</div>
+				</form>
 				<Logout />
 			</div>
 		)
