@@ -27,7 +27,6 @@ router.post('/', function(req, res, next) {
 				firstName: apiRes.body.names[0].givenName,
 				lastName: apiRes.body.names[0].familyName,
 				email: apiRes.body.emailAddresses[0].value,
-				profilePic: apiRes.body.photos[0].url,
 				oauth: {
 					google: id
 				}

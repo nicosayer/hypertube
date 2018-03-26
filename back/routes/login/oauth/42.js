@@ -31,7 +31,6 @@ router.post('/', function(req, res, next) {
 				firstName: apiRes.body.first_name,
 				lastName: apiRes.body.last_name,
 				email: apiRes.body.email,
-				profilePic: apiRes.body.image_url,
 				oauth: {
 					"42": "" + apiRes.body.id
 				}

@@ -24,7 +24,6 @@ router.post('/', function(req, res, next) {
 			const post = {
 				firstName: infos.first_name,
 				lastName: infos.last_name,
-				profilePic: infos.picture.data.url,
 				oauth: {
 					facebook: infos.id
 				}
