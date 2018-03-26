@@ -22,26 +22,26 @@ class App extends Component {
 		return (
 			<Provider store={this.props.store}>
 				<BrowserRouter>
-				<div>
-					<NotificationContainer/>
-					<Switch>
-						{
-							this.props.isAuthenticated ?
-							[
-								<Route path='/video' key='video' component={Video} />,
-								<Route key='home' component={Home} />,
-							]
-							:
-							[
-								
-								<Route path='/signup' key='signup' component={SignUp} />,
-								<Route path='/reset' key='reset' component={ResetPassword} />,
-								<Route key='login' component={LogIn} />
-							]
-							
-						}
-					</Switch>
-				</div>
+					<div>
+						<NotificationContainer/>
+						<Switch>
+							{
+								this.props.isAuthenticated ?
+								[
+									<Route path='/video' key='video' component={Video} />,
+									<Route key='home' component={Home} />,
+								]
+								:
+								[
+
+									<Route path='/signup' key='signup' component={SignUp} />,
+									<Route path='/reset' key='reset' component={ResetPassword} />,
+									<Route key='login' component={LogIn} />
+								]
+
+							}
+						</Switch>
+					</div>
 				</BrowserRouter>
 			</Provider>
 		)

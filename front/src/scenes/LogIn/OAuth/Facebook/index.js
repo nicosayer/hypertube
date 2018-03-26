@@ -11,7 +11,7 @@ class AuthFacebook extends Component {
 
 	constructor(props) {
 		super(props)
-		
+
 		this.clicked = this.clicked.bind(this);
 	}
 
@@ -35,7 +35,7 @@ class AuthFacebook extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.search).state === 'facebookOAuth2'){
-			this.props.history.push('/')		
+			this.props.history.push('/')
 		}
 	}
 
@@ -49,7 +49,7 @@ class AuthFacebook extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}>Login with Facebook</span>
+			<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Login with Facebook</span>
 		);
 	}
 }

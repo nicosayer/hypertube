@@ -11,7 +11,7 @@ class AuthGoogle extends Component {
 
 	constructor(props) {
 		super(props)
-		
+
 		this.clicked = this.clicked.bind(this);
 	}
 
@@ -35,7 +35,7 @@ class AuthGoogle extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.hash).state === 'googleOAuth2'){
-			this.props.history.push('/')		
+			this.props.history.push('/')
 		}
 	}
 
@@ -50,7 +50,7 @@ class AuthGoogle extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}>Login with Google</span>
+			<span onClick={this.clicked}><i className="fab fa-google spaceRight"></i>Login with Google</span>
 		);
 	}
 }
