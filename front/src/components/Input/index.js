@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './style.css';
+
 class Input extends React.Component {
 
 	constructor(props) {
@@ -85,7 +87,7 @@ class Input extends React.Component {
 				errors.format = true;
 			}
 		}
-		
+
 		if (Object.keys(errors).length) {
 			if (this.state.valid) {
 				this.setState({ valid: false });

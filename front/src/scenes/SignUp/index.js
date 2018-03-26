@@ -32,7 +32,7 @@ class SignUp extends Component {
 		event.preventDefault();
 		var error = this.state.error;
 		if (!this.state.login) {
-				error.login = 'default';
+			error.login = 'default';
 		}
 		if (!this.state.password) {
 			error.password = 'default';
@@ -63,11 +63,9 @@ class SignUp extends Component {
 				})
 			})
 			.then((payload) => {
-				console.log(2)
 				this.props.dispatch(logMe(payload))
 			})
 			.catch(error => {
-				console.log(3);
 				this.setState({ error })
 			})
 		}
@@ -103,11 +101,14 @@ class SignUp extends Component {
 		return (
 			<div className='formBox'>
 				<span className='lignBottom fontBig block'>Sign up</span>
-				<form onSubmit={this.handleFormSubmit}>
+				<form className='fontLeft' onSubmit={this.handleFormSubmit}>
+					<div className='fontGrey block fontSmall'>
+						<label for='login'>Login</label>
+					</div>
 					<Input
+						id='login'
 						type='text'
 						name='login'
-						placeholder='Login'
 						className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
@@ -127,11 +128,13 @@ class SignUp extends Component {
 						:
 						null
 					}
-					<br />
+					<div className='fontGrey block fontSmall'>
+						<label for='firstName'>First Name</label>
+					</div>
 					<Input
+						id='firstName'
 						type='text'
 						name='firstName'
-						placeholder='First name'
 						className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
 						validation={{
 							minLen: 2,
@@ -145,41 +148,45 @@ class SignUp extends Component {
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
-						{
-							this.state.error.hasOwnProperty('firstName') ?
-							<Tooltip text={errors.signup.firstName} visible={true} />
-							:
-							null
-						}
-					<br />
-						<Input
-							type='text'
-							name='lastName'
-							placeholder='Last name'
-							className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
-							validation={{
-								minLen: 2,
-								maxLen: 20,
-								format: /^[a-z ]+$/gi,
-								invalidClass: 'invalidInput',
-								handleValidation: this.handleInputValidation,
-								validateOnChange: true
-							}}
-							maxLen={20}
-							trimOnBlur
-							onChange={this.handleInputChange}
-							/>
-							{
-								this.state.error.hasOwnProperty('lastName') ?
-								<Tooltip text={errors.signup.lastName} visible={true}/>
-								:
-								null
-							}
-					<br />
+					{
+						this.state.error.hasOwnProperty('firstName') ?
+						<Tooltip text={errors.signup.firstName} visible={true} />
+						:
+						null
+					}
+					<div className='fontGrey block fontSmall'>
+						<label for='lastName' className='block'>Last Name</label>
+					</div>
 					<Input
+						id='lastName'
+						type='text'
+						name='lastName'
+						className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
+						validation={{
+							minLen: 2,
+							maxLen: 20,
+							format: /^[a-z ]+$/gi,
+							invalidClass: 'invalidInput',
+							handleValidation: this.handleInputValidation,
+							validateOnChange: true
+						}}
+						maxLen={20}
+						trimOnBlur
+						onChange={this.handleInputChange}
+						/>
+					{
+						this.state.error.hasOwnProperty('lastName') ?
+						<Tooltip text={errors.signup.lastName} visible={true}/>
+						:
+						null
+					}
+					<div className='fontGrey block fontSmall'>
+						<label for='email'>Email</label>
+					</div>
+					<Input
+						id='email'
 						type='text'
 						name='email'
-						placeholder='Email'
 						className={this.state.error.hasOwnProperty('email') ? 'invalidInput' : null}
 						validation={{
 							minLen: 0,
@@ -193,17 +200,19 @@ class SignUp extends Component {
 						trimOnBlur
 						onChange={this.handleInputChange}
 						/>
-						{
-							this.state.error.hasOwnProperty('email') ?
-							<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
-							:
-							null
-						}
-					<br />
+					{
+						this.state.error.hasOwnProperty('email') ?
+						<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
+						:
+						null
+					}
+					<div className='fontGrey block fontSmall'>
+						<label for='password'>Password</label>
+					</div>
 					<Input
+						id='password'
 						type='password'
 						name='password'
-						placeholder='Password'
 						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
 						validation={{
 							minLen: 6,
@@ -215,14 +224,17 @@ class SignUp extends Component {
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
-						{
-							this.state.error.hasOwnProperty('password') ?
-							<Tooltip text={errors.signup.password} visible={true}/>
-							:
-							null
-						}
-					<br />
-					<input type='submit' value='Signup'/>
+					{
+						this.state.error.hasOwnProperty('password') ?
+						<Tooltip text={errors.signup.password} visible={true}/>
+						:
+						null
+					}
+					<div className='block fontRight'>
+						<div>
+							<input type='submit' value='Signup'/>
+						</div>
+					</div>
 				</form>
 				<div className='lignTop block fontSmall'>
 					<Link to={{pathname: '/'}}>You already have an account ?</Link>

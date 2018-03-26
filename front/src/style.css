@@ -19,23 +19,9 @@ div, p {
 	display: inline-block;
 }
 
-input {
-	color: #f1f1f1;
-	font-family: 'Open Sans', sans-serif;
-	font-size: 100%;
-	background: #1A1D23;
-	padding: 10px 20px;
-	margin: 5px 10px;
-	border: 0px;
-	border-radius: 3px;
-	border: 1px solid lightgrey;
-}
-
-input[type='submit'] {
-	color: white;
-}
-
 .formBox {
+	min-width: 200px;
+	width: 15vw;
 	border-radius: 3px;
 	background: #2A292F;
 	padding: 20px 40px;
@@ -43,16 +29,28 @@ input[type='submit'] {
 	margin: 50px 25px;
 }
 
-.invalidInput {
-	border: solid 1px #BE4B49;
-}
-
 .fontBig {
 	font-size: 200%;
 }
 
 .fontSmall {
+	font-size: 85%;
+}
+
+.fontXSmall {
 	font-size: 75%;
+}
+
+.fontGrey {
+	color: dimgray;
+}
+
+.fontLeft {
+	text-align: left;
+}
+
+.fontRight {
+	text-align: right;
 }
 
 .marginTop {
@@ -86,8 +84,13 @@ input[type='submit'] {
 	margin-bottom: 10px;
 	border-bottom: 1px solid #1A1D23;
 }
+
 .spaceTop {
 	margin-top: 10px;
+}
+
+.spaceRight {
+	margin-right: 10px;
 }
 
 .loading {
@@ -101,4 +104,17 @@ input[type='submit'] {
 		to {
 				-webkit-transform: rotate(359deg);
 		}
+}
+
+.button {
+	background: #1A1D23;
+	padding: 10px 0px;
+	border: 1px solid lightgrey;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.wFull {
+	box-sizing: border-box;
+	width: 100%;
 }

@@ -92,12 +92,12 @@ class LogIn extends Component {
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
-						{
-							this.state.error.hasOwnProperty('login') ?
-							<Tooltip text={errors.login.login} visible={true} />
-							:
-							null
-						}
+					{
+						this.state.error.hasOwnProperty('login') ?
+						<Tooltip text={errors.login.login} visible={true} />
+						:
+						null
+					}
 					<br />
 					<Input
 						type='password'
@@ -110,26 +110,30 @@ class LogIn extends Component {
 						maxLen={50}
 						onChange={this.handleInputChange}
 						/>
-						{
-							this.state.error.hasOwnProperty('password') ?
-							<Tooltip text={errors.login.password} visible={true} />
-							:
-							null
-						}
+					{
+						this.state.error.hasOwnProperty('password') ?
+						<Tooltip text={errors.login.password} visible={true} />
+						:
+						null
+					}
 					<br />
 					<div className='block fontSmall'>
 						<Link to='/reset'>Forgot your password ?</Link>
 					</div>
-					<input className='spaceTop' type='submit' value='Log in'/>
+					<div className='block fontRight'>
+						<div>
+							<input className='spaceTop' type='submit' value='Log in'/>
+						</div>
+					</div>
 				</form>
-				<div className='spaceTop block'>
-				<Auth42 />
+				<div className='button wFull spaceTop'>
+					<Auth42 />
 				</div>
-				<div className='spaceTop block'>
-				<AuthFacebook />
+				<div className='button wFull spaceTop'>
+					<AuthFacebook />
 				</div>
-				<div className='spaceTop block'>
-				<AuthGoogle />
+				<div className='button wFull spaceTop'>
+					<AuthGoogle />
 				</div>
 				<div className='lignTop block fontSmall'>
 					<Link to='/signup'>You want to create an account ?</Link>
