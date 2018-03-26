@@ -11,7 +11,16 @@ class AuthFacebook extends Component {
 
 	constructor(props) {
 		super(props)
-
+		if (queryString.parse(window.location.search).state === 'facebookOAuth2') {
+			this.state = {
+				loading: true
+			};
+		}
+		else {
+			this.state = {
+				loading: false
+			};
+		}
 		this.clicked = this.clicked.bind(this);
 	}
 
@@ -48,7 +57,14 @@ class AuthFacebook extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span>
+			<div>
+				{
+					this.state.loading ?
+					<div className='loading'><i className="fas fa-spinner"></i></div>
+					:
+					<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span>
+				}
+			</div>
 		);
 	}
 }

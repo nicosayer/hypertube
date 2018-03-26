@@ -11,7 +11,16 @@ class AuthGoogle extends Component {
 
 	constructor(props) {
 		super(props)
-
+		if(queryString.parse(window.location.hash).state === 'googleOAuth2') {
+			this.state = {
+				loading: true
+			};
+		}
+		else {
+			this.state = {
+				loading: false
+			};
+		}
 		this.clicked = this.clicked.bind(this);
 	}
 
@@ -33,7 +42,7 @@ class AuthGoogle extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.hash).state === 'googleOAuth2'){
+		if (!this.props.isAuthenticated && nextProps.isAuthenticated && queryString.parse(window.location.hash).state === 'googleOAuth2') {
 			this.props.history.push('/')
 		}
 	}
@@ -49,7 +58,14 @@ class AuthGoogle extends Component {
 
 	render() {
 		return (
-			<span onClick={this.clicked}><i className="fab fa-google spaceRight"></i>Connect with Google</span>
+			<div>
+				{
+					this.state.loading ?
+					<div className='loading'><i className="fas fa-spinner"></i></div>
+					:
+					<span onClick={this.clicked}><i className='fab fa-google spaceRight'></i>Connect with Google</span>
+				}
+			</div>
 		);
 	}
 }
