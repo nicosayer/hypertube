@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
-import queryString from 'query-string';
 
 import { logMe } from '../../actions/me'
 import { fetchWrap } from '../../services/fetchWrap'

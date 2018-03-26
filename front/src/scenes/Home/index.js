@@ -70,7 +70,6 @@ class Home extends Component {
 				})
 			})
 			.then((payload) => {
-				console.log(payload)
 			})
 			.catch(error => {
 				this.setState({ error: {
@@ -117,7 +116,6 @@ class Home extends Component {
 	}
 
 	render() {
-		console.log(this.state.error)
 		return (
 			<div className='formBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
@@ -136,6 +134,7 @@ class Home extends Component {
 							minLen: 1,
 							maxLen: 20,
 							format: /^[a-z ]+$/gi,
+							emptyIsValid: true,
 							invalidClass: 'invalidInput',
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -164,6 +163,7 @@ class Home extends Component {
 							minLen: 1,
 							maxLen: 20,
 							format: /^[a-z ]+$/gi,
+							emptyIsValid: true,
 							invalidClass: 'invalidInput',
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -192,6 +192,7 @@ class Home extends Component {
 							minLen: 6,
 							maxLen: 20,
 							format: /^[a-z0-9]+$/gi,
+							emptyIsValid: true,
 							invalidClass: 'invalidInput',
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -219,6 +220,7 @@ class Home extends Component {
 							minLen: 0,
 							maxLen: 50,
 							format: /^.+@.+\..+$/gi,
+							emptyIsValid: true,
 							invalidClass: 'invalidInput',
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true

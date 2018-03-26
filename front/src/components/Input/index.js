@@ -75,19 +75,20 @@ class Input extends React.Component {
 	validation(name, value) {
 		var errors = {};
 
-		if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
-			errors.minLen = this.props.validation.minLen;
-		}
-		if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
-			errors.maxLen = this.props.validation.maxLen;
-		}
-		if (this.props.validation.format) {
-			const regex = new RegExp(this.props.validation.format);
-			if (!regex.test(value)) {
-				errors.format = true;
+		if (value || !this.props.validation.emptyIsValid) {
+			if (this.props.validation.minLen && value.length < this.props.validation.minLen) {
+				errors.minLen = this.props.validation.minLen;
+			}
+			if (this.props.validation.maxLen && value.length > this.props.validation.maxLen) {
+				errors.maxLen = this.props.validation.maxLen;
+			}
+			if (this.props.validation.format) {
+				const regex = new RegExp(this.props.validation.format);
+				if (!regex.test(value)) {
+					errors.format = true;
+				}
 			}
 		}
-
 		if (Object.keys(errors).length) {
 			if (this.state.valid) {
 				this.setState({ valid: false });
