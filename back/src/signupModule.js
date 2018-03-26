@@ -158,37 +158,35 @@ module.exports = function(req, post, isOAuth, callback) {
 				if (!error.includes('email')) {
 					error.push('email');
 				}
-
-				callback(error, 1);
 			}
-			else {
-				collection.findOne({login: {$regex: new RegExp('^' + post.login + '$', 'i')}}, function (err, result) {
-					if (err) throw err;
 
-					if (result !== null) {
-						if (!error.includes('login')) {
-							error.push('login');
-						}
+			collection.findOne({login: {$regex: new RegExp('^' + post.login + '$', 'i')}}, function (err, result) {
+				if (err) throw err;
 
-						callback(error, 1)
+				if (result !== null) {
+					if (!error.includes('login')) {
+						error.push('login');
 					}
+				}
 
-					if (Object.keys(error).length === 0) {
-						bcrypt.genSalt(10, function(err, salt) {
-							bcrypt.hash(post.password, salt, function(err, hash) {
-								post.password = hash;
+				if (Object.keys(error).length === 0) {
+					bcrypt.genSalt(10, function(err, salt) {
+						bcrypt.hash(post.password, salt, function(err, hash) {
+							post.password = hash;
 
-								collection.insert(post, function (err, result) {
-									if (err) throw err;
+							collection.insert(post, function (err, result) {
+								if (err) throw err;
 
-									req.session._id = result.ops[0]._id;
-									callback(result.ops[0]);
-								});
+								req.session._id = result.ops[0]._id;
+								callback(result.ops[0]);
 							});
 						});
-					}
-				});
-			}
+					});
+				}
+				else {
+					callback(error, 1);
+				}
+			});
 		});
 	}
 }
