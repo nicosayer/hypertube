@@ -27,6 +27,7 @@ class Home extends Component {
 		this.handleSaveSubmit = this.handleSaveSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleInputValidation = this.handleInputValidation.bind(this);
+		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
 	}
 
 	componentDidMount() {
@@ -69,7 +70,7 @@ class Home extends Component {
 		}
 	}
 
-	handlePasswordChangeClick(event) {
+	handlePasswordChangeSubmit(event) {
 		event.preventDefault();
 		var error = this.state.error;
 
