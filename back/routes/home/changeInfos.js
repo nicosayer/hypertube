@@ -83,38 +83,49 @@ console.log(errors)
 		const collection = db.collection('users');
 
 		var update = {}
-		if (login.length > 0)
-			update.login = login
 		if (firstName.length > 0)
 			update.firstName = firstName
 		if (lastName.length > 0)
 			update.lastName = lastName
 		console.log(update)
 
-		collection.findOne({email: email}, function (error, result) {
-			if (error) throw error;
-			
-			if ((result && result._id.toString() != new mongodb.ObjectId(req.session._id).toString()) && email.length > 0) {
-				collection.update(
-					{_id: new mongodb.ObjectId(req.session._id)},
-					{$set: update}, function (err, result) {
-					if (err) throw err;
-
+		collection.findOne({email: email}, function (error, resultEmail) {
+			collection.findOne({login: login}, function (error, resultLogin) {
+				if (error) throw error;
+				
+				if (resultEmail && resultEmail._id.toString() != new mongodb.ObjectId(req.session._id).toString() && email.length > 0) {
 					errors.email = 'duplicate'
-					res.status(300).json(errors);
-				});
-			}
-			else {
-				if (email.length > 0)
-					update.email = email
-				collection.update(
-					{_id: new mongodb.ObjectId(req.session._id)},
-					{$set: update}, function (err, result) {
-					if (err) throw err;
+				}
+				if (resultLogin && resultLogin._id.toString() != new mongodb.ObjectId(req.session._id).toString() && login.length > 0) {
+					errors.login = 'duplicate'
+				}
+				if (Object.keys(errors).length === 0) {
+					if (email.length > 0)
+						update.email = email
+					if (login.length > 0)
+						update.login = login
+					collection.update(
+						{_id: new mongodb.ObjectId(req.session._id)},
+						{$set: update}, function (err, result) {
+						if (err) throw err;
 
-					res.status(202)
-				});
-			}
+						res.status(202)
+					});
+				}
+				else {
+					if (typeof errors.email == 'undefined' && email.length > 0)
+						update.email = email
+					if (typeof errors.login == 'undefined' && login.length > 0)
+						update.login = login
+					collection.update(
+						{_id: new mongodb.ObjectId(req.session._id)},
+						{$set: update}, function (err, result) {
+						if (err) throw err;
+
+						res.status(300).json(errors)
+					});
+				}
+			})
 		})
 	}
 	else {
