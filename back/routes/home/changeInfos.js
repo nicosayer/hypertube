@@ -6,7 +6,7 @@ const mongodb = mongo.getMongodb();
 
 router.post('/', function(req, res, next) {
 	console.log(req.body)
-	const { login, firstName, lastName, email } = req.body
+	var { login, firstName, lastName, email } = req.body
 
 	var errors = {}
 
@@ -18,16 +18,17 @@ router.post('/', function(req, res, next) {
 		console.log(firstName)
 		console.log(lastName)
 		console.log(errors)
-		/*email = email.toLowerCase();
+
+		email = email.toLowerCase();
 		firstName = firstName.toLowerCase();
 		lastName = lastName.toLowerCase();
 
 		firstName = firstName.replace(/\s+/g, ' ');
-		lastName = lastName.replace(/\s+/g, ' ');*/
+		lastName = lastName.replace(/\s+/g, ' ');
 
 		console.log(errors)
 
-		if (login.length> 0 && login.length < 4) {
+		if (login.length> 0 && login.length < 6) {
 			errors.login = 'default';
 		}
 		if (login.length > 20) {
@@ -70,19 +71,6 @@ console.log(errors)
 			errors.lastName = 'default'
 		}
 		console.log(errors)
-
-		/*if (change[1].length < 6) {
-			errors.password = 'default'
-		}
-		if (change[1].length > 50) {
-			errors.password = 'default'
-		}
-		if (!(/[a-zA-Z]/i.test(change[1]))) {
-			errors.password = 'default'
-		}
-		if (!(/[0-9]/i.test(change[1]))) {
-			errors.password = 'default'
-		}*/
 	}
 
 	if (!req.session || !req.session._id){
@@ -106,7 +94,7 @@ console.log(errors)
 		collection.findOne({email: email}, function (error, result) {
 			if (error) throw error;
 			
-			if (result && email.length > 0) {
+			if ((result && result._id.toString() != new mongodb.ObjectId(req.session._id).toString()) && email.length > 0) {
 				collection.update(
 					{_id: new mongodb.ObjectId(req.session._id)},
 					{$set: update}, function (err, result) {
@@ -117,7 +105,8 @@ console.log(errors)
 				});
 			}
 			else {
-				update.email = email
+				if (email.length > 0)
+					update.email = email
 				collection.update(
 					{_id: new mongodb.ObjectId(req.session._id)},
 					{$set: update}, function (err, result) {
