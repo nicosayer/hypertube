@@ -101,64 +101,62 @@ module.exports = function(req, post, isOAuth, callback) {
 						const userResult = result;
 						var objTmp = Object.assign({}, result.oauth, post.oauth);
 
-						collection.update(
-							{email: post.email},
-							{$set: {oauth: objTmp}}, function (err, result) {
-								if (err) throw err;
+						collection.update({email: post.email}, {$set: {oauth: objTmp}}, function (err, result) {
+							if (err) throw err;
 
-								req.session._id = userResult._id;
-								callback(result);
-							});
-						}
-						else {
+							req.session._id = userResult._id;
+							callback(result);
+						});
+					}
+					else {
+						collection.insert(post, function (err, result) {
+							if (err) throw err;
+
+							req.session._id = result.ops[0]._id;
+							callback(result.ops[0]);
+						});
+					}
+				});
+			}
+			else {
+				req.session._id = result._id;
+				callback(result);
+			}
+		});
+	}
+	else {
+		collection.findOne({email: post.email}, function (err, result) {
+			if (err) throw err;
+
+			if (result) {
+				error.email = 'alreadyTaken';
+			}
+
+			collection.findOne({login: {$regex: new RegExp('^' + post.login + '$', 'i')}}, function (err, result) {
+				if (err) throw err;
+
+				if (result !== null) {
+					error.login = 'alreadyTaken';
+				}
+
+				if (Object.keys(error).length === 0) {
+					bcrypt.genSalt(10, function(err, salt) {
+						bcrypt.hash(post.password, salt, function(err, hash) {
+							post.password = hash;
+
 							collection.insert(post, function (err, result) {
 								if (err) throw err;
 
 								req.session._id = result.ops[0]._id;
 								callback(result.ops[0]);
 							});
-						}
+						});
 					});
 				}
 				else {
-					req.session._id = result._id;
-					callback(result);
+					callback(error, 1);
 				}
 			});
-		}
-		else {
-			collection.findOne({email: post.email}, function (err, result) {
-				if (err) throw err;
-
-				if (result) {
-					error.email = 'alreadyTaken';
-				}
-
-				collection.findOne({login: {$regex: new RegExp('^' + post.login + '$', 'i')}}, function (err, result) {
-					if (err) throw err;
-
-					if (result !== null) {
-						error.login = 'alreadyTaken';
-					}
-
-					if (Object.keys(error).length === 0) {
-						bcrypt.genSalt(10, function(err, salt) {
-							bcrypt.hash(post.password, salt, function(err, hash) {
-								post.password = hash;
-
-								collection.insert(post, function (err, result) {
-									if (err) throw err;
-
-									req.session._id = result.ops[0]._id;
-									callback(result.ops[0]);
-								});
-							});
-						});
-					}
-					else {
-						callback(error, 1);
-					}
-				});
-			});
-		}
+		});
 	}
+}
