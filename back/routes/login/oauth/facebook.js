@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const got = require('got');
 
-const signupModule = require("../../../src/signupModuleEric");
+const signupModule = require("../../../src/signupModule");
 
 router.post('/', function(req, res, next) {
 	if (req.session && req.session._id) {
@@ -36,6 +36,7 @@ router.post('/', function(req, res, next) {
 
 			signupModule(req, post, true, (result, error = 0) => {
 				if (error) {
+					console.log(result);
 					res.status(300).json(result);
 				} else {
 					res.status(201).json(result);

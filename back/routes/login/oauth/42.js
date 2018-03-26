@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const got = require('got');
 
-const signupModule = require("../../../src/signupModuleEric");
+const signupModule = require("../../../src/signupModule");
 
 router.post('/', function(req, res, next) {
 	if (req.session && req.session._id) {
@@ -33,12 +33,13 @@ router.post('/', function(req, res, next) {
 				email: apiRes.body.email,
 				profilePic: apiRes.body.image_url,
 				oauth: {
-					"42": apiRes.body.id
+					"42": "" + apiRes.body.id
 				}
 			};
 			
 			signupModule(req, post, true, (result, error = 0) => {
 				if (error) {
+					console.log(result);
 					res.status(300).json(result);
 				} else {
 					res.status(201).json(result);

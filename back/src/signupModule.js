@@ -9,7 +9,6 @@ module.exports = function(req, post, isOAuth, callback) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
-
 	Object.keys(post).filter(function(key, index) {
 		if (key === 'password') {
 			return false;
@@ -112,77 +111,37 @@ module.exports = function(req, post, isOAuth, callback) {
 			error.push('password');
 		}
 	}
+	
 
-	collection.findOne({oauth: post.oauth}, function (err, result) {
-		if (err) throw err;
+	if (isOAuth) {
+		collection.findOne({oauth: post.oauth}, function (err, result) {
+			if (err) throw err;
 
-		if (result === null) {
-			collection.findOne({email: post.email}, function (err, result) {
-				if (err) throw err;
-				const userResult = result;
+			if (!result) {
+				collection.findOne({email: post.email}, function (err, result) {
+					if (err) throw err;
 
-				new Promise((resolve, reject) => {
-					if (result !== null) {
-						if (!isOAuth) {
-							if (!error.includes('email')) {
-								error.push('email');
-							}
-							callback(error, 1);
-						}
-						else {
-							collection.update(
-								{email: post.email},
-								{$set: {oauth: post.oauth}}, function (err, result) {
-									if (err) throw err;
+					if (result) {
+						const userResult = result;
+						var objTmp = Object.assign({}, result.oauth, post.oauth);
 
-									req.session._id = userResult._id;
-									callback(result);
-								});
-							}
-						}
-						else {
-							resolve(req.session._id);
-						}
-					})
-					.then(data => {
-						if (!isOAuth) {
-							collection.findOne({login: {$regex: new RegExp('^' + post.login + '$', 'i')}}, function (err, result) {
-								if (err) throw err;
+						collection.update(
+							{email: post.email},
+							{$set: {oauth: objTmp}}, function (err, result) {
+							if (err) throw err;
 
-								if (result !== null) {
-									if (!error.includes('login')) {
-										error.push('login');
-									}
-								}
+							req.session._id = userResult._id;
+							callback(result);
+						});
+					}
+					else {
+						collection.insert(post, function (err, result) {
+							if (err) throw err;
 
-								if (Object.keys(error).length === 0) {
-									bcrypt.genSalt(10, function(err, salt) {
-										bcrypt.hash(post.password, salt, function(err, hash) {
-											post.password = hash;
-
-											collection.insert(post, function (err, result) {
-												if (err) throw err;
-
-												req.session._id = result.ops[0]._id;
-												callback(result.ops[0]);
-											});
-										});
-									});
-								}
-								else {
-									callback(error, 1)
-								}
-							});
-						}
-						else if (isOAuth && req.session && !data) {
-							collection.insert(post, function (err, result) {
-								if (err) throw err;
-
-								req.session._id = result.ops[0]._id;
-								callback(result.ops[0]);
-							});
-						}
-					})
+							req.session._id = result.ops[0]._id;
+							callback(result.ops[0]);
+						});
+					}
 				});
 			}
 			else {
@@ -191,3 +150,45 @@ module.exports = function(req, post, isOAuth, callback) {
 			}
 		});
 	}
+	else {
+		collection.findOne({email: post.email}, function (err, result) {
+			if (err) throw err;
+
+			if (result) {
+				if (!error.includes('email')) {
+					error.push('email');
+				}
+
+				callback(error, 1);
+			}
+			else {
+				collection.findOne({login: {$regex: new RegExp('^' + post.login + '$', 'i')}}, function (err, result) {
+					if (err) throw err;
+
+					if (result !== null) {
+						if (!error.includes('login')) {
+							error.push('login');
+						}
+
+						callback(error, 1)
+					}
+
+					if (Object.keys(error).length === 0) {
+						bcrypt.genSalt(10, function(err, salt) {
+							bcrypt.hash(post.password, salt, function(err, hash) {
+								post.password = hash;
+
+								collection.insert(post, function (err, result) {
+									if (err) throw err;
+
+									req.session._id = result.ops[0]._id;
+									callback(result.ops[0]);
+								});
+							});
+						});
+					}
+				});
+			}
+		});
+	}
+}
