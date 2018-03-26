@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "jsmpeg": "^1.0.0",
     "moment": "^2.21.0",
     "react": "^16.2.0",
     "react-datepicker": "^1.2.2",
@@ -13,7 +14,10 @@
     "react-scripts": "^1.1.1",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "socket.io-client": "^2.0.4",
+    "socket.io-stream": "^0.9.1",
+    "torrent-search-api": "^1.0.27"
   },
   "scripts": {
     "start": "react-scripts start",

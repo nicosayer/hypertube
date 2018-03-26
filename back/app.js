@@ -16,6 +16,7 @@ mongo.connect(error => {
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -59,6 +60,6 @@ app.use(function(err, req, res, next) {
 	res.render('error');
 });
 
-app.listen(3001);
+//app.listen(3001);
 
 module.exports = app;

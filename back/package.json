@@ -15,9 +15,14 @@
     "htmlspecialchars": "^1.0.5",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
-    "mongodb": "^3.0.4",
+    "mongodb": "^3.0.5",
     "morgan": "~1.9.0",
     "nodemailer": "^4.6.3",
-    "randomstring": "^1.1.5"
+    "peerflix": "^0.37.0",
+    "randomstring": "^1.1.5",
+    "socket.io": "^2.0.4",
+    "socket.io-stream": "^0.9.1",
+    "torrent-search-api": "^1.0.27",
+    "torrent-stream": "^1.0.3"
   }
 }

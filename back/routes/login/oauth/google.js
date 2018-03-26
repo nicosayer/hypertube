@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const got = require('got');
 
-const signupModule = require("../../../src/signupModule");
+const signupModule = require("../../../src/signupModuleEric");
 
 router.post('/', function(req, res, next) {
 	if (req.session && req.session._id) {
