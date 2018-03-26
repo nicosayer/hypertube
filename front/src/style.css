@@ -20,22 +20,31 @@ div, p {
 }
 
 input {
+	color: #f1f1f1;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 100%;
-	padding: 5px 10px;
+	background: #1A1D23;
+	padding: 10px 20px;
 	margin: 5px 10px;
 	border: 0px;
-	border-radius: 5px;
+	border-radius: 3px;
 	border: 1px solid lightgrey;
 }
 
+input[type='submit'] {
+	color: white;
+}
+
 .formBox {
+	border-radius: 3px;
 	background: #2A292F;
-	padding: 10px 40px;
+	padding: 20px 40px;
+	box-shadow: 0 0 10px black;
+	margin: 50px 25px;
 }
 
 .invalidInput {
-	border: solid 1px red;
+	border: solid 1px #BE4B49;
 }
 
 .fontBig {
@@ -43,7 +52,7 @@ input {
 }
 
 .fontSmall {
-	font-size: 50%;
+	font-size: 75%;
 }
 
 .marginTop {
@@ -64,4 +73,19 @@ input {
 
 .test {
 	border: 1px solid red;
+}
+
+.lignTop {
+	padding-top: 10px;
+	margin-top: 10px;
+	border-top: 1px solid #1A1D23;
+}
+
+.lignBottom {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #1A1D23;
+}
+.spaceTop {
+	margin-top: 10px;
 }

@@ -80,14 +80,13 @@ class LogIn extends Component {
 	render() {
 
 		return (
-			<div className="formBox marginTop">
-				<span className='fontBig block'>Log In</span>
-				<Link to='/signup'>Create an account</Link>
+			<div className='formBox'>
+				<span className='lignBottom fontBig block'>Log In</span>
 				<form onSubmit={this.handleFormSubmit}>
 					<Input
-						type="text"
-						name="login"
-						placeholder="Login or email"
+						type='text'
+						name='login'
+						placeholder='Login or email'
 						validation={{
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -98,9 +97,9 @@ class LogIn extends Component {
 					<Tooltip text={errors.login.login} visible={this.state.error.includes('login') ? true : false}/>
 					<br />
 					<Input
-						type="password"
-						name="password"
-						placeholder="Password"
+						type='password'
+						name='password'
+						placeholder='Password'
 						validation={{
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true
@@ -110,16 +109,23 @@ class LogIn extends Component {
 						/>
 					<Tooltip text={errors.login.password} visible={this.state.error.includes('password') ? true : false}/>
 					<br />
-					<Link to='/reset'>Forgot your password?</Link>
-					<br />
-					<input type='submit' value="Log in"/>
+					<div className='block fontSmall'>
+						<Link to='/reset'>Forgot your password?</Link>
+					</div>
+					<input className='spaceTop' type='submit' value='Log in'/>
 				</form>
+				<div className='spaceTop block'>
 				<Auth42 />
-				<br/>
+				</div>
+				<div className='spaceTop block'>
 				<AuthFacebook />
-				<br/>
+				</div>
+				<div className='spaceTop block'>
 				<AuthGoogle />
-				<br/>
+				</div>
+				<div className='lignTop block fontSmall'>
+					<Link to='/signup'>You want to create an account ?</Link>
+				</div>
 			</div>
 		)
 	}
