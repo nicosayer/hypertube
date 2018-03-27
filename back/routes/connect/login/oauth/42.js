@@ -41,7 +41,6 @@ router.post('/', function(req, res, next) {
 
 			signupModule(req, post, url, true, (result, error = 0) => {
 				if (error) {
-					console.log(result);
 					res.status(300).json(result);
 				} else {
 					res.status(201).json(result);

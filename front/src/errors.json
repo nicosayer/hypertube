@@ -20,7 +20,10 @@
 		"login": "Enter your login or email"
 	},
 	"profile": {
-		"oldPassword": "Your password doesn't match",
+		"oldPassword": {
+			"default" : "Enter a combination of at least six characters",
+			"wrong": "Your password is incorrect"
+		},
 		"picture": "Upload a picture in Jpg or Png format"
 	}
 }

@@ -7,7 +7,7 @@ var request = require('request');
 var mongo = require('../mongo');
 
 module.exports = function(req, post, url, isOAuth, callback) {
-	console.log("icila")
+
 	var error = {};
 	var db = mongo.getDb();
 	const collection = db.collection('users');
@@ -102,8 +102,6 @@ module.exports = function(req, post, url, isOAuth, callback) {
 		}
 	}
 
-console.log(post)
-
 	if (isOAuth) {
 		collection.findOne({oauth: post.oauth}, function (err, result) {
 			if (err) throw err;
@@ -119,12 +117,27 @@ console.log(post)
 						collection.findAndModify({email: post.email}, [], {$set: {oauth: objTmp}}, {new: true}, function (err, result) {
 							if (err) throw err;
 
-							req.session._id = userResult._id;
-							callback(result.value);
+							if (!fs.existsSync('public/pictures/'+userResult._id.toString()+'.png') && typeof url != 'undefined'){
+								request.head(url, function(err, res, body){
+								    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
+								    	request(url).pipe(fs.createWriteStream('public/pictures/'+userResult._id.toString()+'.png')).on('close', function() {
+											req.session._id = userResult._id;
+											callback(result.value);
+										});
+								    }
+								    else {
+								    	req.session._id = userResult._id;
+										callback(result.value);
+								    }
+								});
+							}
+							else {
+								req.session._id = userResult._id;
+								callback(result.value);
+							}
 						});
 					}
 					else {
-						console.log("ici")
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
 							console.log(url)
@@ -134,7 +147,7 @@ console.log(post)
 										console.log(res.headers['content-type'])
 								    if (res.headers['content-type'] === 'image/jpeg' || res.headers['content-type'] === 'image/png' || res.headers['content-type'] === 'text/html; charset=utf-8') {
 											console.log('ok');
-											request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString())).on('close', function() {
+											request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
 
 											req.session._id = result.ops[0]._id;
 											callback(result.ops[0]);
@@ -155,8 +168,26 @@ console.log(post)
 				});
 			}
 			else {
-				req.session._id = result._id;
-				callback(result);
+				if (!fs.existsSync('public/pictures/'+result._id.toString()+'.png') && typeof url != 'undefined'){
+					request.head(url, function(err, res, body){
+
+					    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
+					    	request(url).pipe(fs.createWriteStream('public/pictures/'+result._id.toString()+'.png')).on('close', function() {
+								req.session._id = result._id;
+								callback(result);
+							});
+					    }
+					    else {
+					    	req.session._id = result._id;
+							callback(result);
+					    }
+					});
+					
+				}
+				else {
+					req.session._id = result._id;
+					callback(result);
+				}
 			}
 		});
 	}

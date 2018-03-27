@@ -34,6 +34,8 @@ router.post('/', function(req, res, next) {
 					}
 					else {
 						const password = result.password;
+						console.log(result)
+						console.log(post.password)
 
 						bcrypt.compare(post.password, password, function(error, result) {
 							if (error) throw error;

@@ -30,8 +30,8 @@ class App extends Component {
 								:
 								[
 
-									<Route path='/signup' key='signup' component={SignUp} />,
-									<Route path='/reset' key='reset' component={ResetPassword} />,
+									<Route exact path='/signup' key='signup' component={SignUp} />,
+									<Route exact path='/reset' key='reset' component={ResetPassword} />,
 									<Route key='login' component={LogIn} />
 								]
 
