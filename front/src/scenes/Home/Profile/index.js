@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import {NotificationManager} from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 
 import Logout from './../LogOut';
 import Input from '../../../components/Input';
 import Tooltip from '../../../components/Tooltip/';
+import { updateProfileInfos } from '../../../actions/me'
 
 import { fetchWrap } from '../../../services/fetchWrap'
 
@@ -35,16 +36,7 @@ class Profile extends Component {
 	}
 
 	componentDidMount() {
-		fetchWrap('/home/profile/getUserInfos', {
-			method: 'GET',
-			credentials: 'include'
-		})
-		.then(data => {
-			this.setState({...data});
-		})
-		.catch(data => {
-			console.log(data);
-		})
+		this.setState({...this.props.me});
 	}
 
 	handleSaveSubmit(event) {
@@ -71,6 +63,7 @@ class Profile extends Component {
 					lastName: payload.lastName,
 					email: payload.email,
 				})
+				this.props.dispatch(updateProfileInfos(payload));
 				NotificationManager.success('Information Saved');
 			})
 			.catch(error => {
@@ -388,7 +381,8 @@ class Profile extends Component {
 function mapStateToProps(state) {
 	const { isAuthenticated, me } = state.handleMe
 	return ({
-		isAuthenticated, me
+		isAuthenticated,
+		me
 	})
 }
 
