@@ -131,8 +131,10 @@ console.log(post)
 							if (typeof url != 'undefined') {
 								request.head(url, function(err, res, body){
 								    console.log('content-length:', res.headers['content-length']);
-								    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
-								    	request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
+										console.log(res.headers['content-type'])
+								    if (res.headers['content-type'] === 'image/jpeg' || res.headers['content-type'] === 'image/png' || res.headers['content-type'] === 'text/html; charset=utf-8') {
+											console.log('ok');
+											request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString())).on('close', function() {
 
 											req.session._id = result.ops[0]._id;
 											callback(result.ops[0]);

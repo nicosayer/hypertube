@@ -148,3 +148,7 @@ div, p {
 .floatLeft {
 	float: left;
 }
+
+.pointer {
+	cursor: pointer;
+}

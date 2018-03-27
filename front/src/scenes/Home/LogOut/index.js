@@ -14,7 +14,7 @@ class LogOut extends Component {
 			credentials: 'include'
 		})
 		.then(() => {
-			window.location.reload()
+			window.location.href = '/';
 		})
 	}
 

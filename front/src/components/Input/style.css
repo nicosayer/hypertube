@@ -24,6 +24,10 @@ input[type='submit'] {
 	cursor: pointer;
 }
 
+input[type='file'] {
+	display: none;
+}
+
 .invalidInput {
 	border-bottom: solid 1px #BE4B49;
 }
