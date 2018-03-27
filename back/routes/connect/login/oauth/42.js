@@ -35,11 +35,11 @@ router.post('/', function(req, res, next) {
 				login: apiRes.body.login,
 				oauth: {
 					"42": "" + apiRes.body.id
-				},
-				url: apiRes.body.image_url
+				}
 			};
-			
-			signupModule(req, post, true, (result, error = 0) => {
+			var url = apiRes.body.image_url
+
+			signupModule(req, post, url, true, (result, error = 0) => {
 				if (error) {
 					console.log(result);
 					res.status(300).json(result);

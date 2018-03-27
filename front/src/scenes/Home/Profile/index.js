@@ -33,6 +33,15 @@ class Profile extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
+		const profilePicUrl = 'http://localhost:3001/pictures/' + this.props.me._id + '.png';
+		this.imageExists(profilePicUrl, exists => {
+			if(exists) {
+				this.picture.src = profilePicUrl;
+			}
+			else {
+				this.picture.src = 'http://localhost:3001/pictures/default.png'
+			}
+		});
 	}
 
 	componentDidMount() {
@@ -134,37 +143,33 @@ class Profile extends Component {
 			if (picture.type !== 'image/png' && picture.type !== 'image/jpeg') {
 				error.picture = 'default';
 			}
-
 			const url = window.URL || window.webkitURL;
-			var image = new Image();
-
-			image.onload = () => {
-				var formData = new FormData();
-				formData.append('picture', picture);
-				if (!Object.keys(error).length) {
-					fetchWrap('/home/profile/changePicture', {
-						method: 'POST',
-						credentials: 'include',
-						body: formData
-					})
-					.then((payload) => {
-						that.picture.src = 'http://localhost:3001/pictures/' + this.props.me._id + '.png?' + new Date().getTime();
-					})
-					.catch(error => {
-						console.log(error)
-					})
+			this.imageExists(url.createObjectURL(picture), exists => {
+				if (exists) {
+					var formData = new FormData();
+					formData.append('picture', picture);
+					if (!Object.keys(error).length) {
+						fetchWrap('/home/profile/changePicture', {
+							method: 'POST',
+							credentials: 'include',
+							body: formData
+						})
+						.then((payload) => {
+							that.picture.src = 'http://localhost:3001/pictures/' + this.props.me._id + '.png?' + new Date().getTime();
+						})
+						.catch(error => {
+							console.log(error)
+						})
+					}
+					else {
+						this.setState({ error })
+					}
 				}
 				else {
+					error.picture = 'default';
 					this.setState({ error })
 				}
-			};
-
-			image.onerror = () => {
-				error.picture = 'default';
-				this.setState({ error })
-			};
-
-			image.src = url.createObjectURL(picture);
+			})
 		}
 	}
 
@@ -182,6 +187,21 @@ class Profile extends Component {
 		}
 	}
 
+	imageExists(url, callback) {
+		var img = new Image();
+		img.onload = function() { callback(true); };
+		img.onerror = function() { callback(false); };
+		img.src = url;
+	}
+
+	urlExists(url)
+	{
+		var http = new XMLHttpRequest();
+		http.open('HEAD', url, false);
+		http.send();
+		return http.status !== 404;
+	}
+
 	render() {
 		return (
 			<div className='formBox profileBox'>
@@ -190,7 +210,6 @@ class Profile extends Component {
 					<img
 						alt='Profile'
 						className='circle profileImg floatLeft'
-						src={'http://localhost:3001/pictures/' + this.props.me._id + '.png'}
 						ref={img => this.picture = img }
 						onError={() => this.picture.src = 'http://localhost:3001/pictures/default.png'}
 						/>
