@@ -21,7 +21,6 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		.then(apiRes => {
-			console.log(apiRes.body.photos.url)
 			const id = apiRes.body.resourceName.substring(7);
 
 			const post = {
@@ -38,14 +37,12 @@ router.post('/', function(req, res, next) {
 				if (!apiRes.body.photos[0].default || apiRes.body.photos[0].default === false)
 				{
 					url = apiRes.body.photos[0].url
-					console.log(url, apiRes.body.photos[0])
 					break;
 				}
 			}
 
 			signupModule(req, post, url, true, (result, error = 0) => {
 				if (error) {
-					console.log(result);
 					res.status(300).json(result);
 				} else {
 					res.status(201).json(result);
