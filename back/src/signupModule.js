@@ -116,11 +116,11 @@ console.log(post)
 						const userResult = result;
 						var objTmp = Object.assign({}, result.oauth, post.oauth);
 
-						collection.update({email: post.email}, {$set: {oauth: objTmp}}, function (err, result) {
+						collection.findAndModify({email: post.email}, [], {$set: {oauth: objTmp}}, {new: true}, function (err, result) {
 							if (err) throw err;
 
 							req.session._id = userResult._id;
-							callback(result);
+							callback(result.value);
 						});
 					}
 					else {
