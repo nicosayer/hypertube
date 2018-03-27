@@ -9,83 +9,94 @@ module.exports = function(req, post, isOAuth, callback) {
 	var db = mongo.getDb();
 	const collection = db.collection('users');
 
-	Object.keys(post).filter(function(key, index) {
-		if (key === 'password') {
-			return false;
+	if (!isOAuth) {
+		Object.keys(post).filter(function(key, index) {
+			if (key === 'password') {
+				return false;
+			}
+			return true;
+		}).map(function(key, index) {
+			if (key !== 'oauth') {
+				post[key] = post[key].trim();
+			}
+		});
+
+		if (post.firstName && post.lastName) {
+			post.firstName = post.firstName.toLowerCase().replace(/\s+/g, ' ');
+			post.lastName = post.lastName.toLowerCase().replace(/\s+/g, ' ');
 		}
-		return true;
-	}).map(function(key, index) {
-		if (key !== 'oauth') {
-			post[key] = post[key].trim();
+
+		if (post.email) {
+			post.email = post.email.toLowerCase();
 		}
-	});
 
-	post.firstName = post.firstName.toLowerCase().replace(/\s+/g, ' ');
-	post.lastName = post.lastName.toLowerCase().replace(/\s+/g, ' ');
+		if (!(post.firstName && post.lastName && post.login && post.email && post.password)) {
+			error.default = 'default';
+		}
 
-	if (post.email) {
-		post.email = post.email.toLowerCase();
-	}
+		if (post.login) {
+			if (post.login.length < 4) {
+				error.login = 'default';
+			}
+			if (post.login.length > 20) {
+				error.login = 'default';
+			}
+			if (!(/^[a-zà-ÿ0-9]+$/i.test(post.login))) {
+				error.login = 'default';
+			}
+		}
 
-	if (!(post.firstName && post.lastName && post.login && post.email && post.password)) {
-		error.default = 'default';
-	}
+		if (post.email) {
+			if (post.email.length > 50) {
+				error.email = 'default';
+			}
+			if (!(/^.+@.+\..+$/.test(post.email))) {
+				error.email = 'default';
+			}
+		}
 
-	if (post.login && post.login.length < 4) {
-		error.login = 'default';
-	}
-
-	if (post.login && post.login.length > 20) {
-		error.login = 'default';
-	}
-
-	if (post.email && post.email.length > 50) {
-		error.email = 'default';
-	}
-
-	if (post.email && !(/^.+@.+\..+$/.test(post.email))) {
-		error.email = 'default';
-	}
-
-
-	if (post.login && !(/^[a-zà-ÿ0-9]+$/i.test(post.login))) {
-		error.login = 'default';
-	}
-
-	if (post.firstName && post.firstName.length < 1) {
-		error.firstName = 'default';
-
-	}
-
-	if (post.firstName && post.firstName.length > 20) {
-		error.firstName = 'default';
-
-	}
-
-	if (post.firstName && !(/^[a-zà-ÿ ]+$/i.test(post.firstName))) {
-		error.firstName = 'default';
-	}
+		if (post.firstName) {
+			if (post.firstName.length < 1) {
+				error.firstName = 'default';
+			}
+			if (post.firstName.length > 20) {
+				error.firstName = 'default';
+			}
+			if (!(/^[a-zà-ÿ ]+$/i.test(post.firstName))) {
+				error.firstName = 'default';
+			}
+		}
 
 
-	if (post.lastName && post.lastName.length < 1) {
-		error.lastName = 'default';
-	}
+		if (post.lastName) {
+			if (post.lastName.length < 1) {
+				error.lastName = 'default';
+			}
+			if (post.lastName.length > 20) {
+				error.lastName = 'default';
+			}
+			if (!(/^[a-zà-ÿ ]+$/i.test(post.lastName))) {
+				error.lastName = 'default';
+			}
+		}
 
-	if (post.lastName && post.lastName.length > 20) {
-		error.lastName = 'default';
-	}
 
-	if (post.lastName && !(/^[a-zà-ÿ ]+$/i.test(post.lastName))) {
-		error.lastName = 'default';
-	}
-
-
-	if (post.password && post.password.length < 6) {
-		error.password = 'default';
-	}
-
-	if (post.password && post.password.length > 50) {
-		error.password = 'default';
+		if (post.password) {
+			if (post.password.length < 6) {
+				error.password = 'default';
+			}
+			if (post.password.length > 50) {
+				error.password = 'default';
+			}
+			if (!(/[a-z]/i.test(post.password))) {
+				console.log(1)
+				error.password = 'default';
+			}
+			if (!(/[0-9]/.test(post.password))) {
+				console.log(2)
+				error.password = 'default';
+			}
+		}
 	}
 
 
