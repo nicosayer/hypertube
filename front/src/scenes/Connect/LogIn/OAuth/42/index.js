@@ -63,7 +63,7 @@ class Auth42 extends Component {
 			<div>
 				{
 					this.state.loading ?
-					<span className='loading'><i className="fas fa-spinner"></i></span>
+					<div className='loading'><span><i className="fas fa-spinner"></i></span></div>
 					:
 					<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span>
 				}
