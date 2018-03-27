@@ -20,6 +20,7 @@
 		"login": "Enter your login or email"
 	},
 	"profile": {
-		"oldPassword": "Your password doesn't match"
+		"oldPassword": "Your password doesn't match",
+		"picture": "Upload a picture in Jpg or Png format"
 	}
 }
