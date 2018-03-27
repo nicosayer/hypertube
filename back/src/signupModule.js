@@ -118,7 +118,7 @@ console.log(isOAuth)
 						const userResult = result;
 						var objTmp = Object.assign({}, result.oauth, post.oauth);
 
-						collection.update({email: post.email}, {$set: {oauth: objTmp}}, function (err, result) {
+						collection.findAndModify({email: post.email}, [], {$set: {oauth: objTmp}}, {new: true}, function (err, result) {
 							if (err) throw err;
 
 							if (!fs.existSync('public/pictures/'+result.ops[0]._id.toString()+'.png')){
@@ -141,7 +141,7 @@ console.log(isOAuth)
 							}
 
 							req.session._id = userResult._id;
-							callback(result);
+							callback(result.value);
 						});
 					}
 					else {
@@ -152,8 +152,10 @@ console.log(isOAuth)
 							if (typeof url != 'undefined') {
 								request.head(url, function(err, res, body){
 								    console.log('content-length:', res.headers['content-length']);
-								    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
-								    	request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
+										console.log(res.headers['content-type'])
+								    if (res.headers['content-type'] === 'image/jpeg' || res.headers['content-type'] === 'image/png' || res.headers['content-type'] === 'text/html; charset=utf-8') {
+											console.log('ok');
+											request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString())).on('close', function() {
 
 											req.session._id = result.ops[0]._id;
 											callback(result.ops[0]);

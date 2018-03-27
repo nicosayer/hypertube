@@ -38,6 +38,7 @@ router.post('/', function(req, res, next) {
 				if (!apiRes.body.photos[0].default || apiRes.body.photos[0].default === false)
 				{
 					url = apiRes.body.photos[0].url
+					console.log(url, apiRes.body.photos[0])
 					break;
 				}
 			}
