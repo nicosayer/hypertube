@@ -21,6 +21,7 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		.then(apiRes => {
+			console.log(apiRes.body.photos)
 			const id = apiRes.body.resourceName.substring(7);
 
 			const post = {
