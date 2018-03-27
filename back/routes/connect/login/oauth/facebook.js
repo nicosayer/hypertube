@@ -27,7 +27,8 @@ router.post('/', function(req, res, next) {
 				lastName: infos.last_name,
 				oauth: {
 					facebook: infos.id
-				}
+				},
+				url: infos.picture.data.url
 			};
 
 			if (infos.email) {

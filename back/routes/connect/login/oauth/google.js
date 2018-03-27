@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		.then(apiRes => {
-			console.log(apiRes.body.photos)
+			console.log(apiRes.body.photos.url)
 			const id = apiRes.body.resourceName.substring(7);
 
 			const post = {
@@ -32,6 +32,13 @@ router.post('/', function(req, res, next) {
 					google: id
 				}
 			};
+			for (var i = 0; i < apiRes.body.photos.length; i++) {
+				if (apiRes.body.photos[0].default && apiRes.body.photos[0].default !== true)
+				{
+					post.url = apiRes.body.photos[0].url
+					break;
+				}
+			}
 
 			signupModule(req, post, true, (result, error = 0) => {
 				if (error) {

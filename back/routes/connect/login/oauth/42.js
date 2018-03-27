@@ -38,7 +38,7 @@ router.post('/', function(req, res, next) {
 				},
 				url: apiRes.body.image_url
 			};
-console.log(post)
+			
 			signupModule(req, post, true, (result, error = 0) => {
 				if (error) {
 					console.log(result);

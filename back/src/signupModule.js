@@ -128,20 +128,26 @@ console.log(post)
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
 							console.log(post.url)
-							request.head(post.url, function(err, res, body){
-							    console.log('content-length:', res.headers['content-length']);
-							    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
-							    	request(post.url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
+							if (typeof post.url != 'undefined') {
+								request.head(post.url, function(err, res, body){
+								    console.log('content-length:', res.headers['content-length']);
+								    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
+								    	request(post.url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
 
-										req.session._id = result.ops[0]._id;
+											req.session._id = result.ops[0]._id;
+											callback(result.ops[0]);
+									    });
+								    }
+								    else {
+								    	req.session._id = result.ops[0]._id;
 										callback(result.ops[0]);
-								    });
-							    }
-							    else {
-							    	req.session._id = result.ops[0]._id;
-									callback(result.ops[0]);
-							    }
-							});
+								    }
+								});
+							}
+							else {
+								req.session._id = result.ops[0]._id;
+								callback(result.ops[0]);
+							}
 						});
 					}
 				});
