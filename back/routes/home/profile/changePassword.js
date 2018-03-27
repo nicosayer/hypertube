@@ -16,16 +16,16 @@ router.post('/', function(req, res, next) {
 	}
 	else {
 		if (newPassword.length < 6) {
-			errors.password = 'default'
+			errors.newPassword = 'default'
 		}
 		if (newPassword.length > 50) {
-			errors.password = 'default'
+			errors.newPassword = 'default'
 		}
 		if (!(/[a-zA-Z]/i.test(newPassword))) {
-			errors.password = 'default'
+			errors.newPassword = 'default'
 		}
 		if (!(/[0-9]/i.test(newPassword))) {
-			errors.password = 'default'
+			errors.newPassword = 'default'
 		}
 	}
 
@@ -40,15 +40,16 @@ router.post('/', function(req, res, next) {
 
 		collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 			if (error) throw error;
+
 			bcrypt.compare(oldPassword, result.password, function(error, result) {
 				if (error) throw error;
 
 				if (result !== true) {
-					errors.password = 'wrong'
+					errors.oldPassword = 'wrong'
 
 					collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 						if (error) throw error;
-						res.status(300).json({errors: errors, user: result});
+						res.status(300).json(errors);
 					});
 				}
 				else {
