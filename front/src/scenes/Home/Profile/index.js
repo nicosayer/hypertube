@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import {NotificationManager} from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 
 import Logout from './../LogOut';
 import Input from '../../../components/Input';
 import Tooltip from '../../../components/Tooltip/';
+import { updateProfileInfos } from '../../../actions/me'
 
 import { fetchWrap } from '../../../services/fetchWrap'
 
@@ -18,6 +19,7 @@ class Profile extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			id: '',
 			firstName: '',
 			lastName: '',
 			login: '',
@@ -27,22 +29,14 @@ class Profile extends Component {
 		}
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleSaveSubmit = this.handleSaveSubmit.bind(this);
+		this.handlePictureSubmit = this.handlePictureSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
 	}
 
 	componentDidMount() {
-		fetchWrap('/home/profile/getUserInfos', {
-			method: 'GET',
-			credentials: 'include'
-		})
-		.then(data => {
-			this.setState({...data});
-		})
-		.catch(data => {
-			console.log(data);
-		})
+		this.setState({...this.props.me});
 	}
 
 	handleSaveSubmit(event) {
@@ -69,6 +63,7 @@ class Profile extends Component {
 					lastName: payload.lastName,
 					email: payload.email,
 				})
+				this.props.dispatch(updateProfileInfos(payload));
 				NotificationManager.success('Information Saved');
 			})
 			.catch(error => {
@@ -123,6 +118,52 @@ class Profile extends Component {
 		})
 	}
 
+	handlePictureSubmit(event) {
+		const that = this;
+		const picture = event.target.files[0];
+		if (picture) {
+			var error = this.state.error;
+
+			if (picture.size > 10000000) {
+				error.picture = 'default';
+			}
+			if (picture.type !== 'image/png' && picture.type !== 'image/jpeg') {
+				error.picture = 'default';
+			}
+
+			const url = window.URL || window.webkitURL;
+			var image = new Image();
+
+			image.onload = () => {
+				var formData = new FormData();
+				formData.append('picture', picture);
+				if (!Object.keys(error).length) {
+					fetchWrap('/home/profile/changePicture', {
+						method: 'POST',
+						credentials: 'include',
+						body: formData
+					})
+					.then((payload) => {
+						that.picture.src = 'http://localhost:3001/pictures/' + this.props.me._id + '.png?' + new Date().getTime();
+					})
+					.catch(error => {
+						console.log(error)
+					})
+				}
+				else {
+					this.setState({ error })
+				}
+			};
+
+			image.onerror = () => {
+				error.picture = 'default';
+				this.setState({ error })
+			};
+
+			image.src = url.createObjectURL(picture);
+		}
+	}
+
 	handleInputValidation(name, error) {
 		var tmp = this.state.error;
 		if (!Object.keys(error).length) {
@@ -141,14 +182,25 @@ class Profile extends Component {
 		return (
 			<div className='formBox profileBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
-				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
-						<img alt="Profile" className='circle profileImg floatLeft' src='https://d34jodf30bmh8b.cloudfront.net/pictures/5720/5863/profile-1496846605-b0d01e0807dbaa4d93dfc9288e00405f.jpg' />
-					<div>
+				<div className='fontLeft block'>
+					<img
+						alt='Profile'
+						className='circle profileImg floatLeft'
+						src={'http://localhost:3001/pictures/' + this.props.me._id + '.png'}
+						ref={img => this.picture = img }
+						onError={() => this.picture.src = 'http://localhost:3001/pictures/default.png'}
+						/>
+					<form encType='multipart/form-data' onChange={this.handlePictureSubmit}>
 						<span className='fontGrey fontSmall block'>
 							Your Photo
 						</span>
-						<div className='changePhotoButton'>Change photo</div>
-					</div>
+						<div className='changePhotoButton'>
+							<label htmlFor='upload'><span className='pointer'>Change photo</span></label>
+						</div>
+						<input id='upload' type='file' name='upload' accept='.png,.jpeg,.jpg'/>
+					</form>
+				</div>
+				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
 					<div className='fontGrey block fontSmall floatClear'>
 						<label htmlFor='firstName'>First Name</label>
 					</div>
@@ -327,9 +379,10 @@ class Profile extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe
+	const { isAuthenticated, me } = state.handleMe
 	return ({
-		isAuthenticated
+		isAuthenticated,
+		me
 	})
 }
 
