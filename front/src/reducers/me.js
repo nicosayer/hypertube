@@ -1,5 +1,6 @@
 import {
-	SAVE_ME
+	SAVE_ME,
+	UPDATE_ME
 } from '../actions/me'
 
 export function handleMe(
@@ -15,6 +16,12 @@ export function handleMe(
 			me: action.me,
 			isAuthenticated: true
 		})
+
+		case UPDATE_ME:
+		return Object.assign({}, state, {
+			me: action.userInfos
+		})
+
 		default:
 		return state
 	}
