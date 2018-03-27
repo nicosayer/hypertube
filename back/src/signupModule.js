@@ -103,8 +103,10 @@ module.exports = function(req, post, url, isOAuth, callback) {
 	}
 
 console.log(post)
+console.log(isOAuth)
 
 	if (isOAuth) {
+		console.log("ici")
 		collection.findOne({oauth: post.oauth}, function (err, result) {
 			if (err) throw err;
 
@@ -118,6 +120,25 @@ console.log(post)
 
 						collection.update({email: post.email}, {$set: {oauth: objTmp}}, function (err, result) {
 							if (err) throw err;
+
+							if (!fs.existSync('public/pictures/'+result.ops[0]._id.toString()+'.png')){
+								if (typeof url != 'undefined') {
+									request.head(url, function(err, res, body){
+									    console.log('content-length:', res.headers['content-length']);
+									    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
+									    	request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
+
+												req.session._id = result.ops[0]._id;
+												callback(result.ops[0]);
+										    });
+									    }
+									    else {
+									    	req.session._id = result.ops[0]._id;
+											callback(result.ops[0]);
+									    }
+									});
+								}
+							}
 
 							req.session._id = userResult._id;
 							callback(result);
