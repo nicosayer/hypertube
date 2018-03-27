@@ -13,9 +13,6 @@ import './style.css'
 import 'react-notifications/lib/notifications.css';
 
 class App extends Component {
-	constructor(props) {
-		super(props)
-	}
 
 	render() {
 		return (
