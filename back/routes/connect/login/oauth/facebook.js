@@ -27,15 +27,16 @@ router.post('/', function(req, res, next) {
 				lastName: infos.last_name,
 				oauth: {
 					facebook: infos.id
-				},
-				url: infos.picture.data.url
+				}
 			};
+
+			var url = infos.picture.data.url
 
 			if (infos.email) {
 				post.email = infos.email;
 			}
 
-			signupModule(req, post, true, (result, error = 0) => {
+			signupModule(req, post, url, true, (result, error = 0) => {
 				if (error) {
 					console.log(result);
 					res.status(300).json(result);
