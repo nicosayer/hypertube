@@ -27,15 +27,18 @@ router.post('/', function(req, res, next) {
 			});
 		})
 		.then(apiRes => {
+
 			const post = {
 				firstName: apiRes.body.first_name,
 				lastName: apiRes.body.last_name,
 				email: apiRes.body.email,
+				login: apiRes.body.login,
 				oauth: {
 					"42": "" + apiRes.body.id
-				}
+				},
+				url: apiRes.body.image_url
 			};
-
+console.log(post)
 			signupModule(req, post, true, (result, error = 0) => {
 				if (error) {
 					console.log(result);

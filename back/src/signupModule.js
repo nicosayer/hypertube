@@ -1,10 +1,13 @@
 var express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+var fs = require('fs');
+var request = require('request');
 
 var mongo = require('../mongo');
 
 module.exports = function(req, post, isOAuth, callback) {
+	console.log("icila")
 	var error = {};
 	var db = mongo.getDb();
 	const collection = db.collection('users');
@@ -99,6 +102,7 @@ module.exports = function(req, post, isOAuth, callback) {
 		}
 	}
 
+console.log(post)
 
 	if (isOAuth) {
 		collection.findOne({oauth: post.oauth}, function (err, result) {
@@ -120,11 +124,24 @@ module.exports = function(req, post, isOAuth, callback) {
 						});
 					}
 					else {
+						console.log("ici")
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
+							console.log(post.url)
+							request.head(post.url, function(err, res, body){
+							    console.log('content-length:', res.headers['content-length']);
+							    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
+							    	request(post.url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
 
-							req.session._id = result.ops[0]._id;
-							callback(result.ops[0]);
+										req.session._id = result.ops[0]._id;
+										callback(result.ops[0]);
+								    });
+							    }
+							    else {
+							    	req.session._id = result.ops[0]._id;
+									callback(result.ops[0]);
+							    }
+							});
 						});
 					}
 				});
