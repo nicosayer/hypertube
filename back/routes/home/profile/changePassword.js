@@ -15,7 +15,6 @@ router.post('/', function(req, res, next) {
 		error.error = 'default';
 	}
 	else {
-		console.log(errors)
 		if (newPassword.length < 6) {
 			errors.password = 'default'
 		}
@@ -28,7 +27,6 @@ router.post('/', function(req, res, next) {
 		if (!(/[0-9]/i.test(newPassword))) {
 			errors.password = 'default'
 		}
-		console.log(errors)
 	}
 
 	if (!req.session || !req.session._id){
@@ -36,7 +34,7 @@ router.post('/', function(req, res, next) {
 	}
 
 	if (Object.keys(errors).length === 0) {
-console.log(errors)
+
 		const db = mongo.getDb();
 		const collection = db.collection('users');
 
@@ -47,7 +45,7 @@ console.log(errors)
 
 				if (result !== true) {
 					errors.password = 'wrong'
-					console.log(errors)
+
 					collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 						if (error) throw error;
 						res.status(300).json({errors: errors, user: result});
@@ -60,7 +58,7 @@ console.log(errors)
 								{_id: new mongodb.ObjectId(req.session._id)},
 								{$set: {password: hash}}, function (err, result) {
 								if (err) throw err;
-								console.log(result)
+
 								res.sendStatus(202)
 							});
 						});
