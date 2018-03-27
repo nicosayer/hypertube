@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const mongo = require('../../mongo');
+const mongo = require('../../../mongo');
 const mongodb = mongo.getMongodb();
 
 router.post('/', function(req, res, next) {
@@ -92,7 +92,7 @@ console.log(errors)
 		collection.findOne({email: email}, function (error, resultEmail) {
 			collection.findOne({login: login}, function (error, resultLogin) {
 				if (error) throw error;
-				
+
 				if (resultEmail && resultEmail._id.toString() != new mongodb.ObjectId(req.session._id).toString() && email.length > 0) {
 					errors.email = 'duplicate'
 				}
@@ -138,4 +138,3 @@ console.log(result)
 
 
 module.exports = router;
-
