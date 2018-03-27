@@ -3,9 +3,9 @@ import queryString from 'query-string';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 
-import { logMe } from '../../../../actions/me'
+import { logMe } from '../../../../../actions/me'
 
-import { fetchWrap } from '../../../../services/fetchWrap'
+import { fetchWrap } from '../../../../../services/fetchWrap'
 
 class Auth42 extends Component {
 
@@ -27,7 +27,7 @@ class Auth42 extends Component {
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === '42OAuth2') {
 
-			fetchWrap('/login/oauth/42/', {
+			fetchWrap('/connect/login/oauth/42/', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {'Content-Type': 'application/json'},
@@ -63,7 +63,7 @@ class Auth42 extends Component {
 			<div>
 				{
 					this.state.loading ?
-					<div className='loading'><i className="fas fa-spinner"></i></div>
+					<span className='loading'><i className="fas fa-spinner"></i></span>
 					:
 					<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span>
 				}

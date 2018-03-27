@@ -3,9 +3,9 @@ import queryString from 'query-string';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 
-import { logMe } from '../../../../actions/me'
+import { logMe } from '../../../../../actions/me'
 
-import { fetchWrap } from '../../../../services/fetchWrap'
+import { fetchWrap } from '../../../../../services/fetchWrap'
 
 class AuthFacebook extends Component {
 
@@ -26,7 +26,7 @@ class AuthFacebook extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.search).state === 'facebookOAuth2') {
-			fetchWrap('/login/oauth/facebook/', {
+			fetchWrap('/connect/login/oauth/facebook/', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {'Content-Type': 'application/json'},
@@ -60,7 +60,7 @@ class AuthFacebook extends Component {
 			<div>
 				{
 					this.state.loading ?
-					<div className='loading'><i className="fas fa-spinner"></i></div>
+					<span className='loading'><i className="fas fa-spinner"></i></span>
 					:
 					<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span>
 				}

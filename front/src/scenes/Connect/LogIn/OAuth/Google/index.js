@@ -3,9 +3,9 @@ import queryString from 'query-string';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 
-import { logMe } from '../../../../actions/me'
+import { logMe } from '../../../../../actions/me'
 
-import { fetchWrap } from '../../../../services/fetchWrap'
+import { fetchWrap } from '../../../../../services/fetchWrap'
 
 class AuthGoogle extends Component {
 
@@ -26,7 +26,7 @@ class AuthGoogle extends Component {
 
 	componentDidMount() {
 		if (queryString.parse(window.location.hash).state === 'googleOAuth2') {
-			fetchWrap('/login/oauth/google/', {
+			fetchWrap('/connect/login/oauth/google/', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {'Content-Type': 'application/json'},
@@ -61,7 +61,7 @@ class AuthGoogle extends Component {
 			<div>
 				{
 					this.state.loading ?
-					<div className='loading'><i className="fas fa-spinner"></i></div>
+					<span className='loading'><i className="fas fa-spinner"></i></span>
 					:
 					<span onClick={this.clicked}><i className='fab fa-google spaceRight'></i>Connect with Google</span>
 				}

@@ -3,11 +3,11 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider, connect } from 'react-redux'
 import {NotificationContainer} from 'react-notifications';
 
-import Home from './scenes/Home'
-// import Video from './scenes/Video'
-import LogIn from './scenes/LogIn'
-import SignUp from './scenes/SignUp'
-import ResetPassword from './scenes/LogIn/ResetPassword'
+import Profile from './scenes/Home/Profile'
+// import Video from './scenes/Home/Video'
+import LogIn from './scenes/Connect/LogIn'
+import SignUp from './scenes/Connect/SignUp'
+import ResetPassword from './scenes/Connect/LogIn/ResetPassword'
 
 import './style.css'
 import 'react-notifications/lib/notifications.css';
@@ -28,7 +28,7 @@ class App extends Component {
 								this.props.isAuthenticated ?
 								[
 									// <Route path='/video' key='video' component={Video} />,
-									<Route key='home' component={Home} />,
+									<Route key='home' component={Profile} />,
 								]
 								:
 								[

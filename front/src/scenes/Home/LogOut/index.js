@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 class LogOut extends Component {
-	
+
 	constructor(props) {
 		super(props)
 
@@ -9,7 +9,7 @@ class LogOut extends Component {
 	}
 
 	logout() {
-		fetch('/logout', {
+		fetch('/home/logout', {
 			method: 'DELETE',
 			credentials: 'include'
 		})

@@ -3,17 +3,17 @@ import { connect } from 'react-redux'
 import {NotificationManager} from 'react-notifications';
 
 import Logout from './../LogOut';
-import Input from '../../components/Input';
-import Tooltip from '../../components/Tooltip/';
+import Input from '../../../components/Input';
+import Tooltip from '../../../components/Tooltip/';
 
-import { fetchWrap } from '../../services/fetchWrap'
+import { fetchWrap } from '../../../services/fetchWrap'
 
 import './style.css'
 import 'react-notifications/lib/notifications.css';
 
-const errors = require('../../errors.json');
+const errors = require('../../../errors.json');
 
-class Home extends Component {
+class Profile extends Component {
 
 	constructor(props) {
 		super(props)
@@ -33,7 +33,7 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
-		fetchWrap('/home/getUserInfos', {
+		fetchWrap('/home/profile/getUserInfos', {
 			method: 'GET',
 			credentials: 'include'
 		})
@@ -48,7 +48,7 @@ class Home extends Component {
 	handleSaveSubmit(event) {
 		event.preventDefault();
 		if (!Object.keys(this.state.error).length) {
-			fetchWrap('/changeInfos', {
+			fetchWrap('/home/profile/changeInfos', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ class Home extends Component {
 		}
 
 		if (!Object.keys(error).length) {
-			fetchWrap('/changePassword', {
+			fetchWrap('/home/profile/changePassword', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -333,4 +333,4 @@ function mapStateToProps(state) {
 	})
 }
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps)(Profile)

@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { logMe } from '../../actions/me'
-import { fetchWrap } from '../../services/fetchWrap'
+import { logMe } from '../../../actions/me'
+import { fetchWrap } from '../../../services/fetchWrap'
 
 import Auth42 from './OAuth/42'
 import AuthFacebook from './OAuth/Facebook'
 import AuthGoogle from './OAuth/Google'
 
-import Input from '../../components/Input'
-import Tooltip from '../../components/Tooltip/';
+import Input from '../../../components/Input'
+import Tooltip from '../../../components/Tooltip/';
 
-const errors = require('../../errors.json');
+const errors = require('../../../errors.json');
 
 class LogIn extends Component {
 
@@ -40,7 +40,7 @@ class LogIn extends Component {
 			error.password = 'default';
 		}
 		if (!Object.keys(error).length) {
-			fetchWrap('/login', {
+			fetchWrap('/connect/login', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {

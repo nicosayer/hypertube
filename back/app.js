@@ -32,19 +32,19 @@ app.use(session({
 
 app.use('/isUserLoggedIn', require('./routes/isUserLoggedIn'));
 
-app.use('/login', require('./routes/login/'));
-app.use('/login/resetPassword', require('./routes/login/resetPassword'));
-app.use('/login/oauth/42', require('./routes/login/oauth/42'));
-app.use('/login/oauth/Facebook', require('./routes/login/oauth/Facebook'));
-app.use('/login/oauth/Google', require('./routes/login/oauth/Google'));
+app.use('/connect/login', require('./routes/connect/login/'));
+app.use('/connect/login/resetPassword', require('./routes/connect/login/resetPassword'));
+app.use('/connect/login/oauth/42', require('./routes/connect/login/oauth/42'));
+app.use('/connect/login/oauth/Facebook', require('./routes/connect/login/oauth/Facebook'));
+app.use('/connect/login/oauth/Google', require('./routes/connect/login/oauth/Google'));
 
-app.use('/signup', require('./routes/signup'));
+app.use('/connect/signup', require('./routes/connect/signup'));
 
-app.use('/logout', require('./routes/logout'));
+app.use('/home/logout', require('./routes/home/logout'));
 
-app.use('/home/getUserInfos', require('./routes/home/getUserInfos'));
-app.use('/changeInfos', require('./routes/home/changeInfos'));
-app.use('/changePassword', require('./routes/home/changePassword'));
+app.use('/home/profile/getUserInfos', require('./routes/home/profile/getUserInfos'));
+app.use('/home/profile/changeInfos', require('./routes/home/profile/changeInfos'));
+app.use('/home/profile/changePassword', require('./routes/home/profile/changePassword'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { logMe } from '../../actions/me';
+import { logMe } from '../../../actions/me';
 
-import { fetchWrap } from '../../services/fetchWrap';
-import Input from '../../components/Input';
-import Tooltip from '../../components/Tooltip/';
+import { fetchWrap } from '../../../services/fetchWrap';
+import Input from '../../../components/Input';
+import Tooltip from '../../../components/Tooltip/';
 
-const errors = require('../../errors.json');
+const errors = require('../../../errors.json');
 
 class SignUp extends Component {
 
@@ -46,10 +46,10 @@ class SignUp extends Component {
 		if (!this.state.email) {
 			error.email = 'default';
 		}
-		
+
 		if (!Object.keys(error).length) {
 			console.log(1)
-			fetchWrap('/signup', {
+			fetchWrap('/connect/signup', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

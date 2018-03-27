@@ -31,7 +31,7 @@ server.on('listening', onListening);
 
 const socketIO = require('socket.io');
 const io = socketIO.listen(server);
-file1 = require('../routes/video')(io)
+file1 = require('../routes/home/video')(io)
 /**
  * Normalize a port into a number, string, or false.
  */

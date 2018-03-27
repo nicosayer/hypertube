@@ -13,9 +13,9 @@ class Video extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		
-		
-		
+
+
+
 		if (nextProps.isConnect)
 		{
 			var video = document.querySelector('video');
@@ -74,7 +74,7 @@ class Video extends Component {
 
 	render() {
 		console.log(this.state.result)
-		const result = this.state.result.map((item,key) => 
+		const result = this.state.result.map((item,key) =>
 			<div id={key} key={key} onClick={() => this.truc(key)} >{item.title}</div>
 		)
 
@@ -95,8 +95,8 @@ function mapStateToProps(state) {
 	const { isAuthenticated } = state.handleMe
 	const { isConnect, socket } = state.connectSocket
 	return ({
-		isAuthenticated, 
-		isConnect, 
+		isAuthenticated,
+		isConnect,
 		socket
 	})
 }

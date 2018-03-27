@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const mongo = require('../../mongo');
+const mongo = require('../../../mongo');
 
 
 router.post('/', function(req, res, next) {
