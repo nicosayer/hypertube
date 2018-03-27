@@ -6,7 +6,7 @@ var request = require('request');
 
 var mongo = require('../mongo');
 
-module.exports = function(req, post, isOAuth, callback) {
+module.exports = function(req, post, url, isOAuth, callback) {
 	console.log("icila")
 	var error = {};
 	var db = mongo.getDb();
@@ -127,12 +127,12 @@ console.log(post)
 						console.log("ici")
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
-							console.log(post.url)
-							if (typeof post.url != 'undefined') {
-								request.head(post.url, function(err, res, body){
+							console.log(url)
+							if (typeof url != 'undefined') {
+								request.head(url, function(err, res, body){
 								    console.log('content-length:', res.headers['content-length']);
 								    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
-								    	request(post.url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
+								    	request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
 
 											req.session._id = result.ops[0]._id;
 											callback(result.ops[0]);

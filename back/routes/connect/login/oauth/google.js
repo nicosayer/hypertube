@@ -32,15 +32,17 @@ router.post('/', function(req, res, next) {
 					google: id
 				}
 			};
+			var url;
+
 			for (var i = 0; i < apiRes.body.photos.length; i++) {
 				if (!apiRes.body.photos[0].default || apiRes.body.photos[0].default === false)
 				{
-					post.url = apiRes.body.photos[0].url
+					url = apiRes.body.photos[0].url
 					break;
 				}
 			}
 
-			signupModule(req, post, true, (result, error = 0) => {
+			signupModule(req, post, url, true, (result, error = 0) => {
 				if (error) {
 					console.log(result);
 					res.status(300).json(result);
