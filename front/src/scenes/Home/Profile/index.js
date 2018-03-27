@@ -142,7 +142,7 @@ class Profile extends Component {
 			<div className='formBox profileBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
-						<img alt="Profile Picture" className='circle profileImg floatLeft' src='https://d34jodf30bmh8b.cloudfront.net/pictures/5720/5863/profile-1496846605-b0d01e0807dbaa4d93dfc9288e00405f.jpg' />
+						<img alt="Profile" className='circle profileImg floatLeft' src='https://d34jodf30bmh8b.cloudfront.net/pictures/5720/5863/profile-1496846605-b0d01e0807dbaa4d93dfc9288e00405f.jpg' />
 					<div>
 						<span className='fontGrey fontSmall block'>
 							Your Photo
