@@ -33,15 +33,6 @@ class Profile extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
-		const profilePicUrl = 'http://localhost:3001/pictures/' + this.props.me._id + '.png';
-		this.imageExists(profilePicUrl, exists => {
-			if(exists) {
-				this.picture.src = profilePicUrl;
-			}
-			else {
-				this.picture.src = 'http://localhost:3001/pictures/default.png'
-			}
-		});
 	}
 
 	componentDidMount() {
@@ -50,7 +41,8 @@ class Profile extends Component {
 
 	handleSaveSubmit(event) {
 		event.preventDefault();
-		if (!Object.keys(this.state.error).length) {
+		const error = this.state.error;
+		if (!error.login && !error.email && !error.firstName && !error.lastName) {
 			fetchWrap('/home/profile/changeInfos', {
 				method: 'POST',
 				headers: {
@@ -98,7 +90,7 @@ class Profile extends Component {
 			error.password = 'default';
 		}
 
-		if (!Object.keys(error).password) {
+		if (!error.oldPassword && !error.newPassword) {
 			fetchWrap('/home/profile/changePassword', {
 				method: 'POST',
 				headers: {
@@ -146,7 +138,7 @@ class Profile extends Component {
 				if (exists) {
 					var formData = new FormData();
 					formData.append('picture', picture);
-					if (!Object.keys(error).length) {
+					if (!error.picture) {
 						fetchWrap('/home/profile/changePicture', {
 							method: 'POST',
 							credentials: 'include',
@@ -193,8 +185,6 @@ class Profile extends Component {
 		img.src = url;
 	}
 
-	// src={'http://localhost:3001/pictures/' + this.props.me._id + '.png'}
-
 	render() {
 		return (
 			<div className='formBox profileBox'>
@@ -204,6 +194,7 @@ class Profile extends Component {
 						alt='Profile'
 						className='circle profileImg floatLeft'
 						ref={img => this.picture = img }
+						src={'http://localhost:3001/pictures/' + this.props.me._id + '.png'}
 						onError={() => this.picture.src = 'http://localhost:3001/pictures/default.png'}
 						/>
 					<form encType='multipart/form-data' onChange={this.handlePictureSubmit}>
@@ -393,7 +384,7 @@ class Profile extends Component {
 							</div>
 						</div>
 					</form>
-					
+
 				<Logout />
 			</div>
 		)
