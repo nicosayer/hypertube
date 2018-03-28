@@ -20,7 +20,7 @@ router.post('/', function(req, res, next) {
 			'&access_token=' + JSON.parse(apiRes.body).access_token);
 		})
 		.then(apiRes => {
-			console.log(apiRes)
+			console.log(apiRes);
 			const infos = JSON.parse(apiRes.body);
 			const post = {
 				firstName: infos.first_name,
@@ -38,7 +38,6 @@ router.post('/', function(req, res, next) {
 
 			signupModule(req, post, url, true, (result, error = 0) => {
 				if (error) {
-					console.log(result);
 					res.status(300).json(result);
 				} else {
 					res.status(201).json(result);

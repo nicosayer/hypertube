@@ -25,7 +25,8 @@
 	"resetPassword": {
 		"login": {
 			"default": "Enter your login or email",
-			"incorrect": "This login could not be found"
+			"incorrect": "This login could not be found",
+			"noMail": "Your account is linked with a social network"
 		}
 	},
 	"profile": {

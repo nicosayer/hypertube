@@ -35,12 +35,6 @@ class Profile extends Component {
 		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
 		const profilePicUrl = 'http://localhost:3001/pictures/' + this.props.me._id + '.png';
 
-		// if (this.urlExists(profilePicUrl)) {
-		// 	this.picture.src = profilePicUrl;
-		// }
-		// else {
-			// this.picture.src = 'http://localhost:3001/pictures/default.png'
-		// }
 		this.imageExists(profilePicUrl, exists => {
 			if(exists) {
 				this.picture.src = profilePicUrl;
@@ -82,7 +76,6 @@ class Profile extends Component {
 				NotificationManager.success('Informations saved');
 			})
 			.catch(error => {
-				console.log(error)
 				this.setState({
 					login: error.user.login,
 					firstName: error.user.firstName,
@@ -97,9 +90,9 @@ class Profile extends Component {
 	handlePasswordChangeSubmit(event) {
 		event.preventDefault();
 		this.setState({
-					oldPassword: "",
-					newPassword: ""
-				});
+			oldPassword: "",
+			newPassword: ""
+		});
 		var error = this.state.error;
 
 		if (!this.state.oldPassword || !this.state.newPassword) {
@@ -201,14 +194,6 @@ class Profile extends Component {
 		img.src = url;
 	}
 
-	urlExists(url)
-	{
-		var http = new XMLHttpRequest();
-		http.open('HEAD', url, false);
-		http.send();
-		return http.status !== 404;
-	}
-
 	// src={'http://localhost:3001/pictures/' + this.props.me._id + '.png'}
 
 	render() {
@@ -230,12 +215,12 @@ class Profile extends Component {
 							<label htmlFor='upload'><span className='pointer'>Change photo</span></label>
 						</div>
 						<input id='upload' type='file' name='upload' accept='.png,.jpeg,.jpg'/>
-							{
-								this.state.error.hasOwnProperty('picture') ?
-								<Tooltip text={errors.profile.picture[this.state.error.picture]} visible={true} />
-								:
-								null
-							}
+						{
+							this.state.error.hasOwnProperty('picture') ?
+							<Tooltip text={errors.profile.picture[this.state.error.picture]} visible={true} />
+							:
+							null
+						}
 					</form>
 				</div>
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
@@ -390,7 +375,7 @@ class Profile extends Component {
 							validation={{
 								minLen: 6,
 								maxLen: 50,
-								format: /.*[0-9]+.*/,
+								format: /^.*[0-9]+.*$/,
 								emptyIsValid: true,
 								invalidClass: 'invalidInput',
 								handleValidation: this.handleInputValidation,

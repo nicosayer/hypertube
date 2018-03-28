@@ -92,11 +92,9 @@ module.exports = function(req, post, url, isOAuth, callback) {
 				error.password = 'default';
 			}
 			if (!(/[a-z]/i.test(post.password))) {
-				console.log(1)
 				error.password = 'default';
 			}
 			if (!(/[0-9]/.test(post.password))) {
-				console.log(2)
 				error.password = 'default';
 			}
 		}
@@ -114,25 +112,20 @@ module.exports = function(req, post, url, isOAuth, callback) {
 						const userResult = result;
 						var objTmp = Object.assign({}, result.oauth, post.oauth);
 
-						collection.findAndModify({email: post.email}, [], {$set: {oauth: objTmp}}, {new: true}, function (err, result) {
+						collection.findAndModify({email: post.email}, [], {$set: {oauth: objTmp, }}, {new: true}, function (err, result) {
 							if (err) throw err;
-
-							if (!fs.existsSync('public/pictures/'+userResult._id.toString()+'.png') && typeof url != 'undefined'){
-								request.head(url, function(err, res, body){
-								    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
-								    	request(url).pipe(fs.createWriteStream('public/pictures/'+userResult._id.toString()+'.png')).on('close', function() {
-											req.session._id = userResult._id;
-											callback(result.value);
-										});
-								    }
-								    else {
-								    	req.session._id = userResult._id;
+							if (!fs.existsSync('public/pictures/' + userResult._id.toString() + '.png') && typeof url != 'undefined') {
+								request.head(url, function(err, res, body) {
+									request(url).pipe(fs.createWriteStream('public/pictures/' + userResult._id.toString() + '.png')).on('close', function() {
+										req.session._id = userResult._id;
+										fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 										callback(result.value);
-								    }
+									});
 								});
 							}
 							else {
 								req.session._id = userResult._id;
+								fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 								callback(result.value);
 							}
 						});
@@ -140,27 +133,18 @@ module.exports = function(req, post, url, isOAuth, callback) {
 					else {
 						collection.insert(post, function (err, result) {
 							if (err) throw err;
-							console.log(url)
 							if (typeof url != 'undefined') {
 								request.head(url, function(err, res, body){
-								    console.log('content-length:', res.headers['content-length']);
-										console.log(res.headers['content-type'])
-								    if (res.headers['content-type'] === 'image/jpeg' || res.headers['content-type'] === 'image/png' || res.headers['content-type'] === 'text/html; charset=utf-8') {
-											console.log('ok');
-											request(url).pipe(fs.createWriteStream('public/pictures/'+result.ops[0]._id.toString()+'.png')).on('close', function() {
-
-											req.session._id = result.ops[0]._id;
-											callback(result.ops[0]);
-									    });
-								    }
-								    else {
-								    	req.session._id = result.ops[0]._id;
+									request(url).pipe(fs.createWriteStream('public/pictures/' + result.ops[0]._id.toString() + '.png')).on('close', function() {
+										req.session._id = result.ops[0]._id;
+										fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 										callback(result.ops[0]);
-								    }
+									});
 								});
 							}
 							else {
 								req.session._id = result.ops[0]._id;
+								fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 								callback(result.ops[0]);
 							}
 						});
@@ -171,21 +155,24 @@ module.exports = function(req, post, url, isOAuth, callback) {
 				if (!fs.existsSync('public/pictures/'+result._id.toString()+'.png') && typeof url != 'undefined'){
 					request.head(url, function(err, res, body){
 
-					    if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
-					    	request(url).pipe(fs.createWriteStream('public/pictures/'+result._id.toString()+'.png')).on('close', function() {
+						if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
+							request(url).pipe(fs.createWriteStream('public/pictures/'+result._id.toString()+'.png')).on('close', function() {
 								req.session._id = result._id;
+								fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 								callback(result);
 							});
-					    }
-					    else {
-					    	req.session._id = result._id;
+						}
+						else {
+							req.session._id = result._id;
+							fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 							callback(result);
-					    }
+						}
 					});
-					
+
 				}
 				else {
 					req.session._id = result._id;
+					fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 					callback(result);
 				}
 			}
@@ -215,6 +202,7 @@ module.exports = function(req, post, url, isOAuth, callback) {
 								if (err) throw err;
 
 								req.session._id = result.ops[0]._id;
+								fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 								callback(result.ops[0]);
 							});
 						});

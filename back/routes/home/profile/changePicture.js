@@ -8,6 +8,7 @@ const mongodb = mongo.getMongodb();
 router.post('/', function(req, res, next) {
 
 	if (req.session && req.session._id) {
+
 		var form = new formidable.IncomingForm();
 		form.uploadDir = './public/pictures';
 		form.keepExtensions = true;

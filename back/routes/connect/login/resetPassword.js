@@ -29,9 +29,11 @@ router.post('/', function(req, res, next) {
 				}, function (err, result) {
 					if (err) throw err
 
-					if (result === null) {
+					if (!result) {
 						res.status(300).json({login: 'incorrect'});
-						console.log(1)
+					}
+					else if (!result.email) {
+						res.status(300).json({login: 'noMail'});
 					}
 					else {
 						const newPassword = randomstring.generate(7) + Math.floor(Math.random() * Math.floor(500));

@@ -218,6 +218,7 @@ class SignUp extends Component {
 						validation={{
 							minLen: 6,
 							maxLen: 50,
+							format: /^.*[0-9]+.*$/,
 							invalidClass: 'invalidInput',
 							handleValidation: this.handleInputValidation,
 							validateOnChange: true

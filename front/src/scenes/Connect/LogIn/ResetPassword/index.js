@@ -53,6 +53,7 @@ class ResetPassword extends React.Component {
 					this.props.history.push('/login')
 				})
 				.catch(error => {
+					console.log(error)
 					this.setState({
 						error: error,
 						loading: false
@@ -76,6 +77,7 @@ class ResetPassword extends React.Component {
 	}
 
 	render() {
+		console.log(this.state.error);
 		return (
 			<div>
 				<div className='formBox'>
