@@ -34,7 +34,6 @@ class Profile extends Component {
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
 		const profilePicUrl = 'http://localhost:3001/pictures/' + this.props.me._id + '.png';
-
 		this.imageExists(profilePicUrl, exists => {
 			if(exists) {
 				this.picture.src = profilePicUrl;
@@ -340,8 +339,6 @@ class Profile extends Component {
 						</div>
 					</div>
 				</form>
-				{
-					this.props.me.password ?
 					<form className='fontLeft' onSubmit={this.handlePasswordChangeSubmit}>
 						<div className='fontGrey block fontSmall'>
 							<label htmlFor='oldPassword'>Old password</label>
@@ -396,9 +393,7 @@ class Profile extends Component {
 							</div>
 						</div>
 					</form>
-					:
-					null
-				}
+					
 				<Logout />
 			</div>
 		)

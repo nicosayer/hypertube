@@ -103,6 +103,7 @@ router.post('/', function(req, res, next) {
 						{$set: update}, {new: true}, function (err, result) {
 							if (err) throw err;
 							const user = {
+								_id: result.value._id,
 								firstName: result.value.firstName ? result.value.firstName : '',
 								lastName: result.value.lastName ? result.value.lastName : '',
 								login: result.value.login ? result.value.login : '',
@@ -117,6 +118,7 @@ router.post('/', function(req, res, next) {
 							{$set: update}, {new: true}, function (err, result) {
 								if (err) throw err;
 								const user = {
+									_id: result.value._id,
 									firstName: result.value.firstName ? result.value.firstName : '',
 									lastName: result.value.lastName ? result.value.lastName : '',
 									login: result.value.login ? result.value.login : '',
