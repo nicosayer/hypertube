@@ -58,12 +58,12 @@ class AuthGoogle extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className='wFull'>
 				{
 					this.state.loading ?
-					<span className='loading'><i className="fas fa-spinner"></i></span>
+					<div className='button wFull spaceTop'><div className='loading'><span><i className="fas fa-spinner"></i></span></div></div>
 					:
-					<span onClick={this.clicked}><i className='fab fa-google spaceRight'></i>Connect with Google</span>
+					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className='fab fa-google spaceRight'></i>Connect with Google</span></div>
 				}
 			</div>
 		);

@@ -131,15 +131,9 @@ class LogIn extends Component {
 						</div>
 					</div>
 				</form>
-				<div className='button wFull spaceTop'>
-					<Auth42 />
-				</div>
-				<div className='button wFull spaceTop'>
-					<AuthFacebook />
-				</div>
-				<div className='button wFull spaceTop'>
-					<AuthGoogle />
-				</div>
+				<Auth42 />
+				<AuthFacebook />
+				<AuthGoogle />
 				<div className='lignTop block fontSmall'>
 					<Link to='/signup'>You want to create an account ?</Link>
 				</div>

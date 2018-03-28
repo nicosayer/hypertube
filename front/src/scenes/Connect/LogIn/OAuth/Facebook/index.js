@@ -57,12 +57,12 @@ class AuthFacebook extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className='wFull'>
 				{
 					this.state.loading ?
-					<span className='loading'><i className="fas fa-spinner"></i></span>
+					<div className='button wFull spaceTop'><div className='loading'><span><i className="fas fa-spinner"></i></span></div></div>
 					:
-					<span onClick={this.clicked}><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span>
+					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className="fab fa-facebook spaceRight"></i>Connect with Facebook</span></div>
 				}
 			</div>
 		);

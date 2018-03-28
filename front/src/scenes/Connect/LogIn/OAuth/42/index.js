@@ -60,12 +60,12 @@ class Auth42 extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className='wFull'>
 				{
 					this.state.loading ?
-					<div className='loading'><span><i className="fas fa-spinner"></i></span></div>
+					<div className='button wFull spaceTop'><div className='loading'><span><i className="fas fa-spinner"></i></span></div></div>
 					:
-					<span onClick={this.clicked}><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span>
+					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span></div>
 				}
 			</div>
 		);
