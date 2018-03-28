@@ -98,7 +98,7 @@ class ResetPassword extends React.Component {
 							/>
 						{
 							this.state.error.hasOwnProperty('login') ?
-							<Tooltip text={errors.resetPassword.login} visible={true} />
+							<Tooltip text={errors.resetPassword.login[this.state.error.login]} visible={true} />
 							:
 							null
 						}

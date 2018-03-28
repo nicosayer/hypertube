@@ -34,6 +34,13 @@ class Profile extends Component {
 		this.handleInputValidation = this.handleInputValidation.bind(this);
 		this.handlePasswordChangeSubmit = this.handlePasswordChangeSubmit.bind(this);
 		const profilePicUrl = 'http://localhost:3001/pictures/' + this.props.me._id + '.png';
+
+		// if (this.urlExists(profilePicUrl)) {
+		// 	this.picture.src = profilePicUrl;
+		// }
+		// else {
+			// this.picture.src = 'http://localhost:3001/pictures/default.png'
+		// }
 		this.imageExists(profilePicUrl, exists => {
 			if(exists) {
 				this.picture.src = profilePicUrl;
@@ -72,7 +79,7 @@ class Profile extends Component {
 					email: payload.email,
 				})
 				this.props.dispatch(updateProfileInfos(payload));
-				NotificationManager.success('Information Saved');
+				NotificationManager.success('Informations saved');
 			})
 			.catch(error => {
 				console.log(error)
@@ -99,8 +106,7 @@ class Profile extends Component {
 			error.password = 'default';
 		}
 
-
-		if (!Object.keys(error).length) {
+		if (!Object.keys(error).password) {
 			fetchWrap('/home/profile/changePassword', {
 				method: 'POST',
 				headers: {
@@ -114,7 +120,7 @@ class Profile extends Component {
 			})
 			.then(() => {
 				console.log(1)
-				
+				NotificationManager.success('Password changed');
 			})
 			.catch(error => {
 				this.setState({ error })
@@ -135,13 +141,13 @@ class Profile extends Component {
 		const that = this;
 		const picture = event.target.files[0];
 		if (picture) {
-			var error = this.state.error;
+			var error = {};
 
 			if (picture.size > 10000000) {
-				error.picture = 'default';
+				error.picture = 'size';
 			}
 			if (picture.type !== 'image/png' && picture.type !== 'image/jpeg') {
-				error.picture = 'default';
+				error.picture = 'type';
 			}
 			const url = window.URL || window.webkitURL;
 			this.imageExists(url.createObjectURL(picture), exists => {
@@ -156,9 +162,10 @@ class Profile extends Component {
 						})
 						.then((payload) => {
 							that.picture.src = 'http://localhost:3001/pictures/' + this.props.me._id + '.png?' + new Date().getTime();
+							this.setState({ error })
 						})
 						.catch(error => {
-							console.log(error)
+							this.setState({ error })
 						})
 					}
 					else {
@@ -166,7 +173,7 @@ class Profile extends Component {
 					}
 				}
 				else {
-					error.picture = 'default';
+					error.picture = 'type';
 					this.setState({ error })
 				}
 			})
@@ -202,6 +209,8 @@ class Profile extends Component {
 		return http.status !== 404;
 	}
 
+	// src={'http://localhost:3001/pictures/' + this.props.me._id + '.png'}
+
 	render() {
 		return (
 			<div className='formBox profileBox'>
@@ -221,6 +230,12 @@ class Profile extends Component {
 							<label htmlFor='upload'><span className='pointer'>Change photo</span></label>
 						</div>
 						<input id='upload' type='file' name='upload' accept='.png,.jpeg,.jpg'/>
+							{
+								this.state.error.hasOwnProperty('picture') ?
+								<Tooltip text={errors.profile.picture[this.state.error.picture]} visible={true} />
+								:
+								null
+							}
 					</form>
 				</div>
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
@@ -352,19 +367,15 @@ class Profile extends Component {
 							name='oldPassword'
 							value={this.state.oldPassword}
 							validation={{
-								minLen: 6,
-								maxLen: 50,
-								emptyIsValid: true,
 								invalidClass: 'invalidInput',
 								handleValidation: this.handleInputValidation,
-								validateOnChange: true
 							}}
 							maxLen={50}
 							onChange={this.handleInputChange}
 							/>
 						{
 							this.state.error.hasOwnProperty('oldPassword') ?
-							<Tooltip text={errors.profile.oldPassword[this.state.error.oldPassword]} visible={true} />
+							<Tooltip text={errors.profile.oldPassword} visible={true} />
 							:
 							null
 						}
@@ -379,6 +390,7 @@ class Profile extends Component {
 							validation={{
 								minLen: 6,
 								maxLen: 50,
+								format: /.*[0-9]+.*/,
 								emptyIsValid: true,
 								invalidClass: 'invalidInput',
 								handleValidation: this.handleInputValidation,
@@ -389,7 +401,7 @@ class Profile extends Component {
 							/>
 						{
 							this.state.error.hasOwnProperty('newPassword') ?
-							<Tooltip text={errors.signup.password} visible={true} />
+							<Tooltip text={errors.profile.newPassword} visible={true} />
 							:
 							null
 						}

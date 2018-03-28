@@ -30,7 +30,7 @@ router.post('/', function(req, res, next) {
 					if (err) throw err
 
 					if (result === null) {
-						res.status(300).json({login: 'default'});
+						res.status(300).json({login: 'incorrect'});
 						console.log(1)
 					}
 					else {

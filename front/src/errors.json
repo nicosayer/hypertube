@@ -10,20 +10,30 @@
 			"default": "Enter your email in the correct format",
 			"alreadyTaken": "This email is already taken"
 		},
-		"password": "Enter a combination of at least six characters"
+		"password": "Enter a combination of six characters with at least one number"
 	},
 	"login": {
-		"login": "Enter your login or email",
-		"password": "Enter your password"
+		"login": {
+			"default": "Enter your login or email",
+			"incorrect": "This login could not be found"
+		},
+		"password": {
+			"default": "Enter your password",
+			"incorrect": "Your password is incorrect"
+			}
 	},
 	"resetPassword": {
-		"login": "Enter your login or email"
+		"login": {
+			"default": "Enter your login or email",
+			"incorrect": "This login could not be found"
+		}
 	},
 	"profile": {
-		"oldPassword": {
-			"default" : "Enter a combination of at least six characters",
-			"wrong": "Your password is incorrect"
-		},
-		"picture": "Upload a picture in Jpg or Png format"
+		"oldPassword": "Your old password is incorrect",
+		"newPassword": "Enter a combination of six characters with at least one number",
+		"picture": {
+			"type": "Upload a picture in JPG or PNG format",
+			"size": "Upload a picture smaller than 10 mb"
+			}
 	}
 }

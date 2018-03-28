@@ -97,7 +97,7 @@ class LogIn extends Component {
 						/>
 					{
 						this.state.error.hasOwnProperty('login') ?
-						<Tooltip text={errors.login.login} visible={true} />
+						<Tooltip text={errors.login.login[this.state.error.login]} visible={true} />
 						:
 						null
 					}
@@ -117,7 +117,7 @@ class LogIn extends Component {
 						/>
 					{
 						this.state.error.hasOwnProperty('password') ?
-						<Tooltip text={errors.login.password} visible={true} />
+						<Tooltip text={errors.login.password[this.state.error.password]} visible={true} />
 						:
 						null
 					}

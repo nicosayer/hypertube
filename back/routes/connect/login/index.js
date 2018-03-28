@@ -29,19 +29,18 @@ router.post('/', function(req, res, next) {
 					if (err) throw err
 					const mongoResult = result
 
-					if (result === null) {
-						res.status(300).json({login: 'default'});
+					if (!result) {
+						res.status(300).json({login: 'incorrect'});
+					}
+					else if (!result.password) {
+						res.status(300).json({login: 'incorrect'});
 					}
 					else {
-						const password = result.password;
-						console.log(result)
-						console.log(post.password)
-
-						bcrypt.compare(post.password, password, function(error, result) {
+						bcrypt.compare(post.password, result.password, function(error, result) {
 							if (error) throw error;
 
 							if (result !== true) {
-								res.status(300).json({password: 'default'});
+								res.status(300).json({password: 'incorrect'});
 							}
 							else {
 								req.session._id = mongoResult._id;
