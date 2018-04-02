@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs')
 var torrentStream = require('torrent-stream');
+const parseRange = require('range-parser');
 var engine = torrentStream('magnet:?xt=urn:btih:ec9e9afdf55c50e545d1abf64d255bf9e0687c5d&dn=The.Big.Bang.Theory.S08E13.HDTV.x264-LOL.mp4&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969')
 engine.on('ready', function() {
 	console.log("readyyyyyyy")
@@ -10,9 +11,12 @@ engine.on('ready', function() {
 		{
 			router.get('/', function(req, res, next) {
 				var stream = file.createReadStream();
-				var stat = fs.statSync(stream)
-				console.log(stat)
+				stream.on('data', function(data) {
+					console.log(data)
+				})
 				res.setHeader('Content-Type', 'video/mp4')
+				res.setHeader('Accept-Ranges', 'bytes');
+				res.setHeader('Content-Length', file.length);
       			stream.pipe(res)
 			})
 		}
