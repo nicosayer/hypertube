@@ -20,7 +20,6 @@ router.post('/', function(req, res, next) {
 			'&access_token=' + JSON.parse(apiRes.body).access_token);
 		})
 		.then(apiRes => {
-			console.log(apiRes);
 			const infos = JSON.parse(apiRes.body);
 			const post = {
 				firstName: infos.first_name,

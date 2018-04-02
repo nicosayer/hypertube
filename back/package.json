@@ -25,6 +25,6 @@
     "socket.io": "^2.0.4",
     "socket.io-stream": "^0.9.1",
     "torrent-search-api": "^1.0.27",
-    "torrent-stream": "^1.0.3"
+    "torrent-stream": "^1.0.4"
   }
 }
