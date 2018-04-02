@@ -47,6 +47,8 @@ app.use('/home/profile/changeInfos', require('./routes/home/profile/changeInfos'
 app.use('/home/profile/changePassword', require('./routes/home/profile/changePassword'));
 app.use('/home/profile/changePicture', require('./routes/home/profile/changePicture'));
 
+app.use('/video', require('./routes/home/video/testvideo'));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404));

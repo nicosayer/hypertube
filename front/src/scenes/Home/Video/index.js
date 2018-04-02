@@ -7,7 +7,7 @@ var ss = require('socket.io-stream');
 
 class Video extends Component {
 
-	componentWillReceiveProps(nextProps) {
+	/*componentWillReceiveProps(nextProps) {
 		nextProps.socket.emit('startDownload', 'magnet:?xt=urn:btih:ec9e9afdf55c50e545d1abf64d255bf9e0687c5d&dn=The.Big.Bang.Theory.S08E13.HDTV.x264-LOL.mp4&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969');
 		ss(nextProps.socket).on('startStreaming', (stream) => {
 
@@ -35,17 +35,14 @@ class Video extends Component {
 				});
 			});
 		});
-	}
+	}*/
 
 	render() {
 		return(
 			<div>
 				<br/>
-				<video
-					// ref={video => this.videoElement = video }
-					id="video"
-					controls
-					>
+				<video id="videoPlayer" controls>
+				  <source src="http://localhost:3001/video" type="video/mp4" />
 				</video>
 				<Logout />
 			</div>
