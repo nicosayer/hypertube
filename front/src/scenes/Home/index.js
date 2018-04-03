@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Logout from './LogOut';
 
@@ -11,16 +12,14 @@ class Home extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			result: [],
-			callTime: 0
+			result: []
 		}
 	}
 
 	search(event) {
-		if (event.target && event.target.value) {
+		if (event.which === 13 && event.target && event.target.value) {
 			fetchWrap('https://yts.am/api/v2/list_movies.json?query_term=' + event.target.value)
 			.then(data => {
-				console.log(data);
 				if (data.data && data.data.movie_count) {
 					this.setState({ result: data.data.movies })
 				}
@@ -37,17 +36,15 @@ class Home extends Component {
 	render() {
 
 		const displayResult = this.state.result.map(item =>
-			<div key={item.id}>
-				<a href='test'>
-					<img src={item.large_cover_image ? item.large_cover_image : null} />
-				</a>
-			</div>
+			<Link key={item.id} to={'/' + item.id}>
+				<img src={item.large_cover_image ? item.large_cover_image : null} />
+			</Link>
 		)
 
 		return(
 			<div>
 				<br/>
-				<input type='text' onChange={event => this.search(event)} />
+				<input type='text' onKeyDown={event => this.search(event)} />
 				{displayResult}
 				<Logout />
 			</div>
