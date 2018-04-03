@@ -10,14 +10,37 @@ engine.on('ready', function() {
 		if (file.name == 'The.Big.Bang.Theory.S08E13.HDTV.x264-LOL.mp4')
 		{
 			router.get('/', function(req, res, next) {
-				var stream = file.createReadStream();
-				stream.on('data', function(data) {
-					console.log(data)
-				})
+				console.log(req.headers.range)
+				const ranges = parseRange(file.length, req.headers.range, { combine: true });
+				const range = ranges[0];
+				console.log(ranges)
 				res.setHeader('Content-Type', 'video/mp4')
-				res.setHeader('Accept-Ranges', 'bytes');
-				res.setHeader('Content-Length', file.length);
-      			stream.pipe(res)
+				if (range.start !== 0)
+				{
+					console.log('la')
+					res.setHeader('Accept-Ranges', 'bytes');
+					res.setHeader('Content-Length', 1 + range.end - range.start);
+	        		res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${file.length}`);
+					res.statusCode = 206;
+					file.createReadStream(range).pipe(res)
+				}
+				/*else {
+					console.log('ici')
+					range.start = 0
+					range.end = 1024000
+					res.setHeader('Accept-Ranges', 'bytes');
+					res.setHeader('Content-Length', 1 + 1024000);
+	        		res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${file.length}`);
+					res.statusCode = 206;
+					file.createReadStream(range).pipe(res)
+				}*/
+				else {
+					console.log('ici')
+					//res.setHeader('Accept-Ranges', 'bytes');
+					res.statusCode = 200;
+					res.setHeader('Content-Length', file.length);
+					file.createReadStream().pipe(res)
+				}
 			})
 		}
 	});
