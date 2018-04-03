@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import Logout from './../LogOut';
 
+import { fetchWrap } from '../../../services/fetchWrap'
+
 var ss = require('socket.io-stream');
 
 class Video extends Component {
@@ -37,15 +39,44 @@ class Video extends Component {
 		});
 	}*/ 
 
+	constructor(props) {
+		super(props)
+		this.state = {
+			video: false
+		}
+	}
+
+	click = () => {
+		fetchWrap('/video/search', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					magnet: 'magnet:?xt=urn:btih:d69984cbe2eb2735f0f31e5bd02064cf53c73eb3&dn=Harry+Potter+and+the+Order+of+the+Phoenix+%28Ipod%29.mp4&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'
+				})
+			})
+			.then(payload => {
+				this.setState({ video: true })
+			})
+			.catch(error => {
+				if (error) {
+					this.setState({ error })
+				}
+			})
+	}
+
 	render() {
 
 
 		return(
-			<div onClick={this.click} >
+			<div  >
 				<br/>
-				<video id="videoPlayer" controls>
+				<div onClick={this.click} >click</div>
+				{this.state.video && <video id="videoPlayer" controls>
 				  <source preload='metadata' src="http://localhost:3001/video" type="video/mp4" />
-				</video>
+				</video>}
 				<Logout />
 			</div>
 		);
