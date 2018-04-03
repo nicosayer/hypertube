@@ -6,6 +6,8 @@ import {NotificationContainer} from 'react-notifications';
 import Profile from './scenes/Home/Profile'
 import Home from './scenes/Home/'
 import Search from './scenes/Home/Search'
+import Movies from './scenes/Home/Movies'
+import Video from './scenes/Home/Video'
 import Movie from './scenes/Lib/Movie'
 import TV from './scenes/Lib/TV'
 import LogIn from './scenes/Connect/LogIn'
@@ -29,10 +31,9 @@ class App extends Component {
 								[
 									<Route exact path='/profile' key='profile' component={Profile} />,
 									<Route exact path='/search' key='search' component={Search} />,
-									<Route key='movie' path='/movie/:id([0-9].*)' component={Movie} />,
 									<Route key='tv' path='/tv/:id([0-9].*)' component={TV} />,
-										<Route key='movie' path='/:id([0-9]+)' component={TV} />,
-									<Route key='video' component={Home} />
+									<Route key='movie' path='/:id([0-9]+)' component={Movies} />,
+									<Route key='video' component={Video} />
 								]
 								:
 								[

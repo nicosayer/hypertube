@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const query = require('yify-search');
+//const query = require('yify-search');
 
 router.post('/', function(req, res, next) {
 	console.log(req.body);
