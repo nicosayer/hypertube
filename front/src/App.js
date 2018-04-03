@@ -33,7 +33,7 @@ class App extends Component {
 									<Route exact path='/search' key='search' component={Search} />,
 									<Route key='tv' path='/tv/:id([0-9].*)' component={TV} />,
 									<Route key='movie' path='/:id([0-9]+)' component={Movies} />,
-									<Route key='video' component={Video} />
+									<Route key='video' component={Home} />
 								]
 								:
 								[

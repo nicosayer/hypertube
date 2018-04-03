@@ -233,7 +233,7 @@ class SignUp extends Component {
 						null
 					}
 					<div className='block fontRight'>
-						<div>
+						<div className='inline'>
 							<input type='submit' value='Sign up'/>
 						</div>
 					</div>

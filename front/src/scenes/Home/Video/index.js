@@ -17,7 +17,7 @@ class Video extends Component {
 
 			var video = document.getElementById('video');
 			video.src = window.URL.createObjectURL(mediaSource);
-			
+
 			mediaSource.addEventListener('sourceopen', function(event) {
 				var sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.4d401f"');
 				sourceBuffer.mode = 'sequence';
@@ -37,7 +37,7 @@ class Video extends Component {
 				});
 			});
 		});
-	}*/ 
+	}*/
 
 	constructor(props) {
 		super(props)
@@ -74,8 +74,8 @@ class Video extends Component {
 			<div  >
 				<br/>
 				<div onClick={this.click} >click</div>
-				{this.state.video && <video id="videoPlayer" controls>
-				  <source preload='metadata' src="http://localhost:3001/video" type="video/mp4" />
+				{this.state.video && <video id="videoPlayer" controls autoPlay>
+					<source preload='metadata' src="http://localhost:3001/video" type="video/mp4" />
 				</video>}
 				<Logout />
 			</div>

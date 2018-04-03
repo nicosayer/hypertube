@@ -126,7 +126,7 @@ class LogIn extends Component {
 						<Link to='/reset'>Forgot your password ?</Link>
 					</div>
 					<div className='block fontRight'>
-						<div>
+						<div className='inline'>
 							<input className='spaceTop' type='submit' value='Log in'/>
 						</div>
 					</div>

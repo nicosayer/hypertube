@@ -116,7 +116,7 @@ class ResetPassword extends React.Component {
 							</div>
 							:
 							<div className='block fontRight'>
-								<div>
+								<div className='inline'>
 									<input type='submit' value='Send email'/>
 								</div>
 							</div>

@@ -48,8 +48,8 @@ class Movies extends Component {
 		return(
 			<div  >
 				<br/>
-				{this.state.video && <video id="videoPlayer" controls>
-				  <source autoPlay preload='metadata' src="http://localhost:3001/video" type="video/mp4" />
+				{this.state.video && <video id="videoPlayer" controls autoPlay>
+				  <source preload='metadata' src="http://localhost:3001/video" type="video/mp4" />
 				</video>}
 				<Logout />
 			</div>

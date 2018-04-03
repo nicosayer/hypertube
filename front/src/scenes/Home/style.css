@@ -1,0 +1,58 @@
+.persistentBar {
+	height: 50px;
+	line-height: 50px;
+	display: block;
+	background: #2A292F;
+	border-bottom: 1px solid black;
+}
+
+.searchBar {
+	width: 400px;
+	border: 1px solid dimgray;
+	border-radius: 25px;
+	padding: 5px 10px;
+}
+
+.searchBar:focus {
+	padding: 5px 10px;
+}
+
+.movie {
+	width: 230px;
+	height: 345px;
+	position: relative;
+	margin: 10px;
+	display: inline-block;
+}
+
+
+.movieTitle {
+	display:flex;
+ justify-content:center;
+ align-items:center;
+	opacity: 0;
+	background: rgba(0, 0, 0, 0.85);
+	text-align: center;
+	width: 230px;
+	height: 345px;
+	float: left;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 1000;
+	transition: 0.25s opacity;
+	color: lightgrey;
+}
+
+.movieTitle:hover {
+	opacity: 1;
+}
+
+.movieImg {
+	box-shadow: 0 0 10px black;
+}
+
+.noMovies {
+	font-size: 300%;
+	margin-top: 100px;
+}

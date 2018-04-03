@@ -6,47 +6,128 @@ import Logout from './LogOut';
 
 import { fetchWrap } from '../../services/fetchWrap'
 
+import './style.css';
 
 class Home extends Component {
 
 	constructor(props) {
 		super(props)
 		this.state = {
-			result: []
+			result: [],
+			loading: true
 		}
 	}
 
+	componentDidMount() {
+		this.searchMostPopular();
+	}
+
+	searchMostPopular() {
+		if (!this.state.loading) {
+			this.setState({
+				...this.state,
+				loading: true
+			})
+		}
+		fetchWrap('https://yts.am/api/v2/list_movies.json?sort_by=seeds&limit=50')
+		.then(data => {
+			var result = [];
+			if (data.data && data.data.movie_count) {
+				result = data.data.movies;
+			}
+			this.setState({
+				result,
+				loading: false
+			})
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
 	search(event) {
-		if (event.which === 13 && event.target && event.target.value) {
-			fetchWrap('https://yts.am/api/v2/list_movies.json?query_term=' + event.target.value)
-			.then(data => {
-				if (data.data && data.data.movie_count) {
-					this.setState({ result: data.data.movies })
+		if (event.which === 13) {
+			if (event.target && event.target.value) {
+				if (!this.state.loading) {
+					this.setState({
+						...this.state,
+						loading: true
+					})
 				}
-				else {
-					this.setState({ result: [] })
-				}
-			})
-			.catch(error => {
-				console.log(error);
-			})
+				fetchWrap('https://yts.am/api/v2/list_movies.json?query_term=' + event.target.value)
+				.then(data => {
+					console.log(data.data)
+					var result = [];
+					if (data.data && data.data.movie_count) {
+						result = data.data.movies;
+					}
+					this.setState({
+						result,
+						loading: false
+					})
+				})
+				.catch(error => {
+					console.log(error);
+				})
+			}
+			else {
+				this.searchMostPopular();
+			}
 		}
 	}
 
 	render() {
 
-		const displayResult = this.state.result.map(item =>
+		const movies = this.state.result.map(item =>
 			<Link key={item.id} to={'/' + item.id}>
-				<img src={item.large_cover_image ? item.large_cover_image : null} />
+				<div className='movie'>
+					<div className='movieTitle'>
+						<div>
+						<div className='fontMedium underline'>
+							{item.title ? <b>{item.title}</b> : null}
+						</div>
+						<div>
+							{ item.year ? <b>({item.year})</b> : null }
+						</div>
+						<div className='spaceTop'>
+							{ item.runtime ? item.runtime + ' min' : null }
+						</div>
+						<div className='spaceTop'>
+							{ item.genres ? item.genres.map(genre => ' ' + genre): null }
+						</div>
+						<div className='spaceTop'>
+							{ item.rating ? <span>{item.rating} <i className="fas fa-star"></i></span> : null}
+						</div>
+						</div>
+					</div>
+					<img className='movieImg' src={item.medium_cover_image ? item.medium_cover_image : null} />
+				</div>
 			</Link>
 		)
 
 		return(
 			<div>
-				<br/>
-				<input type='text' onKeyDown={event => this.search(event)} />
-				{displayResult}
-				<Logout />
+				<div className='persistentBar'>
+					<input className='searchBar' placeholder='Quick search' type='text' onKeyDown={event => this.search(event)} />
+						<div className='inline floatRight spaceRight'>
+							<Logout />
+						</div>
+				</div>
+				{ this.state.loading ?
+					<div className='loading noMovies'><span><i className="fas fa-spinner"></i></span></div>
+					:
+					movies.length ?
+					<div>
+						{movies}
+					</div>
+					:
+					<div>
+						<div className='noMovies'>
+							<i className="fas fa-map-signs"></i>
+						</div>
+						Sorry but we didn't find anything
+					</div>
+				}
 			</div>
 		);
 	}

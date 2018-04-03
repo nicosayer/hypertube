@@ -13,13 +13,13 @@ a {
 	text-decoration: none;
 }
 
-div, p {
+div {
 	margin: 0;
 	padding: 0;
-	display: inline-block;
 }
 
 .formBox {
+	display: inline-block;
 	min-width: 300px;
 	width: 15vw;
 	border-radius: 3px;
@@ -70,6 +70,10 @@ div, p {
 	margin-left: 10px;
 }
 
+.inline {
+	display: inline-block;
+}
+
 .block {
 	display: block;
 }
@@ -80,6 +84,10 @@ div, p {
 
 .test {
 	border: 1px solid red;
+}
+
+.underline {
+	text-decoration: underline;
 }
 
 .lignTop {
@@ -148,6 +156,10 @@ div, p {
 
 .floatLeft {
 	float: left;
+}
+
+.floatRight {
+	float: right;
 }
 
 .pointer {

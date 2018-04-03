@@ -19,7 +19,7 @@ class LogOut extends Component {
 	}
 
 	render() {
-		return <input type="submit" value="Logout" onClick={this.logout} />
+		return <div className='inline pointer' onClick={this.logout}>Logout</div>
 	}
 }
 
