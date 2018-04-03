@@ -3,6 +3,8 @@ const router = express.Router();
 const fs = require('fs')
 var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
+var file;
+
 
 router.post('/search', function(req, res, next) {
 	magnet = req.body.magnet
@@ -16,39 +18,48 @@ downlad = function(magnet, resSearch) {
 	engine.on('ready', function() {
 		console.log("readyyyyyyy")
 		var size = 0
-		var file;
+		
 		engine.files.forEach(function(fileTmp) {
 			if (fileTmp.length > size) {
 				size = fileTmp.length
 				file = fileTmp				
 			}
 		})
-		console.log(file.name)
+		console.log("1"+file.name)
 		resSearch.statusCode = 201;
 		resSearch.end()
-		router.get('/', function(req, res, next) {
-			console.log(req.headers.range)
-			const ranges = parseRange(file.length, req.headers.range, { combine: true });
-			const range = ranges[0];
-			console.log(ranges)
-			res.setHeader('Content-Type', 'video/mp4')
-			if (1 == 1) {
-				console.log('la')
-				res.setHeader('Accept-Ranges', 'bytes');
-				res.setHeader('Content-Length', 1 + range.end - range.start);
-        		res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${file.length}`);
-				res.statusCode = 206;
-				file.createReadStream(range).pipe(res)
-			}
-			else {
-				console.log('ici')
-				res.statusCode = 200;
-				res.setHeader('Content-Length', file.length);
-				file.createReadStream().pipe(res)
-			}
-		})
+		console.log("2"+file.name)
+
 	});
 }
+
+router.get('/', function(req, res, next) {
+	var filetmp = file
+	console.log("3"+filetmp.name)
+	console.log(req.headers.range)
+	console.log('filetmp.length:'+filetmp.length)
+	console.log('req.headers.range:'+req.headers.range)
+	const ranges = parseRange(filetmp.length, req.headers.range, { combine: true });
+	const range = ranges[0];
+	console.log(ranges)
+	res.setHeader('Content-Type', 'video/mp4')
+
+	if (ranges !== -1) {
+		console.log('la')
+		res.setHeader('Accept-Ranges', 'bytes');
+		res.setHeader('Content-Length', 1 + range.end - range.start);
+		res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${filetmp.length}`);
+		res.statusCode = 206;
+		console.log("4"+filetmp.name)
+		filetmp.createReadStream(range).pipe(res)
+	}
+	else {
+		console.log('ici')
+		res.statusCode = 200;
+		res.setHeader('Content-Length', file.length);
+		file.createReadStream().pipe(res)
+	}
+})
 
 /*router.get('/', function(req, res, next) {
 
