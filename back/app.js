@@ -13,8 +13,8 @@ mongo.connect(error => {
 });
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 
 app.use(logger('dev'));
@@ -32,13 +32,15 @@ app.use(session({
 
 app.use('/isUserLoggedIn', require('./routes/isUserLoggedIn'));
 
-app.use('/connect/login', require('./routes/connect/login/'));
+app.use('/connect/login', require('./routes/connect/login'));
 app.use('/connect/login/resetPassword', require('./routes/connect/login/resetPassword'));
 app.use('/connect/login/oauth/42', require('./routes/connect/login/oauth/42'));
 app.use('/connect/login/oauth/Facebook', require('./routes/connect/login/oauth/Facebook'));
 app.use('/connect/login/oauth/Google', require('./routes/connect/login/oauth/Google'));
 
 app.use('/connect/signup', require('./routes/connect/signup'));
+
+app.use('/home', require('./routes/home'));
 
 app.use('/home/logout', require('./routes/home/logout'));
 

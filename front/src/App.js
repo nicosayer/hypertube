@@ -4,7 +4,7 @@ import { Provider, connect } from 'react-redux'
 import {NotificationContainer} from 'react-notifications';
 
 import Profile from './scenes/Home/Profile'
-import Video from './scenes/Home/Video'
+import Home from './scenes/Home/'
 import Search from './scenes/Home/Search'
 import Movie from './scenes/Lib/Movie'
 import TV from './scenes/Lib/TV'
@@ -31,7 +31,8 @@ class App extends Component {
 									<Route exact path='/search' key='search' component={Search} />,
 									<Route key='movie' path='/movie/:id([0-9].*)' component={Movie} />,
 									<Route key='tv' path='/tv/:id([0-9].*)' component={TV} />,
-									<Route key='video' component={Video} />
+										<Route key='movie' path='/:id([0-9]+)' component={TV} />,
+									<Route key='video' component={Home} />
 								]
 								:
 								[
