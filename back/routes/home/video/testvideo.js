@@ -8,6 +8,31 @@ var status = true
 num = 100
 
 
+router.get('/:magnet', function(req, res, next) {
+
+	console.log('ici')
+	const { magnet } = req.params
+	console.log(magnet)
+	var file;
+
+	if (typeof engine === 'undefined') {
+		var engine = torrentStream(magnet, {path: './public/movies'})
+		engine.on('ready', function() {
+			console.log("readyyyyyyy")
+			var size = 0
+			engine.files.forEach(function(fileTmp) {
+				if (fileTmp.length > size) {
+					size = fileTmp.length
+					file = fileTmp				
+				}
+			})
+			download(file, req, res)
+		})
+	}
+	else
+		download(file, req, res)
+})
+
 router.post('/search', function(req, res, next) {
 	magnet = req.body.magnet
 	console.log(magnet)
@@ -15,70 +40,43 @@ router.post('/search', function(req, res, next) {
 	
 })
 
-downlad = function(magnet, resSearch) {
-	status = true
-	num++
-	var engine = torrentStream(magnet, {path: './public/movies'})
-	engine.on('ready', function() {
-		console.log("readyyyyyyy")
-		var size = 0
+download = function(file, req, res) {		
 		
-		engine.files.forEach(function(fileTmp) {
-			if (fileTmp.length > size) {
-				size = fileTmp.length
-				file = fileTmp				
-			}
-		})
-		console.log("1"+file.name)
-		resSearch.statusCode = 201;
-		resSearch.json({ num: num })
-		router.get('/'+num, function(req, res, next) {
-			var filetmp = file
-			console.log("route")
-			const range = req.headers.range
-			console.log(range)
-			const parts = range.replace(/bytes=/, "").split("-")
-			console.log(parts)
-			console.log(status)
-			if (status)
-				var start = 0
-			else
-				var start = parseInt(parts[0], 10) > filetmp.length? 0 : parseInt(parts[0], 10)
-			console.log(start)
-			const end = parts[1] 
-		      ? parseInt(parts[1], 10)
-		      : filetmp.length-1
-		      console.log(start, end)
-			console.log("3"+filetmp.name)
-			console.log(req.headers.range)
-			console.log('filetmp.length:'+filetmp.length)
-			console.log('req.headers.range:'+req.headers.range)
-			console.log(parts)
-			res.setHeader('Content-Type', 'video/mp4')
+	console.log("1"+file.name)
+	const range = req.headers.range
+	console.log('req.headers.range:'+req.headers.range)
+	console.log('file.length:'+file.length)
+	const parts = range.replace(/bytes=/, "").split("-")
+	console.log(parts)
+	var start = parseInt(parts[0], 10) > file.length? 0 : parseInt(parts[0], 10)
+	console.log(start)
+	const end = parts[1] 
+      ? parseInt(parts[1], 10)
+      : file.length-1
+      console.log(start, end)
+	console.log("3"+file.name)
+	console.log(parts)
 
-			if (1 == 1) {
-				console.log('la')
-				res.setHeader('Accept-Ranges', 'bytes');
-				res.setHeader('Content-Length', 1 + end - start);
-				res.setHeader('Content-Range', `bytes ${start}-${end}/${filetmp.length}`);
-				res.statusCode = 206;
-				console.log("4"+filetmp.name)
-				status = false
-				filetmp.createReadStream({start, end}).pipe(res)
-			}
-			else {
-				console.log('ici')
-				res.setHeader('Accept-Ranges', 'bytes');
-				res.setHeader('Content-Length', 1 + range.end - range.start);
-				res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${filetmp.length}`);
-				res.statusCode = 206;
-				console.log("4"+filetmp.name)
-				filetmp.createReadStream(range).pipe(res)
-			}
-		})
-		console.log("2"+file.name)
-
-	});
+	res.setHeader('Content-Type', 'video/mp4')
+	if (1 == 1) {
+		console.log('la')
+		res.setHeader('Accept-Ranges', 'bytes');
+		res.setHeader('Content-Length', 1 + end - start);
+		res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
+		res.statusCode = 206;
+		console.log("4"+file.name)
+		status = false
+		file.createReadStream({start, end}).pipe(res)
+	}
+	else {
+		console.log('ici')
+		res.setHeader('Accept-Ranges', 'bytes');
+		res.setHeader('Content-Length', 1 + range.end - range.start);
+		res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${file.length}`);
+		res.statusCode = 206;
+		console.log("4"+file.name)
+		file.createReadStream(range).pipe(res)
+	}
 }
 
 
