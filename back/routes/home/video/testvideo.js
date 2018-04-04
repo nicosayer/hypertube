@@ -10,30 +10,40 @@ router.get('/:magnet/:time', function(req, res, next) {
 
 	if (req.session && req.session._id) {
 		const id = req.session._id.toString()
-		console.log('ici')
 		const { magnet } = req.params
+		const parts = req.headers.range.replace(/bytes=/, "").split("-")
+		
+		console.log('ici')
 		console.log(magnet)
-		const range = req.headers.range
-		const parts = range.replace(/bytes=/, "").split("-")
 
 		if (parseInt(parts[0], 10) === 0) {
-			var engine = torrentStream(magnet, {path: './public/movies'})
-			engine.on('ready', function() {
-				console.log("readyyyyyyy")
-				var size = 0
-				var file;
-				engine.files.forEach(function(fileTmp) {
-					if (fileTmp.length > size) {
-						size = fileTmp.length
-						file = fileTmp				
-					}
+			if (magnet.match(/^magnet:\?xt=urn:/i) != null) {
+				console.log('avant engine')
+				var engine = torrentStream(magnet, {path: './public/movies'})
+				console.log('apres engine')
+
+				engine.on('ready', function() {
+
+					console.log("readyyyyyyy")
+
+					var size = 0
+					var file;
+
+					engine.files.forEach(function(fileTmp) {
+						if (fileTmp.length > size) {
+							size = fileTmp.length
+							file = fileTmp				
+						}
+					})
+					user[id] = file
+					download(file, req, res)
 				})
-				user[id] = file
-				download(file, req, res)
-			})
+			}
+			else {
+				res.sendStatus(300)
+			}
 		}
 		else {
-			console.log(user[id])
 			download(user[id], req, res)
 		}
 	}
@@ -44,78 +54,38 @@ router.get('/:magnet/:time', function(req, res, next) {
 
 download = function(file, req, res) {		
 		
-	console.log("1"+file.name)
-	const range = req.headers.range
 	console.log('req.headers.range:'+req.headers.range)
 	console.log('file.length:'+file.length)
+
+	const range = req.headers.range
 	const parts = range.replace(/bytes=/, "").split("-")
 	console.log(parts)
+
 	var start = parseInt(parts[0], 10) > file.length? 0 : parseInt(parts[0], 10)
 	console.log(start)
-	const end = parts[1] 
-      ? parseInt(parts[1], 10)
-      : file.length-1
-      console.log(start, end)
-	console.log("3"+file.name)
-	console.log(parts)
+
+	const end = parts[1] ? parseInt(parts[1], 10) : file.length-1
+    console.log(start, end)
 
 	res.setHeader('Content-Type', 'video/mp4')
-	if (1 == 1) {
-		console.log('la')
-		res.setHeader('Accept-Ranges', 'bytes');
-		res.setHeader('Content-Length', 1 + end - start);
-		res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
-		res.statusCode = 206;
-		console.log("4"+file.name)
-		status = false
-		file.createReadStream({start, end}).pipe(res)
-	}
-	else {
-		console.log('ici')
-		res.setHeader('Accept-Ranges', 'bytes');
-		res.setHeader('Content-Length', 1 + range.end - range.start);
-		res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${file.length}`);
-		res.statusCode = 206;
-		console.log("4"+file.name)
-		file.createReadStream(range).pipe(res)
-	}
+	res.setHeader('Accept-Ranges', 'bytes');
+	res.setHeader('Content-Length', 1 + end - start);
+	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
+	res.statusCode = 206;
+	file.createReadStream({start, end}).pipe(res)
 }
 
 
+// else {
+// 	console.log('ici')
+// 	res.setHeader('Accept-Ranges', 'bytes');
+// 	res.setHeader('Content-Length', 1 + range.end - range.start);
+// 	res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${file.length}`);
+// 	res.statusCode = 206;
+// 	console.log("4"+file.name)
+// 	file.createReadStream(range).pipe(res)
+// }
 
-/*router.get('/', function(req, res, next) {
-
-	const path = 'public/sample.mp4'
-	const stat = fs.statSync(path)
-	const fileSize = stat.size
-	const range = req.headers.range
-	console.log(range)
-	if (range) {
-		const parts = range.replace(/bytes=/, "").split("-")
-		const start = parseInt(parts[0], 10)
-		const end = parts[1] 
-		  ? parseInt(parts[1], 10)
-		  : fileSize-1
-		const chunksize = (end-start)+1
-		const file = fs.createReadStream(path, {start, end})
-		const head = {
-		  'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-		  'Accept-Ranges': 'bytes',
-		  'Content-Length': chunksize,
-		  'Content-Type': 'video/mp4',
-		}
-		res.writeHead(206, head);
-		file.pipe(res);
-	} 
-	else {
-		const head = {
-		  'Content-Length': fileSize,
-		  'Content-Type': 'video/mp4',
-		}
-		res.writeHead(200, head)
-		fs.createReadStream(path).pipe(res)
-	}
-});*/
 
 
 module.exports = router;
