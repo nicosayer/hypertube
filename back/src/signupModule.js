@@ -101,7 +101,7 @@ module.exports = function(req, post, url, isOAuth, callback) {
 	}
 
 	if (isOAuth) {
-		collection.findOne({oauth: post.oauth}, function (err, result) {
+		collection.findOne({$or: [{'oauth.google': post.oauth.google},{'oauth.42': post.oauth['42']}, {'oauth.facebook': post.oauth.facebook}]}, function (err, result) {
 			if (err) throw err;
 
 			if (!result) {
@@ -118,7 +118,6 @@ module.exports = function(req, post, url, isOAuth, callback) {
 								request.head(url, function(err, res, body) {
 									request(url).pipe(fs.createWriteStream('public/pictures/' + userResult._id.toString() + '.png')).on('close', function() {
 										req.session._id = userResult._id;
-										fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 										callback(result.value);
 									});
 								});
@@ -137,7 +136,6 @@ module.exports = function(req, post, url, isOAuth, callback) {
 								request.head(url, function(err, res, body){
 									request(url).pipe(fs.createWriteStream('public/pictures/' + result.ops[0]._id.toString() + '.png')).on('close', function() {
 										req.session._id = result.ops[0]._id;
-										fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 										callback(result.ops[0]);
 									});
 								});
@@ -154,11 +152,9 @@ module.exports = function(req, post, url, isOAuth, callback) {
 			else {
 				if (!fs.existsSync('public/pictures/'+result._id.toString()+'.png') && typeof url != 'undefined'){
 					request.head(url, function(err, res, body){
-
 						if (res.headers['content-type'] == 'image/jpeg' || res.headers['content-type'] == 'image/png') {
 							request(url).pipe(fs.createWriteStream('public/pictures/'+result._id.toString()+'.png')).on('close', function() {
 								req.session._id = result._id;
-								fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
 								callback(result);
 							});
 						}
