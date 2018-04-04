@@ -3,41 +3,43 @@ const router = express.Router();
 const fs = require('fs')
 var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
-var file;
-var status = true
-num = 100
 
+var user = {}
 
-router.get('/:magnet', function(req, res, next) {
+router.get('/:magnet/:time', function(req, res, next) {
 
-	console.log('ici')
-	const { magnet } = req.params
-	console.log(magnet)
-	var file;
+	if (req.session && req.session._id) {
+		const id = req.session._id.toString()
+		console.log('ici')
+		const { magnet } = req.params
+		console.log(magnet)
+		const range = req.headers.range
+		const parts = range.replace(/bytes=/, "").split("-")
 
-	if (typeof engine === 'undefined') {
-		var engine = torrentStream(magnet, {path: './public/movies'})
-		engine.on('ready', function() {
-			console.log("readyyyyyyy")
-			var size = 0
-			engine.files.forEach(function(fileTmp) {
-				if (fileTmp.length > size) {
-					size = fileTmp.length
-					file = fileTmp				
-				}
+		if (parseInt(parts[0], 10) === 0) {
+			var engine = torrentStream(magnet, {path: './public/movies'})
+			engine.on('ready', function() {
+				console.log("readyyyyyyy")
+				var size = 0
+				var file;
+				engine.files.forEach(function(fileTmp) {
+					if (fileTmp.length > size) {
+						size = fileTmp.length
+						file = fileTmp				
+					}
+				})
+				user[id] = file
+				download(file, req, res)
 			})
-			download(file, req, res)
-		})
+		}
+		else {
+			console.log(user[id])
+			download(user[id], req, res)
+		}
 	}
-	else
-		download(file, req, res)
-})
-
-router.post('/search', function(req, res, next) {
-	magnet = req.body.magnet
-	console.log(magnet)
-	downlad(magnet, res)
-	
+	else {
+		res.sendStatus(300)
+	}
 })
 
 download = function(file, req, res) {		
