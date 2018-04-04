@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require('fs')
 var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
+const ffmpeg = require('fluent-ffmpeg');
 
 var user = {}
 
@@ -67,12 +68,31 @@ download = function(file, req, res) {
 	const end = parts[1] ? parseInt(parts[1], 10) : file.length-1
     console.log(start, end)
 
-	res.setHeader('Content-Type', 'video/mp4')
+	res.setHeader('Content-Type', 'video/webm')
 	res.setHeader('Accept-Ranges', 'bytes');
 	res.setHeader('Content-Length', 1 + end - start);
 	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
-	file.createReadStream({start, end}).pipe(res)
+
+	ffmpeg(file.createReadStream({start, end}))
+	.videoCodec('libvpx')
+	.audioCodec('libvorbis')
+	.videoBitrate('512k')
+	.format('webm')
+	.outputOptions([
+		'-deadline realtime',
+		'-error-resilient 1'
+	])
+	.on('start', () => {
+		console.log('transcoding...')
+	})
+	.on('error', err => {
+		if (err.message !== 'Output stream closed') {
+			console.log(err.message);
+			convert.kill();
+		}
+	})
+	.pipe(res);
 }
 
 
