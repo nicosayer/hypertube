@@ -1,0 +1,44 @@
+.menuBar {
+	height: 50px;
+	line-height: 50px;
+	display: block;
+	background: #2A292F;
+	border-bottom: 1px solid black;
+	position: fixed;
+	top: 0;
+	left:0;
+	z-index: 1000;
+	width: 100%;
+}
+
+.menuLogo {
+	left: -80px;
+	transition: 0.35s left;
+	position: absolute;
+}
+
+.menuLogo:hover {
+	left: 10px;
+}
+
+.menuSearch {
+	width: 200px;
+	border: 1px solid dimgray;
+	border-radius: 25px;
+	padding: 5px 10px;
+	transition: 0.35s width;
+}
+
+.menuSearch:hover {
+	width: 400px;
+}
+
+.menuSearch:focus {
+	width: 400px;
+	padding: 5px 10px;
+}
+
+.menuProfile {
+	position: absolute;
+	right: 10px;
+}

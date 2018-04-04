@@ -26,9 +26,7 @@ div {
 	background: #2A292F;
 	padding: 20px 40px;
 	box-shadow: 0 0 10px black;
-	margin: 50px 25px;
 }
-
 
 .fontBig {
 	font-size: 200%;
@@ -60,6 +58,14 @@ div {
 
 .fontRight {
 	text-align: right;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.relative {
+	position: relative;
 }
 
 .marginTop {

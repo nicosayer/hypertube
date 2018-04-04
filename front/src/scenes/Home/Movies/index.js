@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Logout from './../LogOut';
+import Logout from '../Menu/LogOut';
 
 import { fetchWrap } from '../../../services/fetchWrap'
 
