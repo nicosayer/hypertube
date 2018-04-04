@@ -4,17 +4,38 @@
 	display: block;
 	background: #2A292F;
 	border-bottom: 1px solid black;
+	position: fixed;
+	top: 0;
+	left:0;
+	z-index: 1000;
+	width: 100%;
+}
+
+.hypertubeLogo {
+	left: -80px;
+	transition: 0.5s left;
+	position: absolute;
+}
+
+.hypertubeLogo:hover {
+	left: 10px;
 }
 
 .searchBar {
-	width: 400px;
+	width: 200px;
 	border: 1px solid dimgray;
 	border-radius: 25px;
 	padding: 5px 10px;
+	transition: 0.5s width;
 }
 
 .searchBar:focus {
 	padding: 5px 10px;
+	width: 400px;
+}
+
+.searchResults {
+	margin-top: 50px;
 }
 
 .movie {
@@ -39,7 +60,7 @@
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	z-index: 1000;
+	z-index: 900;
 	transition: 0.25s opacity;
 	color: lightgrey;
 }

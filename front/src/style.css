@@ -78,6 +78,10 @@ div {
 	display: block;
 }
 
+.transparent {
+	opacity: 0.1;
+}
+
 .hidden {
 	visibility: hidden;
 }
@@ -104,6 +108,10 @@ div {
 
 .spaceTop {
 	margin-top: 10px;
+}
+
+.spaceLeft {
+	margin-left: 10px;
 }
 
 .spaceRight {

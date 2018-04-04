@@ -29,7 +29,7 @@ class Home extends Component {
 				loading: true
 			})
 		}
-		fetchWrap('https://yts.am/api/v2/list_movies.json?sort_by=seeds&limit=50')
+		fetchWrap('https://yts.am/api/v2/list_movies.json?sort_by=download_count&limit=50')
 		.then(data => {
 			var result = [];
 			if (data.data && data.data.movie_count) {
@@ -83,21 +83,21 @@ class Home extends Component {
 				<div className='movie'>
 					<div className='movieTitle'>
 						<div>
-						<div className='fontMedium underline'>
-							{item.title ? <b>{item.title}</b> : null}
-						</div>
-						<div>
-							{ item.year ? <b>({item.year})</b> : null }
-						</div>
-						<div className='spaceTop'>
-							{ item.runtime ? item.runtime + ' min' : null }
-						</div>
-						<div className='spaceTop'>
-							{ item.genres ? item.genres.map(genre => ' ' + genre): null }
-						</div>
-						<div className='spaceTop'>
-							{ item.rating ? <span>{item.rating} <i className="fas fa-star"></i></span> : null}
-						</div>
+							<div className='fontMedium underline'>
+								{item.title ? <b>{item.title}</b> : null}
+							</div>
+							<div>
+								{ item.year ? <b>({item.year})</b> : null }
+							</div>
+							<div className='spaceTop'>
+								{ item.runtime ? item.runtime + ' min' : null }
+							</div>
+							<div className='spaceTop'>
+								{ item.genres ? item.genres.map(genre => ' ' + genre): null }
+							</div>
+							<div className='spaceTop'>
+								{ item.rating ? <span>{item.rating} <i className='fas fa-star'></i></span> : null}
+							</div>
 						</div>
 					</div>
 					<img className='movieImg' src={item.medium_cover_image ? item.medium_cover_image : null} />
@@ -108,26 +108,33 @@ class Home extends Component {
 		return(
 			<div>
 				<div className='persistentBar'>
-					<input className='searchBar' placeholder='Quick search' type='text' onKeyDown={event => this.search(event)} />
-						<div className='inline floatRight spaceRight'>
-							<Logout />
-						</div>
+					<i className='fas fa-search'></i>
+					<input className='searchBar spaceLeft' placeholder='Quick search' type='text' onKeyDown={event => this.search(event)} />
+					<div className='inline floatRight spaceRight'>
+						<Logout />
+					</div>
+					<div className='inline floatLeft hypertubeLogo'>
+						Hypertube
+						<i className='fas fa-space-shuttle spaceLeft'></i>
+					</div>
 				</div>
-				{ this.state.loading ?
-					<div className='loading noMovies'><span><i className="fas fa-spinner"></i></span></div>
-					:
-					movies.length ?
-					<div>
-						{movies}
-					</div>
-					:
-					<div>
-						<div className='noMovies'>
-							<i className="fas fa-map-signs"></i>
+				<div className='searchResults'>
+					{ this.state.loading ?
+						<div className='loading noMovies'><span><i className='fas fa-spinner'></i></span></div>
+						:
+						movies.length ?
+						<div>
+							{movies}
 						</div>
-						Sorry but we didn't find anything
-					</div>
-				}
+						:
+						<div>
+							<div className='noMovies'>
+								<i className='fas fa-map-signs'></i>
+							</div>
+							Sorry but we didn't find anything
+						</div>
+					}
+				</div>
 			</div>
 		);
 	}
