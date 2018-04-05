@@ -5,6 +5,7 @@ var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
 var mongo = require('../../../mongo');
+var child_process = require('child_process')
 
 var user = {}
 
@@ -43,7 +44,8 @@ router.get('/:magnet/:time', function(req, res, next) {
 						}
 					})
 					user[id] = file
-					download(file, req, res)
+					res.sendStatus(201)
+					//download(file, req, res)
 				})
 			}
 			else {
@@ -65,6 +67,7 @@ download = function(file, req, res) {
 	console.log('req.headers.range:'+req.headers.range)
 	console.log('file.length:'+file.length)
 
+	console.log(file.name)
 	const range = req.headers.range
 	var parts;
 	if (typeof range == 'undefined')
@@ -81,30 +84,57 @@ download = function(file, req, res) {
 
 	res.setHeader('Content-Type', 'video/webm')
 	res.setHeader('Accept-Ranges', 'bytes');
-	res.setHeader('Content-Length', 1 + end - start);
-	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
+	//res.setHeader('Content-Length', 1 + end - start);
+	//res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
-	file.createReadStream({start, end}).pipe(res)
+	var stream = file.createReadStream({start, end})
 
-	/*ffmpeg(file.createReadStream({start, end}))
+	var convert = ffmpeg(stream)
 	.videoCodec('libvpx')
 	.audioCodec('libvorbis')
 	.videoBitrate('512k')
 	.format('webm')
-	.outputOptions([
-		'-deadline realtime',
-		'-error-resilient 1'
-	])
 	.on('start', () => {
 		console.log('transcoding...')
 	})
-	.on('error', err => {
-		if (err.message !== 'Output stream closed') {
-			console.log(err.message);
-		}
+	.on('error', (err, stdout, stderr) => {
+		//if (err.message !== 'Output stream closed') {
+			console.log(err.message, err, stderr);
+		//}
 	})
-	.pipe(res);*/
+	.pipe(res)
+
+	
 }
+
+//var input_file = file.createReadStream();
+	// input_file.on('error', function(err) {
+	//     console.log(err);
+	// });
+
+	// // var output_path = 'tmp/output.mp4';
+	// // var output_stream = fs.createWriteStream('tmp/output.mp4');
+
+	// var ffmpeg = child_process.spawn('ffmpeg', ['-i', 'pipe:0', '-f', 'webm', '-movflags', 'frag_keyframe', 'pipe:1']);
+	// input_file.pipe(ffmpeg.stdin);
+	// ffmpeg.stdout.pipe(res);
+
+	// ffmpeg.stderr.on('data', function (data) {
+	//     console.log(data.toString());
+	// });
+
+	// ffmpeg.stderr.on('end', function () {
+	//     console.log('file has been converted succesfully');
+	// });
+
+	// ffmpeg.stderr.on('exit', function () {
+	//     console.log('child process exited');
+	// });
+
+	// ffmpeg.stderr.on('close', function() {
+	//     console.log('...closing time! bye');
+	// });
+
 
 
 // else {

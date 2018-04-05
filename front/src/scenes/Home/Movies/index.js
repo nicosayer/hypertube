@@ -25,7 +25,6 @@ class Movies extends Component {
 			fetchWrap('/video/'+magnet+'/'+time+'first', {credentials: 'include'})
 			.then(() => {
 				this.setState({ video: true, time: time, magnet: magnet })
-				alert('retour')
 			})
 			.catch(error => console.log(error))
 			
