@@ -1,0 +1,9 @@
+.main {
+	overflow-x: hidden;
+	overflow-y: scroll;
+	height: calc(100vh - 51px);
+	box-sizing: border-box;
+	position: absolute;
+	z-index: -200;
+	width: 100vw;
+}

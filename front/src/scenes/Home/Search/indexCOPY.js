@@ -1,54 +1,126 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
-import Logout from './../LogOut';
+import { Link } from 'react-router-dom';
 
 import { fetchWrap } from '../../../services/fetchWrap'
 
+import './style.css';
 
 class Search extends Component {
 
 	constructor(props) {
 		super(props)
 		this.state = {
-			result: []
+			search: '',
+			result: [],
+			loading: true
+		}
+		this.props.history.push('/')
+	}
+
+	componentDidMount() {
+		this._isMounted = true;
+		this.determineTypeOfSearch();
+	}
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.search !== prevState.search) {
+			return {
+				search: nextProps.search,
+				loading: true
+			};
+		}
+		else {
+			return null;
 		}
 	}
 
-	search(e) {
-		console.log(e.target.value)
-		fetchWrap('https://api.themoviedb.org/3/search/tv?api_key=6cccec2917aab5c242bfff03911e32d6&language=en-US&query='+e.target.value+'&page=1&include_adult=false', {
-			
-		})
-		.then(result => {
-			console.log(result)
-			this.setState({ result: result.results })
+	componentDidUpdate(prevProps, prevState) {
+		this.determineTypeOfSearch();
+	}
+
+	determineTypeOfSearch() {
+		if (this.state.loading) {
+			if (this.state.search) {
+				this.search('https://yts.am/api/v2/list_movies.json?query_term=' + this.state.search);
+			}
+			else {
+				this.search('https://yts.am/api/v2/list_movies.json?sort_by=download_count&limit=50');
+			}
+		}
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+	search(endPoint) {
+		fetchWrap(endPoint)
+		.then(data => {
+			var result = [];
+			if (data.data && data.data.movie_count) {
+				result = data.data.movies;
+			}
+			if (this._isMounted) {
+				this.setState({
+					...this.state,
+					result,
+					loading: false
+				})
+			}
 		})
 		.catch(error => {
-			console.log(error)
+			console.log(error);
 		})
 	}
 
 	render() {
-
-		const displayResult = this.state.result.map(item => <div key={item.id}><img src={item.poster_path?'https://image.tmdb.org/t/p/w500//'+item.poster_path:null} /> {item.title}</div>)
+		const movies = this.state.result.map(item =>
+			<Link key={item.id} to={'/' + item.id}>
+				<div className='movie'>
+					<div className='movieTitle'>
+						<div>
+							<div className='fontMedium underline'>
+								{item.title ? <b>{item.title}</b> : null}
+							</div>
+							<div>
+								{ item.year ? <b>({item.year})</b> : null }
+							</div>
+							<div className='spaceTop'>
+								{ item.runtime ? item.runtime + ' min' : null }
+							</div>
+							<div className='spaceTop'>
+								{ item.genres ? item.genres.map(genre => ' ' + genre): null }
+							</div>
+							<div className='spaceTop'>
+								{ item.rating ? <span>{item.rating} <i className='fas fa-star'></i></span> : null}
+							</div>
+						</div>
+					</div>
+					<img className='movieImg' alt={item.title} src={item.medium_cover_image ? item.medium_cover_image : null} />
+				</div>
+			</Link>
+		)
 
 		return(
-			<div>
-				<br/>
-				<input type='text' onChange={(e) => this.search(e)} />
-				{displayResult}
-				<Logout />
+			<div className='main'>
+				{ this.state.loading ?
+					<div className='loading noMovies'><span><i className='fas fa-spinner'></i></span></div>
+					:
+					movies.length ?
+					<div>
+						{movies}
+					</div>
+					:
+					<div>
+						<div className='noMovies'>
+							<i className='fas fa-map-signs'></i>
+						</div>
+						Sorry but we didn't find anything
+					</div>
+				}
 			</div>
 		);
 	}
 }
 
-function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe;
-	return ({
-		isAuthenticated
-	});
-}
-
-export default connect(mapStateToProps)(Search)
+export default Search

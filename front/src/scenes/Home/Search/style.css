@@ -1,8 +1,54 @@
-.main {
-	margin-top: 50px;
-	overflow-x: hidden;
-	overflow-y: scroll;
-	height: calc(100vh - 50px);
+.searchMenu {
+	width: 230px;
+	height: calc(100vh - 51px);
+	position: fixed;
+	top: 51px;
+	left: -180px;
+	/* left: 0; */
+	transition: 0.35s left;
+	z-index: 0;
+	background: #2A292F;
+	border-right: 1px solid black;
+}
+
+.searchMenu:hover {
+	left: 0;
+}
+
+.searchMovies {
+	margin-left: 50px;
+	/* margin-left: 230px; */
+	transition: 0.35s margin-left;
+}
+
+.searchMenu:hover + .searchMovies{
+	margin-left: 230px;
+}
+
+.searchChoice {
+	cursor: pointer;
+	padding: 5px;
+	color: dimgray;
+}
+
+.searchChoiceActive {
+	color: inherit;
+	cursor: pointer;
+	padding: 5px;
+}
+
+.searchChoice:hover {
+	color: grey;
+}
+
+.searchRange {
+	width: 30%;
+	padding: 5px;
+	border: none;
+}
+
+.searchRange:focus {
+	padding: 5px;
 }
 
 .movie {
@@ -33,10 +79,14 @@
 
 .movieTitle:hover {
 	opacity: 1;
+	object-fit: cover;
 }
 
 .movieImg {
 	box-shadow: 0 0 10px black;
+	width: 230px;
+	height: 345px;
+	object-fit: cover;
 }
 
 .noMovies {

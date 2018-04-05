@@ -6,6 +6,8 @@ import Profile from './Profile'
 import Search from './Search';
 import Movies from './Movies'
 
+import './style.css';
+
 class Home extends Component {
 
 	constructor(props) {

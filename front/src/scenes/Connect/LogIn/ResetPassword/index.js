@@ -107,15 +107,15 @@ class ResetPassword extends React.Component {
 						<br />
 						{
 							this.state.loading ?
-							<div className='block fontRight'>
-								<div className='button'>
+							<div className='fontRight'>
+								<div className='inline button'>
 									<div className='loading'>
 										<span><i className='fas fa-spinner'></i></span>
 									</div>
 								</div>
 							</div>
 							:
-							<div className='block fontRight'>
+							<div className='fontRight'>
 								<div className='inline'>
 									<input type='submit' value='Send email'/>
 								</div>

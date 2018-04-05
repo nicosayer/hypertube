@@ -4,9 +4,6 @@
 	display: block;
 	background: #2A292F;
 	border-bottom: 1px solid black;
-	position: fixed;
-	top: 0;
-	left:0;
 	z-index: 1000;
 	width: 100%;
 }
@@ -19,6 +16,11 @@
 
 .menuLogo:hover {
 	left: 10px;
+}
+
+.menuType {
+	position: absolute;
+	left: calc(25vw - 118px);
 }
 
 .menuSearch {
@@ -36,6 +38,11 @@
 .menuSearch:focus {
 	width: 400px;
 	padding: 5px 10px;
+}
+
+.menuLanguage {
+	position: absolute;
+	right: calc(25vw - 38px);
 }
 
 .menuProfile {

@@ -35,6 +35,7 @@ class Input extends React.Component {
 		if (this.props.onChange && event && event.target) {
 			const name = event.target.name;
 			if (this.props.forbiddenChars) {
+				console.log(this.props.forbiddenChars)
 				event.target.value = event.target.value.replace(this.props.forbiddenChars, '');
 			}
 			if (this.props.maxLen) {
@@ -63,6 +64,9 @@ class Input extends React.Component {
 			}
 			if (this.props.submitOnBlur) {
 				this.handleSubmit(name, event.target.value);
+			}
+			if (this.props.onBlur) {
+				this.props.onBlur(name, event.target.value);
 			}
 		}
 	}

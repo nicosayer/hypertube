@@ -14,7 +14,7 @@ class Menu extends Component {
 	}
 
 	search(event) {
-		if (event.which === 13 && event.target) {
+		if (event.target) {
 			this.props.handleSearch(event.target.value);
 		}
 	}
@@ -25,31 +25,43 @@ class Menu extends Component {
 	}
 
 	render() {
+
 		return(
-			<div className='menuBar'>
-				<span className='floatLeft' onClick={this.emptySearch}>
-					<Link to='/'>
-						<span className='menuLogo'>
-							<span className='fontGrey'>Hypertube</span>
-							<i className='fas fa-space-shuttle spaceLeft'></i>
+			<div>
+				<div className='menuBar'>
+					<span className='floatLeft' onClick={this.emptySearch}>
+						<Link to='/'>
+							<span className='menuLogo'>
+								<span className='fontGrey'>Hypertube</span>
+								<i className='fas fa-space-shuttle spaceLeft'></i>
+							</span>
+						</Link>
+						<span className='menuType'>
+							Movies
+							<span className='fontGrey spaceLeft spaceRight'>|</span>
+							<span className='fontGrey'>TV Shows</span>
 						</span>
-					</Link>
-				</span>
-				<span className='floatRight'>
-					<span className='menuProfile'>
-						<span onClick={this.emptySearch}>
-							<Link to='/profile'>
-								My profile
-							</Link>
-						</span>
-						<span className='fontGrey spaceLeft spaceRight'>
-							|
-						</span>
-						<Logout />
 					</span>
-				</span>
-				<i className='fas fa-search'></i>
-				<input className='menuSearch spaceLeft' placeholder='Quick search' type='text' onKeyDown={event => this.search(event)} ref={this.searchInput} />
+					<span className='floatRight'>
+						<span className='menuProfile'>
+							<span className='menuLanguage'>
+								en
+								<span className='fontGrey spaceLeft spaceRight'>|</span>
+								<span className='fontGrey'>fr</span>
+							</span>
+							<span onClick={this.emptySearch}>
+								<Link to='/profile'>
+									My profile
+								</Link>
+							</span>
+							<span className='fontGrey spaceLeft spaceRight'>|</span>
+							<Logout />
+						</span>
+					</span>
+					<i className='fas fa-search'></i>
+					<input className='menuSearch spaceLeft' placeholder='Quick search' type='text' onChange={event => this.search(event)} ref={this.searchInput} />
+				</div>
+
 			</div>
 		);
 	}

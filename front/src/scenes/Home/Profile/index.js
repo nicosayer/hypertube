@@ -186,6 +186,7 @@ class Profile extends Component {
 
 	render() {
 		return (
+			<div className='main'>
 			<div className='profileBox formBox'>
 				<span className='lignBottom fontBig block'>Profile</span>
 				<div className='fontLeft block'>
@@ -384,6 +385,7 @@ class Profile extends Component {
 					</div>
 				</form>
 			</div>
+				</div>
 		)
 	}
 }

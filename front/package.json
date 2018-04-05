@@ -5,10 +5,11 @@
   "dependencies": {
     "file-system": "^2.2.2",
     "jsmpeg": "^1.0.0",
-    "moment": "^2.21.0",
+    "moment": "^2.22.0",
     "react": "^16.3.1",
-    "react-datepicker": "^1.2.2",
+    "react-datepicker": "^1.4.0",
     "react-dom": "^16.3.1",
+    "react-infinite-scroller": "^1.1.3",
     "react-notifications": "^1.4.3",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
@@ -16,9 +17,8 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "socket.io-client": "^2.0.4",
-    "socket.io-stream": "^0.9.1",
-    "torrent-search-api": "^1.0.27"
+    "socket.io-client": "^2.1.0",
+    "socket.io-stream": "^0.9.1"
   },
   "scripts": {
     "start": "react-scripts start",
