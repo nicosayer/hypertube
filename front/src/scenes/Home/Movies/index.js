@@ -20,7 +20,15 @@ class Movies extends Component {
 		fetchWrap('https://yts.am/api/v2/movie_details.json?movie_id=' + this.props.match.params.id + '&with_images=true&with_cast=true')
 		.then(data => {
 			console.log(data);
-			this.setState({ video: true, time: Date.now(), magnet: 'magnet:' + encodeURIComponent('?') + 'xt=urn:btih:' + data.data.movie.torrents[0].hash + '&dn=' + encodeURIComponent(data.data.movie.title_long) + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969' })
+			const time = Date.now()
+			const magnet = 'magnet:' + encodeURIComponent('?') + 'xt=urn:btih:' + data.data.movie.torrents[0].hash + '&dn=' + encodeURIComponent(data.data.movie.title_long) + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'
+			fetchWrap('/video/'+magnet+'/'+time+'first', {credentials: 'include'})
+			.then(() => {
+				this.setState({ video: true, time: time, magnet: magnet })
+				alert('retour')
+			})
+			.catch(error => console.log(error))
+			
 		})
 		.catch(error => {
 			console.log(error);

@@ -4,24 +4,25 @@ const fs = require('fs')
 var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
+var mongo = require('../../../mongo');
 
 var user = {}
 
 router.get('/:magnet/:time', function(req, res, next) {
-
 	if (req.session && req.session._id) {
 		const id = req.session._id.toString()
 		const { magnet } = req.params
-		const parts = req.headers.range.replace(/bytes=/, "").split("-")
+		const { time } = req.params
 		
-		console.log('ici')
-		console.log(magnet)
+		// console.log(magnet,time)
 
-		if (parseInt(parts[0], 10) === 0) {
+		if (time.slice(time.length - 5, time.length) == 'first') {
+			console.log('ici')
+			var db = mongo.getDb();
+			const collection = db.collection('movies');
+
 			if (magnet.match(/^magnet:\?xt=urn:/i) != null) {
-				console.log('avant engine')
 				var engine = torrentStream(magnet, {path: './public/movies'})
-				console.log('apres engine')
 
 				engine.on('ready', function() {
 
@@ -30,7 +31,12 @@ router.get('/:magnet/:time', function(req, res, next) {
 					var size = 0
 					var file;
 
-					engine.files.forEach(function(fileTmp) {
+					engine.files.forEach(function(fileTmp, key) {
+						if (key === 0)
+						{
+							const path = fileTmp.path.split('/')
+							collection.update({path: path[0]}, {$set: {date: Date.now()}}, {upsert: true})
+						}
 						if (fileTmp.length > size) {
 							size = fileTmp.length
 							file = fileTmp				
@@ -45,6 +51,7 @@ router.get('/:magnet/:time', function(req, res, next) {
 			}
 		}
 		else {
+			console.log('laaaa')
 			download(user[id], req, res)
 		}
 	}
@@ -59,7 +66,11 @@ download = function(file, req, res) {
 	console.log('file.length:'+file.length)
 
 	const range = req.headers.range
-	const parts = range.replace(/bytes=/, "").split("-")
+	var parts;
+	if (typeof range == 'undefined')
+		parts = [0, file.length-1]
+	else
+		parts = range.replace(/bytes=/, "").split("-")
 	console.log(parts)
 
 	var start = parseInt(parts[0], 10) > file.length? 0 : parseInt(parts[0], 10)
@@ -73,8 +84,9 @@ download = function(file, req, res) {
 	res.setHeader('Content-Length', 1 + end - start);
 	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
+	file.createReadStream({start, end}).pipe(res)
 
-	ffmpeg(file.createReadStream({start, end}))
+	/*ffmpeg(file.createReadStream({start, end}))
 	.videoCodec('libvpx')
 	.audioCodec('libvorbis')
 	.videoBitrate('512k')
@@ -89,10 +101,9 @@ download = function(file, req, res) {
 	.on('error', err => {
 		if (err.message !== 'Output stream closed') {
 			console.log(err.message);
-			convert.kill();
 		}
 	})
-	.pipe(res);
+	.pipe(res);*/
 }
 
 
