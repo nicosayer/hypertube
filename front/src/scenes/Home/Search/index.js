@@ -6,8 +6,10 @@ import { fetchWrap } from '../../../services/fetchWrap'
 
 import './style.css';
 
-const genres = require('./genres.json');
-const genresList = require('./genresList.json');
+const genresMovies = require('./genresMovies.json');
+const genresTV = require('./genresTV.json');
+const genresMoviesList = require('./genresMoviesList.json');
+const genresTVList = require('./genresTVList.json');
 
 class Search extends Component {
 
@@ -21,12 +23,12 @@ class Search extends Component {
 			ratings_min: 0,
 			ratings_max: 10,
 			genres: [],
+			page: 1,
 			result: [],
+			lastApiCallTimestamp : 0,
 			loading: true,
-			scrolling: false,
-			page: 1
+			scrolling: false
 		}
-		this.props.history.push('/')
 		this.determineTypeOfSearch = this.determineTypeOfSearch.bind(this);
 		this.scrolling = this.scrolling.bind(this);
 		this.discover = this.discover.bind(this);
@@ -64,35 +66,71 @@ class Search extends Component {
 
 	determineTypeOfSearch() {
 		if (this.state.loading || this.state.scrolling) {
+			var endPoint;
 			if (this.state.search) {
-				this.search('https://api.themoviedb.org/3/search/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.state.search + '&page=' + this.state.page + '&include_adult=false');
+				if (this.props.canal === 'tv'){
+					endPoint = 'https://api.themoviedb.org/3/search/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.state.search + '&page=' + this.state.page;
+				}
+				else {
+					endPoint = 'https://api.themoviedb.org/3/search/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.state.search + '&page=' + this.state.page;
+				}
+			}
+			else if (this.props.canal === 'tv'){
+				endPoint = 'https://api.themoviedb.org/3/discover/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&first_air_date.gte=' + this.state.release_date_min + '&vote_count.gte=100&first_air_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&page=' + this.state.page + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
 			}
 			else {
-				this.search('https://api.themoviedb.org/3/discover/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&page=' + this.state.page + '&primary_release_date.gte=' + this.state.release_date_min + '&primary_release_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(','));
+				endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&page=' + this.state.page + '&vote_count.gte=2000&primary_release_date.gte=' + this.state.release_date_min + '&primary_release_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
 			}
+			this.search(endPoint);
 		}
 	}
 
 	search(endPoint) {
-		console.log(endPoint)
+		const actualTimestamp = Date.now();
+		this.setState({lastApiCallTimestamp: actualTimestamp}, () =>
 		fetchWrap(endPoint)
 		.then(data => {
 			var result = [];
+			var page = this.state.page + 1;
 			if (data.total_results) {
-				result = this.state.result.concat(data.results);
+				if (data.page <= data.total_pages) {
+					result = this.state.result.concat(data.results);
+				}
+				else {
+					result = this.state.result;
+					page = 0;
+				}
+			}
+			else {
+				page = 0;
 			}
 			if (this._isMounted) {
-				this.setState({
-					result,
-					loading: false,
-					scrolling: false,
-					page: this.state.page + 1
-				})
+				if (actualTimestamp === this.state.lastApiCallTimestamp) {
+					var { orderBy, release_date_min, release_date_max, ratings_min, ratings_max, genres } = this.state;
+					if (this.state.search) {
+						orderBy = 'popularity.desc';
+						release_date_min = 1900;
+						release_date_max = 2018;
+						ratings_min = 0;
+						ratings_max = 10;
+						genres = [];
+					}
+					this.setState({
+						result,
+						loading: false,
+						scrolling: false,
+						page,
+						orderBy,
+						release_date_min,
+						release_date_max,
+						ratings_min,
+						ratings_max,
+						genres,
+					})
+				}
 			}
 		})
-		.catch(error => {
-			console.log(error);
-		})
+		.catch(error => console.log(error)));
 	}
 
 	discover(name, value) {
@@ -112,47 +150,47 @@ class Search extends Component {
 			}
 		}
 		else if (name === 'release_date_min') {
-			if (!isNaN(value) || value < 1000) {
-				value = '';
-			}
-			else if (!value) {
+			if (!value) {
 				value = 1900;
+			}
+			else if (isNaN(value) || value < 1000) {
+				value = '';
 			}
 		}
 		else if (name === 'release_date_max') {
-			if (isNaN(value) || value < 1000) {
-				value = '';
-			}
-			else if (!value) {
+			if (!value) {
 				value = 2018;
+			}
+			else if (isNaN(value) || value < 1000) {
+				value = '';
 			}
 		}
 		else if (name === 'ratings_min') {
-			if (isNaN(value)) {
-				value = '';
+			if (!value) {
+				value = -1;
 			}
-			else if (!value) {
-				value = 0;
+			else if (isNaN(value)) {
+				value = '';
 			}
 		}
 		else if (name === 'ratings_max') {
-			if (isNaN(value)) {
-				value = '';
-			}
-			else if (!value) {
+			if (!value) {
 				value = 10;
+			}
+			else if (isNaN(value)) {
+				value = '';
 			}
 		}
 		if (value) {
-		this.setState({
-			search: '',
-			result: [],
-			page: 1,
-			loading: true,
-			[name]: value
-		}, () => this.determineTypeOfSearch())
+			this.setState({
+				search: '',
+				result: [],
+				page: 1,
+				loading: true,
+				[name]: value
+			}, () => this.determineTypeOfSearch())
+		}
 	}
-}
 
 	scrolling() {
 		if (!this.state.scrolling && !this.state.loading) {
@@ -164,6 +202,34 @@ class Search extends Component {
 
 	render() {
 		const movies = this.state.result.map((item, key) =>
+		this.props.canal === 'tv' ?
+		<Link key={key} to={'/tv/' + item.id}>
+			{
+				item.poster_path ?
+				<div className='movie'>
+					<div className='movieTitle'>
+						<div>
+							<div className='fontMedium underline'>
+								{item.name ? <b>{item.name}</b> : null}
+							</div>
+							<div>
+								{ item.first_air_date ? <b>({item.first_air_date.substring(0, 4)})</b> : null }
+							</div>
+							<div className='spaceTop'>
+								{ item.genre_ids ? item.genre_ids.map(id => ' ' + genresTV[id]): null }
+							</div>
+							<div className='spaceTop'>
+								{ item.vote_average ? <span>{item.vote_average} <i className='fas fa-star'></i></span> : null}
+							</div>
+						</div>
+					</div>
+					<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
+				</div>
+				:
+				null
+			}
+		</Link>
+		:
 		<Link key={key} to={'/' + item.id}>
 			{
 				item.poster_path ?
@@ -177,7 +243,7 @@ class Search extends Component {
 								{ item.release_date ? <b>({item.release_date.substring(0, 4)})</b> : null }
 							</div>
 							<div className='spaceTop'>
-								{ item.genre_ids ? item.genre_ids.map(id => ' ' + genres[id]): null }
+								{ item.genre_ids ? item.genre_ids.map(id => ' ' + genresMovies[id]): null }
 							</div>
 							<div className='spaceTop'>
 								{ item.vote_average ? <span>{item.vote_average} <i className='fas fa-star'></i></span> : null}
@@ -196,7 +262,7 @@ class Search extends Component {
 		<div className='main'>
 			<InfiniteScroll
 				loadMore={this.scrolling}
-				hasMore={true}
+				hasMore={this.state.page ? true : false}
 				useWindow={false}
 				>
 				<div className='searchMenu'>
@@ -204,6 +270,7 @@ class Search extends Component {
 					<div className='spaceLeft spaceRight spaceBottom fontLeft spaceTop'>
 						Order by
 					</div>
+
 					<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>Popularity</div>
 					<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>Rating</div>
 					<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>Release date</div>
@@ -214,7 +281,12 @@ class Search extends Component {
 					</div>
 					<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
 					{
-						genresList.map(elem =>
+						this.props.canal === 'tv' ?
+						genresTVList.map(elem =>
+							<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
+						)
+						:
+						genresMoviesList.map(elem =>
 							<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
 						)
 					}

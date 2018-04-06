@@ -60,6 +60,10 @@ div {
 	text-align: right;
 }
 
+.fontJustify {
+	text-align: justify;
+}
+
 .absolute {
 	position: absolute;
 }
@@ -116,8 +120,16 @@ div {
 	margin-top: 10px;
 }
 
+.spaceTopBig {
+	margin-top: 50px;
+}
+
 .spaceBottom {
 	margin-bottom: 10px;
+}
+
+.spaceBottomBig {
+	margin-bottom: 20px;
 }
 
 .spaceLeft {
@@ -126,6 +138,10 @@ div {
 
 .spaceRight {
 	margin-right: 10px;
+}
+
+.spaceRightBig {
+	margin-right: 20px;
 }
 
 .loading {

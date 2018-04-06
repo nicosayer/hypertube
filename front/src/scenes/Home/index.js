@@ -29,16 +29,12 @@ class Home extends Component {
 					<Menu handleSearch={this.handleSearch} />
 					<Switch>
 						{
-							this.state.search ?
-								[
-									<Route key='movie' path='/:id([0-9]+)' component={Movies} />,
-									<Route key='search' render={props => <Search {...props} search={this.state.search} />} />
-								]
-							:
 							[
-								<Route key='movie' path='/:id([0-9]+)' component={Movies} />,
-								<Route exact path='/profile' key='profile' component={Profile} />,
-								<Route key='search' render={props => <Search {...props} search={this.state.search} />} />
+								<Route key='tv' path='/:id([0-9]+)' render={props => <Movies {...props} search={this.state.search} canal='movie' />} />,
+								<Route key='movie' path='/tv/:id([0-9]+)' render={props => <Movies {...props} search={this.state.search} canal='tv' />} />,
+								<Route key='profile' exact path='/profile'  component={Profile} />,
+								<Route key='searchTv' path='/tv' render={props => <Search {...props} search={this.state.search} canal='tv' />} />,
+								<Route key='searchMovie' render={props => <Search {...props} search={this.state.search} canal='movie' />} />
 							]
 						}
 					</Switch>

@@ -4,7 +4,6 @@
 	position: fixed;
 	top: 51px;
 	left: -180px;
-	/* left: 0; */
 	transition: 0.35s left;
 	z-index: 0;
 	background: #2A292F;
@@ -16,8 +15,8 @@
 }
 
 .searchMovies {
-	margin-left: 50px;
-	/* margin-left: 230px; */
+	margin-left: calc((100vw - (100vw - 230px)) / 2);
+	width: calc(100vw - 230px);
 	transition: 0.35s margin-left;
 }
 
@@ -55,7 +54,7 @@
 	width: 230px;
 	height: 345px;
 	position: relative;
-	margin: 10px;
+	margin: 15px;
 	display: inline-block;
 }
 
@@ -87,6 +86,7 @@
 	width: 230px;
 	height: 345px;
 	object-fit: cover;
+	border-radius: 3px;
 }
 
 .noMovies {

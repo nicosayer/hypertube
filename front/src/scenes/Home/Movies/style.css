@@ -1,0 +1,60 @@
+.movieInfos {
+	text-align: left;
+	display: inline-block;
+	margin: 50px;
+	width: 1400px;
+}
+
+.movieInfosImg {
+	border-radius: 3px;
+	box-shadow: 0 0 10px black;
+}
+
+.movieInfosOverview {
+	display: inline-block;
+	max-width: 850px;
+	text-align: justify;
+	margin-left: 2%;
+}
+
+.castContainer {
+	display: inline-block;
+	text-align: center;
+	margin-left: 2%;
+}
+
+.prodImg {
+	background: white;
+	width: 100px;
+	height: 100px;
+	object-fit: contain;
+	border-radius: 3px;
+	box-shadow: 0 0 10px black;
+}
+
+.castImg {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 3px;
+	box-shadow: 0 0 10px black;
+}
+
+.torrentQualityButton {
+	text-align: center;
+	display: inline-block;
+	margin-left: 2%;
+	border-radius: 3px;
+	border: 1px solid white;
+	padding: 10px;
+	color: grey;
+	box-shadow: 0 0 10px black;
+	transition: 0.35s box-shadow;
+	transition: 0.35s color;
+	cursor: pointer;
+}
+
+.torrentQualityButton:hover {
+	box-shadow: 0 0 50px black;
+	color: white;
+}
