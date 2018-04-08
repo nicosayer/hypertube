@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import videojs from 'video.js'
+
+import 'video.js/dist/video-js.css'
 
 import Logout from '../Menu/LogOut';
 
 import { fetchWrap } from '../../../services/fetchWrap'
+
+import MediaElement from '../../../components/player';
 
 class Movies extends Component {
 
@@ -17,7 +22,14 @@ class Movies extends Component {
 	}
 
 	componentDidMount() {
-		fetchWrap('https://yts.am/api/v2/movie_details.json?movie_id=' + this.props.match.params.id + '&with_images=true&with_cast=true')
+		// var vid = document.querySelector( 'video')
+		// console.log(vid)
+		// var player = videojs(vid, {autoplay: true, controls: true});
+		// player.on('timeupdate', (data) => {
+		// 	player.seekable();
+			//alert(Math.floor(seekable && seekable.length ? seekable.end(0) - seekable.start(0) : 0))
+		// })
+		/*fetchWrap('https://yts.am/api/v2/movie_details.json?movie_id=' + this.props.match.params.id + '&with_images=true&with_cast=true')
 		.then(data => {
 			console.log(data);
 			const time = Date.now()
@@ -31,17 +43,35 @@ class Movies extends Component {
 		})
 		.catch(error => {
 			console.log(error);
-		})
+		})*/
 	}
 
 	render() {
 
+		const
+			sources = [
+				{src: 'https://f381a324.ngrok.io/output.m3u8', type: 'application/x-mpegURL'}
+			],
+			config = {},
+			tracks = {}
+		;
+
 		return(
 			<div  >
 				<br/>
-				{this.state.video && <video controls autoPlay>
-				  <source preload='metadata' src={'http://localhost:3001/video/'+this.state.magnet+'/'+this.state.time} type="video/mp4" />
-				</video>}
+				<MediaElement
+				   id="player1"
+				   mediaType="video"
+				   preload="none"
+				   controls
+				   autoPlay
+				   width="640"
+				   height="360"
+				   poster=""
+				   sources={JSON.stringify(sources)}
+				   options={JSON.stringify(config)}
+				   tracks={JSON.stringify(tracks)}
+				/>);
 				<Logout />
 			</div>
 		);

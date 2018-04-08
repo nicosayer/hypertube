@@ -7,6 +7,7 @@
     "starts": "nodemon ./bin/www"
   },
   "dependencies": {
+    "await": "^0.2.6",
     "bcrypt": "^1.0.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -15,18 +16,21 @@
     "fluent-ffmpeg": "^2.1.2",
     "formidable": "^1.2.1",
     "got": "^8.3.0",
+    "hls-server": "^1.5.0",
     "htmlspecialchars": "^1.0.5",
     "http-errors": "^1.6.3",
     "jade": "~1.11.0",
     "mongodb": "^3.0.5",
     "morgan": "~1.9.0",
+    "ngrok": "^3.0.1",
     "node-cron": "^1.2.1",
     "nodemailer": "^4.6.4",
     "peerflix": "^0.37.0",
+    "pump": "^3.0.0",
     "randomstring": "^1.1.5",
     "socket.io": "^2.1.0",
     "socket.io-stream": "^0.9.1",
-    "torrent-search-api": "^1.1.0",
+    "torrent-search-api": "^1.1.1",
     "torrent-stream": "^1.0.4"
   }
 }

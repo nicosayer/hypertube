@@ -1,4 +1,67 @@
+
 const express = require('express');
+const router = express.Router();
+const fs = require('fs')
+var torrentStream = require('torrent-stream');
+const parseRange = require('range-parser');
+const ffmpeg = require('fluent-ffmpeg');
+var mongo = require('../../../mongo')
+
+var HLSServer = require('hls-server');
+
+var user = {}
+
+exports = module.exports = http => {
+
+	/*var server = http.createServer()
+	var hls = new HLSServer(server, {
+		path: '/streams',
+		dir: 'public/'
+	})
+	server.listen(8000)*/
+	var engine = torrentStream('magnet:?xt=urn:btih:3979a828a7fa105af4a9e4af6f33c5b3402a1d94&dn=Moana+2016+1080p+BluRay+x264+DTS-JYK&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'/*, {path: './public/movies'}*/)
+
+	engine.on('ready', function() {
+
+		console.log("readyyyyyyy")
+
+		var size = 0
+		var file;
+
+		engine.files.forEach(function(fileTmp, key) {
+			console.log(fileTmp.name)
+			if (fileTmp.name == "Moana 2016 1080p BluRay x264 DTS-JYK.mkv") {
+				console.log('here')
+				var stream = fileTmp.createReadStream()
+				ffmpeg(stream, { timeout: 432000 }).addOptions([
+				    '-profile:v baseline', // baseline profile (level 3.0) for H264 video codec
+				    '-level 3.0', 
+				    '-s 640x360',          // 640px width, 360px height output video dimensions
+				    '-start_number 10',     // start the first .ts segment at index 0
+				    '-hls_time 20',        // 10 second segment duration
+				    '-hls_list_size 50',
+				    '-hls_playlist_type event',
+				    '-f hls'               // HLS format
+				  ])
+				.on('error', function(err, er1, er2) {
+			        console.log(err, er1, er2);
+			    })
+				.output('public/output.m3u8')
+				.on('end', () => {
+					console.log('ya moyen que ca marche enfait')
+				})
+				.run()
+			}
+			
+			
+		})
+		//download(file, req, res)
+	})
+
+	
+}
+
+/*const express = require('express');
 const router = express.Router();
 const fs = require('fs')
 var torrentStream = require('torrent-stream');
@@ -6,6 +69,7 @@ const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
 var mongo = require('../../../mongo');
 var child_process = require('child_process')
+const pump = require('pump')
 
 var user = {}
 
@@ -82,11 +146,7 @@ download = function(file, req, res) {
 	const end = parts[1] ? parseInt(parts[1], 10) : file.length-1
     console.log(start, end)
 
-	res.setHeader('Content-Type', 'video/webm')
-	res.setHeader('Accept-Ranges', 'bytes');
-	//res.setHeader('Content-Length', 1 + end - start);
-	//res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
-	res.statusCode = 206;
+
 	var stream = file.createReadStream({start, end})
 
 	var convert = ffmpeg(stream)
@@ -102,9 +162,15 @@ download = function(file, req, res) {
 			console.log(err.message, err, stderr);
 		//}
 	})
-	.pipe(res)
+	.pipe()
 
-	
+	res.setHeader('Content-Type', 'video/webm')
+	res.setHeader('Accept-Ranges', 'bytes');
+	res.setHeader('Content-Length', 1 + end - start);
+	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
+	res.statusCode = 206;
+
+	pump(convert,res)
 }
 
 //var input_file = file.createReadStream();
@@ -115,7 +181,7 @@ download = function(file, req, res) {
 	// // var output_path = 'tmp/output.mp4';
 	// // var output_stream = fs.createWriteStream('tmp/output.mp4');
 
-	// var ffmpeg = child_process.spawn('ffmpeg', ['-i', 'pipe:0', '-f', 'webm', '-movflags', 'frag_keyframe', 'pipe:1']);
+	//var ffmpeg = child_process.spawn('ffmpeg', ['-i', 'pipe:0', '-f', 'webm', '-movflags', 'frag_keyframe', 'pipe:1']);
 	// input_file.pipe(ffmpeg.stdin);
 	// ffmpeg.stdout.pipe(res);
 
@@ -149,4 +215,4 @@ download = function(file, req, res) {
 
 
 
-module.exports = router;
+module.exports = router;*/

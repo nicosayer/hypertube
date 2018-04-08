@@ -5,12 +5,18 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongo = require('./mongo');
 const session = require('express-session');
+var cron = require('node-cron');
 
 const app = express();
 
 mongo.connect(error => {
 	if (error) throw error;
+	cron.schedule('42 0 * * *', function(){
+	  console.log('delete outdated movies');
+	});
 });
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

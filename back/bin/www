@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('back:server');
 var http = require('http');
+var fs = require('fs');
+const ngrok = require('ngrok');
 
 /**
 * Get port from environment and store in Express.
@@ -19,9 +21,12 @@ app.set('port', port);
 * Create HTTP server.
 */
 
-var server = http.createServer(app);
-const io = require('../socket')(require('socket.io')(server));
 
+var server = http.createServer(app);
+const url = ngrok.connect(3001)
+url.then((data) => {console.log(data)})
+const io = require('../socket')(require('socket.io')(server));
+var HLSServer = require('../routes/home/video/testvideo')(http);
 /**
 * Listen on provided port, on all network interfaces.
 */
