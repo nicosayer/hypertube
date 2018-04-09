@@ -8,6 +8,28 @@
 	z-index: 0;
 	background: #2A292F;
 	border-right: 1px solid black;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 3px;
+	background: dimgray;
+}
+
+@media only screen and (max-height: 1200px) {
+	.searchChoice, .searchChoiceActive, .searchRange, .searchRange:focus {
+		padding: 2px !important;
+	}
+}
+
+@media only screen and (max-height: 1050px) {
+	.searchChoice, .searchChoiceActive, .searchRange, .searchRange:focus {
+		padding: 0 !important;
+	}
 }
 
 .searchMenu:hover {
@@ -60,8 +82,8 @@
 
 .movieTitle {
 	display:flex;
- justify-content:center;
- align-items:center;
+	justify-content:center;
+	align-items:center;
 	opacity: 0;
 	background: rgba(0, 0, 0, 0.85);
 	text-align: center;

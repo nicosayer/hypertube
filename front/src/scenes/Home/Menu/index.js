@@ -54,11 +54,6 @@ class Menu extends Component {
 								<i className='fas fa-space-shuttle spaceLeft'></i>
 							</span>
 						</Link>
-						<span className='menuType'>
-							<Link to='/'><span className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}>{language.moviesSectionLink[this.props.language]}</span></Link>
-							<span className='fontGrey spaceLeft spaceRight'>|</span>
-							<Link to='/tv'><span className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}>{language.tvSectionLink[this.props.language]}</span></Link>
-						</span>
 					</span>
 					<span className='floatRight'>
 						<span className='menuProfile'>
@@ -76,7 +71,12 @@ class Menu extends Component {
 							<Logout />
 						</span>
 					</span>
-					<i className='fas fa-search'></i>
+					<span className='menuType'>
+						<Link to='/'><span className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}>{language.moviesSectionLink[this.props.language]}</span></Link>
+						<span className='fontGrey spaceLeft spaceRight'>|</span>
+						<Link to='/tv'><span className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}>{language.tvSectionLink[this.props.language]}</span></Link>
+					</span>
+					<span className='magnifyingGlassLogo'><i className='fas fa-search'></i></span>
 					<input className='menuSearch spaceLeft' placeholder={language.quickSearchLabel[this.props.language]} type='text' onChange={event => this.search(event)} onKeyDown={event => this.handleKeyDown(event)} ref={this.searchInput} />
 				</div>
 
