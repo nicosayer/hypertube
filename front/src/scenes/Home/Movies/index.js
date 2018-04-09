@@ -83,9 +83,9 @@ class Movies extends Component {
 		});
 	}
 
-	selectEpisode(episodeNumber) {
+	selectEpisode(magnet) {
 		this.setState({
-			episodeNumber
+			episodeNumber: encodeURIComponent(magnet)
 		})
 	}
 
@@ -99,7 +99,7 @@ class Movies extends Component {
 		this.state.torrentInfo && this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents ?
 		this.state.torrentInfo.data.movies[0].torrents.map((torrent, key) => {
 			if (torrent.seeds >= 0 && torrent.quality !== '3D') {
-				return <div key={key} className='torrentQualityButton' onClick={() => (this.selectEpisode(encodeURIComponent('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969')))}>{torrent.quality}<br/>{torrent.size}</div>
+				return <div key={key} className='torrentQualityButton' onClick={() => (this.selectEpisode('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'))}>{torrent.quality}<br/>{torrent.size}</div>
 			}
 			return null;
 		})
