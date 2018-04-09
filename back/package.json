@@ -30,6 +30,7 @@
     "randomstring": "^1.1.5",
     "socket.io": "^2.1.0",
     "socket.io-stream": "^0.9.1",
+    "srt-to-vtt": "^1.1.1",
     "torrent-search-api": "^1.1.1",
     "torrent-stream": "^1.0.4"
   }

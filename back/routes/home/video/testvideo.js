@@ -7,15 +7,49 @@ const ffmpeg = require('fluent-ffmpeg');
 var mongo = require('../../../mongo');
 var child_process = require('child_process')
 const pump = require('pump')
+const got = require('got');
+var zlib = require("zlib");
+var request = require('request')
+var srt2vtt = require('srt-to-vtt')
+
+var gunzip = zlib.createGunzip();
 
 var user = {}
 
 router.get('/:magnet/:time', function(req, res, next) {
 
+	got('https://rest.opensubtitles.org/search/imdbid-1211837', {
+		headers: {
+	        'User-Agent': 'TemporaryUserAgent'
+	    }
+	})
+	.then((subs) => {
+		//console.log(subs.body)
+		subs = subs.body
+		//console.log(subs)
+		subs = JSON.parse(subs)
+		subs = subs.filter(sub => {
+			return sub.ISO639 == 'en'
+		})
+		console.log(subs)
+		var buffer = []
+		request(subs[0].SubDownloadLink).pipe(gunzip).pipe(srt2vtt()).pipe(fs.createWriteStream('./public/' + subs[0].MovieReleaseName + '.vtt'))
+		gunzip.on('data', function(data) {
+            // decompression chunk ready, add it to the buffer
+            buffer.push(data.toString())
+
+        }).on("end", function() {
+            // response and decompression complete, join the buffer and return
+            buffer.join("");
+            console.log(buffer)
+
+        }).on("error", function(e) {
+            callback(e);
+        })
+	})
 
 
-
-	var engine = torrentStream('magnet:?xt=urn:btih:3979a828a7fa105af4a9e4af6f33c5b3402a1d94&dn=Moana+2016+1080p+BluRay+x264+DTS-JYK&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969', {path: './public/movies'})
+	/*var engine = torrentStream('magnet:?xt=urn:btih:3979a828a7fa105af4a9e4af6f33c5b3402a1d94&dn=Moana+2016+1080p+BluRay+x264+DTS-JYK&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969', {path: './public/movies'})
 
 	engine.on('ready', function() {
 
@@ -53,7 +87,7 @@ router.get('/:magnet/:time', function(req, res, next) {
 			
 		})
 		//download(file, req, res)
-	})
+	})*/
 
 
 	/*if (req.session && req.session._id) {
