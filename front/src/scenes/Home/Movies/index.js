@@ -8,7 +8,7 @@ import Logout from '../Menu/LogOut';
 
 import { fetchWrap } from '../../../services/fetchWrap'
 
-import MediaElement from '../../../components/player';
+import ReactPlayer from 'react-player'
 
 class Movies extends Component {
 
@@ -48,30 +48,18 @@ class Movies extends Component {
 
 	render() {
 
-		const
-			sources = [
-				{src: 'https://f381a324.ngrok.io/output.m3u8', type: 'application/x-mpegURL'}
-			],
-			config = {},
-			tracks = {}
-		;
+		// const
+		// 	sources = [
+		// 		{src: 'https://a7fdb298.ngrok.io/output.m3u8', type: 'application/x-mpegURL'}
+		// 	],
+		// 	config = {},
+		// 	tracks = {}
+		// ;
 
 		return(
 			<div  >
 				<br/>
-				<MediaElement
-				   id="player1"
-				   mediaType="video"
-				   preload="none"
-				   controls
-				   autoPlay
-				   width="640"
-				   height="360"
-				   poster=""
-				   sources={JSON.stringify(sources)}
-				   options={JSON.stringify(config)}
-				   tracks={JSON.stringify(tracks)}
-				/>);
+				<ReactPlayer url='https://c222b17f.ngrok.io/output.m3u8' width="1280px" height="720px" playing controls />
 				<Logout />
 			</div>
 		);
