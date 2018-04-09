@@ -20,6 +20,7 @@
     "jade": "~1.11.0",
     "mongodb": "^3.0.5",
     "morgan": "~1.9.0",
+    "ngrok": "^3.0.1",
     "node-cron": "^1.2.1",
     "nodemailer": "^4.6.4",
     "peerflix": "^0.37.0",
