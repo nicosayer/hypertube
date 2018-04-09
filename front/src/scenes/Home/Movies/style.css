@@ -44,7 +44,7 @@
 	margin-left: 2%;
 	border-radius: 3px;
 	border: 1px solid white;
-	padding: 10px;
+	padding: 5px 10px;
 	color: grey;
 	box-shadow: 0 0 10px black;
 	transition: 0.35s box-shadow;
@@ -59,6 +59,7 @@
 
 .tvEpisodesTable {
 	margin: auto;
+	margin-bottom: 5px;
 	border-collapse: collapse;
 	border-radius: 3px;
 	background: #2A292F;
@@ -71,7 +72,7 @@
 }
 
 .tvEpisodesTable tr td {
-	padding: 5px 20px;
+	padding: 10px 20px;
 	border-bottom: 1px solid #1A1D23;
 	width: 33%;
 }

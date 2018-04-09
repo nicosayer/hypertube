@@ -10,6 +10,7 @@ class Movies extends Component {
 		super(props)
 		this.state = {
 			seasonNumber: 0,
+			episodeNumber: '',
 			movieInfo: '',
 			movieCast: '',
 			torrentInfo: '',
@@ -82,7 +83,15 @@ class Movies extends Component {
 		});
 	}
 
+	selectEpisode(episodeNumber) {
+		this.setState({
+			episodeNumber
+		})
+	}
+
 	render() {
+
+		console.log(this.state.episodeNumber);
 
 		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes ? this.state.torrentInfo.episodes.filter(episode => episode.season === this.state.seasonNumber).sort((a, b) => a.episode - b.episode) : null;
 
@@ -90,12 +99,7 @@ class Movies extends Component {
 		this.state.torrentInfo && this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents ?
 		this.state.torrentInfo.data.movies[0].torrents.map((torrent, key) => {
 			if (torrent.seeds >= 0 && torrent.quality !== '3D') {
-				if (torrent.quality === '720p') {
-					return <div key={key} className='torrentQualityButton'>{torrent.quality}<br/>{torrent.size}</div>
-				}
-				else {
-					return <div key={key} className='torrentQualityButton'>{torrent.quality}<br/>{torrent.size}</div>
-				}
+				return <div key={key} className='torrentQualityButton' onClick={() => (this.selectEpisode(encodeURIComponent('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969')))}>{torrent.quality}<br/>{torrent.size}</div>
 			}
 			return null;
 		})
@@ -140,7 +144,7 @@ class Movies extends Component {
 									movieLinks ?
 									movieLinks
 									:
-									<div className='fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-frown"></i></div> We do not have this movie yet</div>
+									<div className='fontCenter fontGrey'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div> We do not have this movie yet</div>
 								}
 							</div>
 							:
@@ -157,7 +161,7 @@ class Movies extends Component {
 													this.state.seasonNumber > 1 ?
 													<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber - 1)}><i className="fas fa-angle-double-left"></i></div>
 													:
-													null
+													<span><i className="transparent fas fa-angle-double-left"></i></span>
 												}
 											</th>
 											<th className='fontMedium underline'>
@@ -168,7 +172,7 @@ class Movies extends Component {
 													this.state.seasonNumber < this.state.movieInfo.number_of_seasons ?
 													<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber + 1)}><i className="fas fa-angle-double-right"></i></div>
 													:
-													null
+													<span><i className="transparent fas fa-angle-double-right"></i></span>
 												}
 											</th>
 										</tr>
@@ -184,7 +188,7 @@ class Movies extends Component {
 														Object.keys(episode.torrents).map((torrent, key) =>
 														{
 															if (torrent !== '0') {
-																return <span key={key} className='torrentQualityButton'>{torrent}</span>
+																return <span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url)}>{torrent}</span>
 															}
 															return null;
 														}
@@ -194,7 +198,7 @@ class Movies extends Component {
 										</tr>
 									)
 									:
-									<tr><td colSpan='3'><div className='spaceBottom fontBig'><i className="fas fa-frown"></i></div> We do not have this season yet</td></tr>
+									<tr><td colSpan='3' className='fontGrey'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div> We do not have this season yet</td></tr>
 								}
 							</tbody>
 						</table>
