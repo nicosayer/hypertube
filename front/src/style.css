@@ -80,6 +80,10 @@ div {
 	margin-left: 10px;
 }
 
+.marginAuto {
+	margin: auto;
+}
+
 .inline {
 	display: inline-block;
 }

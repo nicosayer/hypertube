@@ -9,6 +9,7 @@ class Movies extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			seasonNumber: 0,
 			movieInfo: '',
 			movieCast: '',
 			torrentInfo: '',
@@ -43,12 +44,31 @@ class Movies extends Component {
 					})
 					.catch(err => this.setState({loading: false}))
 				}
-				else {
-					this.setState({
-						movieInfo,
-						movieCast,
-						loading: false
+				else if (movieInfo.id){
+					fetchWrap('https://api.themoviedb.org/3/tv/' + movieInfo.id + '/external_ids?api_key=fc97ca1225d5b618b7a69f5a20a132d8')
+					.then(externalIds => {
+						if (externalIds.imdb_id) {
+							movieInfo.imdb_id = externalIds.imdb_id;
+							fetchWrap('https://tv-v2.api-fetch.website/show/' + movieInfo.imdb_id)
+							.then(torrentInfo => {
+								this.setState({
+									movieInfo,
+									movieCast,
+									torrentInfo,
+									loading: false
+								})
+							})
+							.catch(err => this.setState({loading: false}))
+						}
+						else {
+							this.setState({
+								movieInfo,
+								movieCast,
+								loading: false
+							})
+						}
 					})
+					.catch(err => this.setState({loading: false}))
 				}
 			})
 			.catch(err => this.setState({loading: false}))
@@ -56,14 +76,32 @@ class Movies extends Component {
 		.catch(err => this.setState({loading: false}))
 	}
 
-	selectSeason(seasonId) {
-		fetchWrap('https://oneom.tk/search/serial?limit=5&title=test', {headers: {'Accept': 'application/json'}})
-		.then(data => {console.log(data)})
-		.catch(err => {console.log(err)});
+	selectSeason(seasonNumber) {
+		this.setState({
+			seasonNumber
+		});
 	}
 
 	render() {
-		console.log(this.state)
+
+		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes ? this.state.torrentInfo.episodes.filter(episode => episode.season === this.state.seasonNumber).sort((a, b) => a.episode - b.episode) : null;
+
+		const movieLinks =
+		this.state.torrentInfo && this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents ?
+		this.state.torrentInfo.data.movies[0].torrents.map((torrent, key) => {
+			if (torrent.seeds >= 0 && torrent.quality !== '3D') {
+				if (torrent.quality === '720p') {
+					return <div key={key} className='torrentQualityButton'>{torrent.quality}<br/>{torrent.size}</div>
+				}
+				else {
+					return <div key={key} className='torrentQualityButton'>{torrent.quality}<br/>{torrent.size}</div>
+				}
+			}
+			return null;
+		})
+		:
+		null;
+
 		return(
 			<div className='main'>
 				{
@@ -99,59 +137,101 @@ class Movies extends Component {
 							<div className='spaceTopBig'>
 								<div className='spaceBottom'><b>Available in :</b></div>
 								{
-									this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents ?
-									this.state.torrentInfo.data.movies[0].torrents.map((torrent, key) => {
-										if (torrent.seeds >= 0 && torrent.quality !== '3D') {
-											if (torrent.quality === '720p') {
-												return <div key={key} className='torrentQualityButton'>{torrent.quality}<br/>{torrent.size}</div>
-											}
-											else {
-												return <div key={key} className='torrentQualityButton'>{torrent.quality}<br/>{torrent.size}</div>
-											}
-										}
-										return null;
-									})
+									movieLinks ?
+									movieLinks
 									:
-									null
+									<div className='fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-frown"></i></div> We do not have this movie yet</div>
 								}
 							</div>
 							:
 							null
 						}
-						<div className='floatClear'>
+						<div className='floatClear fontCenter'>
 							{
-								this.props.canal === 'tv' ?
-								this.state.movieInfo.seasons.map((season, key) =>
-								{
-									if (season.poster_path) {
-										return <div key={key} className='movie pointer' onClick={() => this.selectSeason(season.id)}>
-											<div className='movieTitle'>
-												<div>
-													<div className='fontMedium underline'>
-														{season.name ? <b>{season.name}</b> : null}
-													</div>
-													<div>
-														{ season.air_date ? <b>({season.air_date.substring(0, 4)})</b> : null }
-													</div>
-													<div className='spaceTop'>
-														{ season.episode_count ? season.episode_count + ' episodes' : null }
-													</div>
-												</div>
-											</div>
-											<img className='movieImg' alt={season.title} src={'https://image.tmdb.org/t/p/w500' + season.poster_path} />
-										</div>
-									}
-									return null;
+								this.state.seasonNumber ?
+								<table className='tvEpisodesTable'>
+									<thead>
+										<tr>
+											<th>
+												{
+													this.state.seasonNumber > 1 ?
+													<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber - 1)}><i className="fas fa-angle-double-left"></i></div>
+													:
+													null
+												}
+											</th>
+											<th className='fontMedium underline'>
+												Season {this.state.seasonNumber}
+											</th>
+											<th>
+												{
+													this.state.seasonNumber < this.state.movieInfo.number_of_seasons ?
+													<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber + 1)}><i className="fas fa-angle-double-right"></i></div>
+													:
+													null
+												}
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{ actualSeason && actualSeason.length ?
+											actualSeason.map((episode, key) =>
+											<tr key={key}>
+												<td><i>#{episode.episode}</i></td>
+												<td><b>{episode.title}</b></td>
+												<td>
+													{
+														Object.keys(episode.torrents).map((torrent, key) =>
+														{
+															if (torrent !== '0') {
+																return <span key={key} className='torrentQualityButton'>{torrent}</span>
+															}
+															return null;
+														}
+													)
+												}
+											</td>
+										</tr>
+									)
+									:
+									<tr><td colSpan='3'><div className='spaceBottom fontBig'><i className="fas fa-frown"></i></div> We do not have this season yet</td></tr>
 								}
-							)
-							:
-							null
-						}
-					</div>
+							</tbody>
+						</table>
+						:
+						null
+					}
+					{
+						this.props.canal === 'tv' ?
+						this.state.movieInfo.seasons.map((season, key) => {
+							if (season.poster_path && season.season_number) {
+								return <div key={key} className='movie pointer' onClick={() => this.selectSeason(season.season_number)}>
+									<div className='movieTitle'>
+										<div>
+											<div className='fontMedium underline'>
+												{season.name ? <b>{season.name}</b> : null}
+											</div>
+											<div>
+												{ season.air_date ? <b>({season.air_date.substring(0, 4)})</b> : null }
+											</div>
+											<div className='spaceTop'>
+												{ season.episode_count ? season.episode_count + ' episodes' : null }
+											</div>
+										</div>
+									</div>
+									<img className='movieImg' alt={season.title} src={'https://image.tmdb.org/t/p/w500' + season.poster_path} />
+								</div>
+							}
+							return null;
+						})
+						:
+						null
+					}
 				</div>
-			}
-		</div>
-	);
+			</div>
+		}
+	</div>
+);
 }
 }
 

@@ -2,7 +2,7 @@
 	text-align: left;
 	display: inline-block;
 	margin: 50px;
-	width: 1400px;
+	width: 75vw;
 }
 
 .movieInfosImg {
@@ -11,10 +11,8 @@
 }
 
 .movieInfosOverview {
-	display: inline-block;
-	max-width: 850px;
+	margin-left: calc(520px + 2%);
 	text-align: justify;
-	margin-left: 2%;
 }
 
 .castContainer {
@@ -57,4 +55,23 @@
 .torrentQualityButton:hover {
 	box-shadow: 0 0 50px black;
 	color: white;
+}
+
+.tvEpisodesTable {
+	margin: auto;
+	border-collapse: collapse;
+	border-radius: 3px;
+	background: #2A292F;
+	box-shadow: 0 0 10px black;
+	width: 100%;
+}
+
+.tvEpisodesTable tr th {
+	padding: 20px;
+}
+
+.tvEpisodesTable tr td {
+	padding: 5px 20px;
+	border-bottom: 1px solid #1A1D23;
+	width: 33%;
 }
