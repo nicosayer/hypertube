@@ -7,6 +7,8 @@ import { logMe } from '../../../../../actions/me'
 
 import { fetchWrap } from '../../../../../services/fetchWrap'
 
+const language = require('./language.json');
+
 class AuthGoogle extends Component {
 
 	constructor(props) {
@@ -63,7 +65,7 @@ class AuthGoogle extends Component {
 					this.state.loading ?
 					<div className='button wFull spaceTop'><div className='loading'><span><i className="fas fa-spinner"></i></span></div></div>
 					:
-					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className='fab fa-google spaceRight'></i>Connect with Google</span></div>
+					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className='fab fa-google spaceRight'></i>{language.buttonText[this.props.language]}</span></div>
 				}
 			</div>
 		);
@@ -71,9 +73,10 @@ class AuthGoogle extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe
+	const { isAuthenticated, language } = state.handleMe
 	return ({
-		isAuthenticated
+		isAuthenticated,
+		language
 	})
 }
 

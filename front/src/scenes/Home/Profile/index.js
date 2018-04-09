@@ -11,6 +11,7 @@ import { fetchWrap } from '../../../services/fetchWrap'
 import './style.css'
 import 'react-notifications/lib/notifications.css';
 
+const language = require('./language.json');
 const errors = require('../../../errors.json');
 
 class Profile extends Component {
@@ -188,7 +189,7 @@ class Profile extends Component {
 		return (
 			<div className='main'>
 			<div className='profileBox formBox'>
-				<span className='lignBottom fontBig block'>Profile</span>
+				<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
 				<div className='fontLeft block'>
 					<img
 						alt='Profile'
@@ -199,10 +200,10 @@ class Profile extends Component {
 						/>
 					<form encType='multipart/form-data' onChange={this.handlePictureSubmit}>
 						<span className='fontGrey fontSmall block'>
-							Your Photo
+							{language.photoLabel[this.props.language]}
 						</span>
 						<div className='inline changePhotoButton'>
-							<label htmlFor='upload'><span className='pointer'>Change photo</span></label>
+							<label htmlFor='upload'><span className='pointer'>{language.changePhotoButton[this.props.language]}</span></label>
 						</div>
 						<input id='upload' type='file' name='upload' accept='.png,.jpeg,.jpg'/>
 						{
@@ -215,7 +216,7 @@ class Profile extends Component {
 				</div>
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
 					<div className='fontGrey block fontSmall floatClear'>
-						<label htmlFor='firstName'>First Name</label>
+						<label htmlFor='firstName'>{language.firstNameInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='firstName'
@@ -243,7 +244,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='lastName'>Last Name</label>
+						<label htmlFor='lastName'>{language.lastNameInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='lastName'
@@ -271,7 +272,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='login'>Login</label>
+						<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='login'
@@ -298,7 +299,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='email'>Email</label>
+						<label htmlFor='email'>{language.emailInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='email'
@@ -326,13 +327,13 @@ class Profile extends Component {
 					}
 					<div className='fontRight'>
 						<div className='inline'>
-							<input className='spaceTop' type='submit' value='Save informations'/>
+							<input className='spaceTop' type='submit' value={language.changeInformationsSubmit[this.props.language]}/>
 						</div>
 					</div>
 				</form>
 				<form className='fontLeft' onSubmit={this.handlePasswordChangeSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='oldPassword'>Old password</label>
+						<label htmlFor='oldPassword'>{language.oldPasswordInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='oldPassword'
@@ -353,7 +354,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='newPassword'>New password</label>
+						<label htmlFor='newPassword'>{language.newPasswordInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='newPassword'
@@ -380,7 +381,7 @@ class Profile extends Component {
 					}
 					<div className='fontRight'>
 						<div className='inline'>
-							<input className='spaceTop' type='submit' value='Change my password'/>
+							<input className='spaceTop' type='submit' value={language.changePasswordSubmit[this.props.language]}/>
 						</div>
 					</div>
 				</form>
@@ -391,9 +392,10 @@ class Profile extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated, me } = state.handleMe
+	const { isAuthenticated, language, me } = state.handleMe
 	return ({
 		isAuthenticated,
+		language,
 		me
 	})
 }

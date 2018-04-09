@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { logMe } from '../../../actions/me'
-import { fetchWrap } from '../../../services/fetchWrap'
-
 import Auth42 from './OAuth/42'
 import AuthFacebook from './OAuth/Facebook'
 import AuthGoogle from './OAuth/Google'
@@ -12,7 +9,11 @@ import AuthGoogle from './OAuth/Google'
 import Input from '../../../components/Input'
 import Tooltip from '../../../components/Tooltip/';
 
+import { changeLanguage, logMe } from '../../../actions/me'
+import { fetchWrap } from '../../../services/fetchWrap'
+
 const errors = require('../../../errors.json');
+const language = require('./language.json');
 
 class LogIn extends Component {
 
@@ -52,11 +53,11 @@ class LogIn extends Component {
 				})
 			})
 			.then(payload => {
-				this.props.dispatch(logMe(payload))
+				this.props.dispatch(logMe(payload));
 			})
 			.catch(error => {
 				if (error) {
-					this.setState({ error })
+					this.setState({ error });
 				}
 			})
 		}
@@ -66,7 +67,7 @@ class LogIn extends Component {
 	}
 
 	handleInputChange(state, value) {
-		this.setState({ [state]: value })
+		this.setState({ [state]: value });
 	}
 
 	handleInputValidation(name, error) {
@@ -78,11 +79,12 @@ class LogIn extends Component {
 	render() {
 
 		return (
+			<div>
 			<div className='formBox'>
-				<span className='lignBottom fontBig block'>Log in</span>
+				<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
 				<form className='fontLeft' onSubmit={this.handleFormSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='login'>Login or email</label>
+						<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
 					</div>
 					<Input
 						id='login'
@@ -102,7 +104,7 @@ class LogIn extends Component {
 						null
 					}
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='password'>Password</label>
+							<label htmlFor='password'>{language.passwordInputLabel[this.props.language]}</label>
 						</div>
 					<Input
 						id='password'
@@ -123,11 +125,11 @@ class LogIn extends Component {
 					}
 					<br />
 					<div className='block fontXSmall fontCenter'>
-						<Link to='/reset'>Forgot your password ?</Link>
+						<Link to='/reset'>{language.resetPasswordLink[this.props.language]}</Link>
 					</div>
 					<div className='block fontRight'>
 						<div className='inline'>
-							<input className='spaceTop' type='submit' value='Log in'/>
+							<input className='spaceTop' type='submit' value={language.submitInput[this.props.language]}/>
 						</div>
 					</div>
 				</form>
@@ -135,17 +137,24 @@ class LogIn extends Component {
 				<AuthFacebook />
 				<AuthGoogle />
 				<div className='lignTop block fontSmall'>
-					<Link to='/signup'>You want to create an account ?</Link>
+					<Link to='/signup'>{language.signUpLink[this.props.language]}</Link>
 				</div>
 			</div>
+			<div className='spaceTop halfTransparent'>
+				<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
+				<span className='fontGrey spaceLeft spaceRight'>|</span>
+				<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>French</span>
+			</div>
+		</div>
 		)
 	}
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe
+	const { isAuthenticated, language } = state.handleMe
 	return ({
-		isAuthenticated
+		isAuthenticated,
+		language
 	})
 }
 

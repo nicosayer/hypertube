@@ -1,0 +1,34 @@
+{
+	"title": {
+		"en": "Sign up",
+		"fr": "Inscription"
+	},
+	"loginInputLabel": {
+		"en": "Login",
+		"fr": "Pseudo"
+	},
+	"firstNameInputLabel": {
+		"en": "First Name",
+		"fr": "Prénom"
+	},
+	"lastNameInputLabel": {
+		"en": "Last Name",
+		"fr": "Nom"
+	},
+	"emailInputLabel": {
+		"en": "Email",
+		"fr": "Email"
+	},
+	"passwordInputLabel": {
+		"en": "Password",
+		"fr": "Mot de passe"
+	},
+	"submitInput": {
+		"en": "Sign up",
+		"fr": "S'inscrire"
+	},
+	"logInLink": {
+		"en": "You already have an account ?",
+		"fr": "Vous avez déjà un compte ?"
+	}
+}

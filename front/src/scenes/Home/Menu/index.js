@@ -5,7 +5,11 @@ import { Link } from 'react-router-dom';
 
 import Logout from './LogOut';
 
+import { changeLanguage } from '../../../actions/me'
+
 import './style.css';
+
+const language = require('./language.json');
 
 class Menu extends Component {
 
@@ -39,6 +43,7 @@ class Menu extends Component {
 	}
 
 	render() {
+
 		return(
 			<div>
 				<div className='menuBar'>
@@ -50,21 +55,21 @@ class Menu extends Component {
 							</span>
 						</Link>
 						<span className='menuType'>
-							<Link to='/'><span className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}>Movies</span></Link>
+							<Link to='/'><span className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}>{language.moviesSectionLink[this.props.language]}</span></Link>
 							<span className='fontGrey spaceLeft spaceRight'>|</span>
-							<Link to='/tv'><span className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}>TV Shows</span></Link>
+							<Link to='/tv'><span className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}>{language.tvSectionLink[this.props.language]}</span></Link>
 						</span>
 					</span>
 					<span className='floatRight'>
 						<span className='menuProfile'>
 							<span className='menuLanguage'>
-								en
+								<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>en</span>
 								<span className='fontGrey spaceLeft spaceRight'>|</span>
-								<span className='fontGrey'>fr</span>
+								<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>fr</span>
 							</span>
 							<span onClick={this.emptySearch}>
 								<Link to='/profile'>
-									My profile
+									{language.profileLink[this.props.language]}
 								</Link>
 							</span>
 							<span className='fontGrey spaceLeft spaceRight'>|</span>
@@ -72,7 +77,7 @@ class Menu extends Component {
 						</span>
 					</span>
 					<i className='fas fa-search'></i>
-					<input className='menuSearch spaceLeft' placeholder='Quick search' type='text' onChange={event => this.search(event)} onKeyDown={event => this.handleKeyDown(event)} ref={this.searchInput} />
+					<input className='menuSearch spaceLeft' placeholder={language.quickSearchLabel[this.props.language]} type='text' onChange={event => this.search(event)} onKeyDown={event => this.handleKeyDown(event)} ref={this.searchInput} />
 				</div>
 
 			</div>
@@ -80,4 +85,11 @@ class Menu extends Component {
 	}
 }
 
-export default withRouter(connect()(Menu))
+function mapStateToProps(state) {
+	const { language } = state.handleMe;
+	return ({
+		language
+	})
+}
+
+export default withRouter(connect(mapStateToProps)(Menu))

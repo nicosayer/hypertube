@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { logMe } from '../../../actions/me';
+import { changeLanguage, logMe } from '../../../actions/me';
 
 import { fetchWrap } from '../../../services/fetchWrap';
 import Input from '../../../components/Input';
 import Tooltip from '../../../components/Tooltip/';
 
 const errors = require('../../../errors.json');
+const language = require('./language.json');
 
 class SignUp extends Component {
 
@@ -48,7 +49,6 @@ class SignUp extends Component {
 		}
 
 		if (!Object.keys(error).length) {
-			console.log(1)
 			fetchWrap('/connect/signup', {
 				method: 'POST',
 				headers: {
@@ -100,146 +100,153 @@ class SignUp extends Component {
 			return <Redirect to='/login' />
 		}
 		return (
-			<div className='formBox'>
-				<span className='lignBottom fontBig block'>Sign up</span>
-				<form className='fontLeft' onSubmit={this.handleFormSubmit}>
-					<div className='fontGrey block fontSmall'>
-						<label htmlFor='login'>Login</label>
-					</div>
-					<Input
-						id='login'
-						type='text'
-						name='login'
-						className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
-						validation={{
-							minLen: 6,
-							maxLen: 20,
-							format: /^[a-z0-9]+$/gi,
-							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation,
-							validateOnChange: true
-						}}
-						trimOnBlur
-						maxLen={20}
-						onChange={this.handleInputChange}
-						/>
-					{
-						this.state.error.hasOwnProperty('login') ?
-						<Tooltip text={errors.signup.login[this.state.error.login]} visible={true} />
-						:
-						null
-					}
-					<div className='fontGrey block fontSmall'>
-						<label htmlFor='firstName'>First Name</label>
-					</div>
-					<Input
-						id='firstName'
-						type='text'
-						name='firstName'
-						className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
-						validation={{
-							minLen: 2,
-							maxLen: 20,
-							format: /^[a-z ]+$/gi,
-							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation,
-							validateOnChange: true
-						}}
-						maxLen={20}
-						trimOnBlur
-						onChange={this.handleInputChange}
-						/>
-					{
-						this.state.error.hasOwnProperty('firstName') ?
-						<Tooltip text={errors.signup.firstName} visible={true} />
-						:
-						null
-					}
-					<div className='fontGrey block fontSmall'>
-						<label htmlFor='lastName' className='block'>Last Name</label>
-					</div>
-					<Input
-						id='lastName'
-						type='text'
-						name='lastName'
-						className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
-						validation={{
-							minLen: 2,
-							maxLen: 20,
-							format: /^[a-z ]+$/gi,
-							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation,
-							validateOnChange: true
-						}}
-						maxLen={20}
-						trimOnBlur
-						onChange={this.handleInputChange}
-						/>
-					{
-						this.state.error.hasOwnProperty('lastName') ?
-						<Tooltip text={errors.signup.lastName} visible={true}/>
-						:
-						null
-					}
-					<div className='fontGrey block fontSmall'>
-						<label htmlFor='email'>Email</label>
-					</div>
-					<Input
-						id='email'
-						type='text'
-						name='email'
-						className={this.state.error.hasOwnProperty('email') ? 'invalidInput' : null}
-						validation={{
-							minLen: 0,
-							maxLen: 50,
-							format: /^.+@.+\..+$/gi,
-							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation,
-							validateOnChange: true
-						}}
-						maxLen={50}
-						trimOnBlur
-						onChange={this.handleInputChange}
-						/>
-					{
-						this.state.error.hasOwnProperty('email') ?
-						<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
-						:
-						null
-					}
-					<div className='fontGrey block fontSmall'>
-						<label htmlFor='password'>Password</label>
-					</div>
-					<Input
-						id='password'
-						type='password'
-						name='password'
-						className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
-						validation={{
-							minLen: 6,
-							maxLen: 50,
-							format: /^.*[0-9]+.*$/,
-							invalidClass: 'invalidInput',
-							handleValidation: this.handleInputValidation,
-							validateOnChange: true
-						}}
-						maxLen={50}
-						onChange={this.handleInputChange}
-						/>
-					{
-						this.state.error.hasOwnProperty('password') ?
-						<Tooltip text={errors.signup.password} visible={true}/>
-						:
-						null
-					}
-					<div className='block fontRight'>
-						<div className='inline'>
-							<input type='submit' value='Sign up'/>
+			<div>
+				<div className='formBox'>
+					<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
+					<form className='fontLeft' onSubmit={this.handleFormSubmit}>
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
 						</div>
+						<Input
+							id='login'
+							type='text'
+							name='login'
+							className={this.state.error.hasOwnProperty('login') ? 'invalidInput' : null}
+							validation={{
+								minLen: 6,
+								maxLen: 20,
+								format: /^[a-z0-9]+$/gi,
+								invalidClass: 'invalidInput',
+								handleValidation: this.handleInputValidation,
+								validateOnChange: true
+							}}
+							trimOnBlur
+							maxLen={20}
+							onChange={this.handleInputChange}
+							/>
+						{
+							this.state.error.hasOwnProperty('login') ?
+							<Tooltip text={errors.signup.login[this.state.error.login]} visible={true} />
+							:
+							null
+						}
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='firstName'>{language.firstNameInputLabel[this.props.language]}</label>
+						</div>
+						<Input
+							id='firstName'
+							type='text'
+							name='firstName'
+							className={this.state.error.hasOwnProperty('firstName') ? 'invalidInput' : null}
+							validation={{
+								minLen: 2,
+								maxLen: 20,
+								format: /^[a-z ]+$/gi,
+								invalidClass: 'invalidInput',
+								handleValidation: this.handleInputValidation,
+								validateOnChange: true
+							}}
+							maxLen={20}
+							trimOnBlur
+							onChange={this.handleInputChange}
+							/>
+						{
+							this.state.error.hasOwnProperty('firstName') ?
+							<Tooltip text={errors.signup.firstName} visible={true} />
+							:
+							null
+						}
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='lastName' className='block'>{language.lastNameInputLabel[this.props.language]}</label>
+						</div>
+						<Input
+							id='lastName'
+							type='text'
+							name='lastName'
+							className={this.state.error.hasOwnProperty('lastName') ? 'invalidInput' : null}
+							validation={{
+								minLen: 2,
+								maxLen: 20,
+								format: /^[a-z ]+$/gi,
+								invalidClass: 'invalidInput',
+								handleValidation: this.handleInputValidation,
+								validateOnChange: true
+							}}
+							maxLen={20}
+							trimOnBlur
+							onChange={this.handleInputChange}
+							/>
+						{
+							this.state.error.hasOwnProperty('lastName') ?
+							<Tooltip text={errors.signup.lastName} visible={true}/>
+							:
+							null
+						}
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='email'>{language.emailInputLabel[this.props.language]}</label>
+						</div>
+						<Input
+							id='email'
+							type='text'
+							name='email'
+							className={this.state.error.hasOwnProperty('email') ? 'invalidInput' : null}
+							validation={{
+								minLen: 0,
+								maxLen: 50,
+								format: /^.+@.+\..+$/gi,
+								invalidClass: 'invalidInput',
+								handleValidation: this.handleInputValidation,
+								validateOnChange: true
+							}}
+							maxLen={50}
+							trimOnBlur
+							onChange={this.handleInputChange}
+							/>
+						{
+							this.state.error.hasOwnProperty('email') ?
+							<Tooltip text={errors.signup.email[this.state.error.email]} visible={true} />
+							:
+							null
+						}
+						<div className='fontGrey block fontSmall'>
+							<label htmlFor='password'>{language.passwordInputLabel[this.props.language]}</label>
+						</div>
+						<Input
+							id='password'
+							type='password'
+							name='password'
+							className={this.state.error.hasOwnProperty('password') ? 'invalidInput' : null}
+							validation={{
+								minLen: 6,
+								maxLen: 50,
+								format: /^.*[0-9]+.*$/,
+								invalidClass: 'invalidInput',
+								handleValidation: this.handleInputValidation,
+								validateOnChange: true
+							}}
+							maxLen={50}
+							onChange={this.handleInputChange}
+							/>
+						{
+							this.state.error.hasOwnProperty('password') ?
+							<Tooltip text={errors.signup.password} visible={true}/>
+							:
+							null
+						}
+						<div className='block fontRight'>
+							<div className='inline'>
+								<input type='submit' value={language.submitInput[this.props.language]}/>
+							</div>
+						</div>
+					</form>
+					<div className='lignTop block fontSmall'>
+						<Link to={{pathname: '/'}}>{language.logInLink[this.props.language]}</Link>
 					</div>
-				</form>
-				<div className='lignTop block fontSmall'>
-					<Link to={{pathname: '/'}}>You already have an account ?</Link>
+				</div>
+				<div className='spaceTop halfTransparent'>
+					<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
+					<span className='fontGrey spaceLeft spaceRight'>|</span>
+					<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>French</span>
 				</div>
 			</div>
 		)
@@ -247,9 +254,10 @@ class SignUp extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe
+	const { isAuthenticated, language } = state.handleMe
 	return ({
-		isAuthenticated
+		isAuthenticated,
+		language
 	})
 }
 

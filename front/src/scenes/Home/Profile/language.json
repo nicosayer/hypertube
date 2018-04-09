@@ -1,0 +1,46 @@
+{
+	"title": {
+		"en": "Profile",
+		"fr": "Profil"
+	},
+	"photoLabel": {
+		"en": "Your photo",
+		"fr": "Votre photo"
+	},
+	"changePhotoButton": {
+		"en": "Change photo",
+		"fr": "Modifier la photo"
+	},
+	"firstNameInputLabel": {
+		"en": "First Name",
+		"fr": "Prénom"
+	},
+	"lastNameInputLabel": {
+		"en": "Last Name",
+		"fr": "Nom"
+	},
+	"loginInputLabel": {
+		"en": "Login",
+		"fr": "Pseudo"
+	},
+	"emailInputLabel": {
+		"en": "Email",
+		"fr": "Email"
+	},
+	"changeInformationsSubmit": {
+		"en": "Save informations",
+		"fr": "Sauvegarder"
+	},
+	"oldPasswordInputLabel": {
+		"en": "Old password",
+		"fr": "Ancien mot de passe"
+	},
+	"newPasswordInputLabel": {
+		"en": "New password",
+		"fr": "Nouveau mot de passe"
+	},
+	"changePasswordSubmit": {
+		"en": "Change my password",
+		"fr": "Modifier le mot de passe"
+	}
+}

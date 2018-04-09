@@ -1,9 +1,9 @@
-
-
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 import {NotificationManager} from 'react-notifications';
 
+import { changeLanguage, logMe } from '../../../../actions/me';
 import { fetchWrap } from '../../../../services/fetchWrap'
 
 import Input from '../../../../components/Input'
@@ -12,6 +12,7 @@ import Tooltip from '../../../../components/Tooltip/';
 import 'react-notifications/lib/notifications.css';
 
 const errors = require('../../../../errors.json');
+const language = require('./language.json');
 
 class ResetPassword extends React.Component {
 
@@ -81,10 +82,10 @@ class ResetPassword extends React.Component {
 		return (
 			<div>
 				<div className='formBox'>
-					<span className='lignBottom fontBig block'>Reset Password</span>
+					<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
 					<form className='fontLeft' onSubmit={this.handleFormSubmit} >
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='login'>Login or email</label>
+							<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
 						</div>
 						<Input
 							id='login'
@@ -117,18 +118,30 @@ class ResetPassword extends React.Component {
 							:
 							<div className='fontRight'>
 								<div className='inline'>
-									<input type='submit' value='Send email'/>
+									<input type='submit' value={language.submitInput[this.props.language]}/>
 								</div>
 							</div>
 						}
 					</form>
 					<div className='lignTop block fontSmall'>
-						<Link to='/'>Back to sign in</Link>
+						<Link to='/'>{language.logInLink[this.props.language]}</Link>
 					</div>
+				</div>
+				<div className='spaceTop halfTransparent'>
+					<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
+					<span className='fontGrey spaceLeft spaceRight'>|</span>
+					<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>French</span>
 				</div>
 			</div>
 		)
 	}
 }
 
-export default ResetPassword;
+function mapStateToProps(state) {
+	const { language } = state.handleMe
+	return ({
+		language
+	})
+}
+
+export default connect(mapStateToProps)(ResetPassword)

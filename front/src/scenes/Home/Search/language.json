@@ -1,0 +1,42 @@
+{
+	"quickSearchUnavailable": {
+		"en": "Sorry but we didn't find anything",
+		"fr": "Nous n'avons trouvé aucun résultats"
+	},
+	"orderByLabel": {
+		"en": "Order by",
+		"fr": "Trier par"
+	},
+	"orderByPopularity": {
+		"en": "Popularity",
+		"fr": "Popularité"
+	},
+	"orderByRating": {
+		"en": "Rating",
+		"fr": "Notes"
+	},
+	"orderByReleaseDate": {
+		"en": "Release Date",
+		"fr": "Date de sortie"
+	},
+	"orderByRevenue": {
+		"en": "Revenue",
+		"fr": "Recette"
+	},
+	"orderByVoteCount": {
+		"en": "Vote count",
+		"fr": "Nombre de notes"
+	},
+	"genreLabel": {
+		"en": "Genre",
+		"fr": "Genre"
+	},
+	"releaseYearLabel": {
+		"en": "Release Year",
+		"fr": "Année de sortie"
+	},
+	"ratingLabel": {
+		"en": "Rating",
+		"fr": "Note"
+	}
+}

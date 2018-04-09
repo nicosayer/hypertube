@@ -7,6 +7,8 @@ import { logMe } from '../../../../../actions/me'
 
 import { fetchWrap } from '../../../../../services/fetchWrap'
 
+const language = require('./language.json');
+
 class Auth42 extends Component {
 
 	constructor(props) {
@@ -65,7 +67,7 @@ class Auth42 extends Component {
 					this.state.loading ?
 					<div className='button wFull spaceTop'><div className='loading'><span><i className="fas fa-spinner"></i></span></div></div>
 					:
-					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className="fas fa-graduation-cap spaceRight"></i>Connect with 42</span></div>
+					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className="fas fa-graduation-cap spaceRight"></i>{language.buttonText[this.props.language]}</span></div>
 				}
 			</div>
 		);
@@ -73,9 +75,10 @@ class Auth42 extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe
+	const { isAuthenticated, language } = state.handleMe
 	return ({
-		isAuthenticated
+		isAuthenticated,
+		language
 	})
 }
 

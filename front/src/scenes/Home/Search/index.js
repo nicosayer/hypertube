@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -10,6 +11,7 @@ const genresMovies = require('./genresMovies.json');
 const genresTV = require('./genresTV.json');
 const genresMoviesList = require('./genresMoviesList.json');
 const genresTVList = require('./genresTVList.json');
+const language = require('./language.json');
 
 class Search extends Component {
 
@@ -255,99 +257,107 @@ class Search extends Component {
 				:
 				null
 			}
-		</Link>
-	)
+		</Link>)
 
-	return(
-		<div className='main'>
-			<InfiniteScroll
-				loadMore={this.scrolling}
-				hasMore={this.state.page ? true : false}
-				useWindow={false}
-				>
-				<div className='searchMenu'>
-					<div className='fontRight spaceRight fontBig fontGrey'><i className="fas fa-bars"></i></div>
-					<div className='spaceLeft spaceRight spaceBottom fontLeft spaceTop'>
-						Order by
-					</div>
-
-					<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>Popularity</div>
-					<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>Rating</div>
-					<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>Release date</div>
-					<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>Revenue</div>
-					<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>Vote count</div>
-					<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
-						Genre
-					</div>
-					<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
-					{
-						this.props.canal === 'tv' ?
-						genresTVList.map(elem =>
-							<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
-						)
-						:
-						genresMoviesList.map(elem =>
-							<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
-						)
-					}
-					<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
-						Release year
-					</div>
-					<input
-						name='release_date_min'
-						type='text'
-						placeholder='1900'
-						className='searchRange spaceRight fontCenter'
-						onChange={(event) => this.discover('release_date_min', event.target.value)}
-						/>
-					-
-					<input
-						name='release_date_max'
-						type='text'
-						placeholder={(new Date()).getFullYear()}
-						className='searchRange spaceLeft fontCenter'
-						onChange={(event) => this.discover('release_date_max', event.target.value)}
-						/>
-					<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
-						Rating
-					</div>
-					<input
-						name='ratings_min'
-						type='text'
-						placeholder='0'
-						className='searchRange spaceRight fontCenter'
-						onChange={(event) => this.discover('ratings_min', event.target.value)}
-						/>
-					-
-					<input
-						name='ratings_max'
-						type='text'
-						placeholder='10'
-						className='searchRange spaceLeft fontCenter'
-						onChange={(event) => this.discover('ratings_max', event.target.value)}
-						/>
-				</div>
-				<div className='searchMovies'>
-					{ this.state.loading ?
-						<div className='loading noMovies'><span><i className='fas fa-spinner'></i></span></div>
-						:
-						movies.length ?
-						<div>
-							{movies}
+		return(
+			<div className='main'>
+				<InfiniteScroll
+					loadMore={this.scrolling}
+					hasMore={this.state.page ? true : false}
+					useWindow={false}
+					>
+					<div className='searchMenu'>
+						<div className='fontRight spaceRight fontBig fontGrey'><i className="fas fa-bars"></i></div>
+						<div className='spaceLeft spaceRight spaceBottom fontLeft spaceTop'>
+							{language.orderByLabel[this.props.language]}
 						</div>
-						:
-						<div>
-							<div className='noMovies'>
-								<i className='fas fa-map-signs'></i>
+
+						<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.language]}</div>
+						<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.language]}</div>
+						<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.language]}</div>
+						<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.language]}</div>
+						<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.language]}</div>
+						<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
+							{language.genreLabel[this.props.language]}
+						</div>
+						<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
+						{
+							this.props.canal === 'tv' ?
+							genresTVList.map(elem =>
+								<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
+							)
+							:
+							genresMoviesList.map(elem =>
+								<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
+							)
+						}
+						<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
+							{language.releaseYearLabel[this.props.language]}
+						</div>
+						<input
+							name='release_date_min'
+							type='text'
+							placeholder='1900'
+							className='searchRange spaceRight fontCenter'
+							onChange={(event) => this.discover('release_date_min', event.target.value)}
+							/>
+						-
+						<input
+							name='release_date_max'
+							type='text'
+							placeholder={(new Date()).getFullYear()}
+							className='searchRange spaceLeft fontCenter'
+							onChange={(event) => this.discover('release_date_max', event.target.value)}
+							/>
+						<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
+							{language.ratingLabel[this.props.language]}
+						</div>
+						<input
+							name='ratings_min'
+							type='text'
+							placeholder='0'
+							className='searchRange spaceRight fontCenter'
+							onChange={(event) => this.discover('ratings_min', event.target.value)}
+							/>
+						-
+						<input
+							name='ratings_max'
+							type='text'
+							placeholder='10'
+							className='searchRange spaceLeft fontCenter'
+							onChange={(event) => this.discover('ratings_max', event.target.value)}
+							/>
+					</div>
+					<div className='searchMovies'>
+						{
+							this.state.loading ?
+							<div className='loading noMovies'><span><i className='fas fa-spinner'></i></span></div>
+							:
+							movies.length ?
+							<div>
+								{movies}
 							</div>
-							Sorry but we didn't find anything
-						</div>
-					}
-				</div>
-			</InfiniteScroll>
-		</div>
-	);
-}
+							:
+							<div>
+								<div className='noMovies'>
+									<i className='fas fa-map-signs'></i>
+								</div>
+								{language.quickSearchUnavailable[this.props.language]}
+							</div>
+						}
+					</div>
+				</InfiniteScroll>
+			</div>
+		);
+	}
 }
 
-export default Search
+
+function mapStateToProps(state) {
+	const { language } = state.handleMe;
+	return ({
+		language
+	})
+}
+
+export default connect(mapStateToProps)(Search)

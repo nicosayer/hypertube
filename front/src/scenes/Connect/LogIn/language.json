@@ -1,0 +1,26 @@
+{
+	"title": {
+		"en": "Log in",
+		"fr": "Se connecter"
+	},
+	"loginInputLabel": {
+		"en": "Login or email",
+		"fr": "Pseudo ou email"
+	},
+	"passwordInputLabel": {
+		"en": "Password",
+		"fr": "Mot de passe"
+	},
+	"resetPasswordLink": {
+		"en": "Forgot your password ?",
+		"fr": "Mot de passe oublié ?"
+	},
+	"submitInput": {
+		"en": "Log in",
+		"fr": "Se connecter"
+	},
+	"signUpLink": {
+		"en": "You want to create an account ?",
+		"fr": "Vous voulez créer un compte ?"
+	}
+}

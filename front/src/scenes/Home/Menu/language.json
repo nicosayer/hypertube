@@ -1,0 +1,18 @@
+{
+	"moviesSectionLink": {
+		"en": "Movies",
+		"fr": "Films"
+	},
+	"tvSectionLink": {
+		"en": "TV Shows",
+		"fr": "Séries TV"
+	},
+	"quickSearchLabel": {
+		"en": "Quick Search",
+		"fr": "Rechercher"
+	},
+	"profileLink": {
+		"en": "My profile",
+		"fr": "Mon profil"
+	}
+}

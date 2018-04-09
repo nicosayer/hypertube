@@ -19,8 +19,9 @@ div {
 }
 
 .formBox {
+	margin-top: 50px;
 	display: inline-block;
-	min-width: 300px;
+	min-width: 350px;
 	width: 15vw;
 	border-radius: 3px;
 	background: #2A292F;
@@ -90,6 +91,10 @@ div {
 
 .block {
 	display: block;
+}
+
+.halfTransparent {
+	opacity: 0.5;
 }
 
 .transparent {
