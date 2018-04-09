@@ -1,25 +1,21 @@
-
 const express = require('express');
 const router = express.Router();
 const fs = require('fs')
 var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
-var mongo = require('../../../mongo')
-
-var HLSServer = require('hls-server');
+var mongo = require('../../../mongo');
+var child_process = require('child_process')
+const pump = require('pump')
 
 var user = {}
 
-exports = module.exports = http => {
+router.get('/:magnet/:time', function(req, res, next) {
 
-	/*var server = http.createServer()
-	var hls = new HLSServer(server, {
-		path: '/streams',
-		dir: 'public/'
-	})
-	server.listen(8000)*/
-	var engine = torrentStream('magnet:?xt=urn:btih:3979a828a7fa105af4a9e4af6f33c5b3402a1d94&dn=Moana+2016+1080p+BluRay+x264+DTS-JYK&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'/*, {path: './public/movies'}*/)
+
+
+
+	var engine = torrentStream('magnet:?xt=urn:btih:3979a828a7fa105af4a9e4af6f33c5b3402a1d94&dn=Moana+2016+1080p+BluRay+x264+DTS-JYK&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969', {path: './public/movies'})
 
 	engine.on('ready', function() {
 
@@ -27,6 +23,7 @@ exports = module.exports = http => {
 
 		var size = 0
 		var file;
+		res.sendStatus(201)
 
 		engine.files.forEach(function(fileTmp, key) {
 			console.log(fileTmp.name)
@@ -58,23 +55,8 @@ exports = module.exports = http => {
 		//download(file, req, res)
 	})
 
-	
-}
 
-/*const express = require('express');
-const router = express.Router();
-const fs = require('fs')
-var torrentStream = require('torrent-stream');
-const parseRange = require('range-parser');
-const ffmpeg = require('fluent-ffmpeg');
-var mongo = require('../../../mongo');
-var child_process = require('child_process')
-const pump = require('pump')
-
-var user = {}
-
-router.get('/:magnet/:time', function(req, res, next) {
-	if (req.session && req.session._id) {
+	/*if (req.session && req.session._id) {
 		const id = req.session._id.toString()
 		const { magnet } = req.params
 		const { time } = req.params
@@ -123,7 +105,7 @@ router.get('/:magnet/:time', function(req, res, next) {
 	}
 	else {
 		res.sendStatus(300)
-	}
+	}*/
 })
 
 download = function(file, req, res) {		
@@ -147,30 +129,34 @@ download = function(file, req, res) {
     console.log(start, end)
 
 
-	var stream = file.createReadStream({start, end})
-
-	var convert = ffmpeg(stream)
-	.videoCodec('libvpx')
-	.audioCodec('libvorbis')
-	.videoBitrate('512k')
-	.format('webm')
-	.on('start', () => {
-		console.log('transcoding...')
-	})
-	.on('error', (err, stdout, stderr) => {
-		//if (err.message !== 'Output stream closed') {
-			console.log(err.message, err, stderr);
-		//}
-	})
-	.pipe()
+	var stream = file.createReadStream({start: start, end: end})
 
 	res.setHeader('Content-Type', 'video/webm')
 	res.setHeader('Accept-Ranges', 'bytes');
 	res.setHeader('Content-Length', 1 + end - start);
 	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
+	stream.pipe(res)
 
-	pump(convert,res)
+	/*var convert = ffmpeg('./public/test.mp4')
+	.videoCodec('libvpx')
+	.audioCodec('libvorbis')
+	.videoBitrate('512k')
+	.format('webm')
+	.on('start', (data) => {
+		console.log('transcoding...')
+		console.log(data)
+	})
+	.on('error', (err, stdout, stderr) => {
+		//if (err.message !== 'Output stream closed') {
+			console.log(err.message, err, stderr);
+		//}
+	})
+	.pipe(res)*/
+
+
+
+	//pump(convert,res)
 }
 
 //var input_file = file.createReadStream();
@@ -215,4 +201,4 @@ download = function(file, req, res) {
 
 
 
-module.exports = router;*/
+module.exports = router;
