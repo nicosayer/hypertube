@@ -76,44 +76,50 @@ class Menu extends Component {
 						<span className='menuProfile'>
 							<span className='menuLanguage'>
 								<span className={this.props.me.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'en' ? () => (this.selectLanguage('en')) : null}>en</span>
-								<span className='fontGrey spaceLeft spaceRight'>|</span>
+								<span className='separator'></span>
 								<span className={this.props.me.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'fr' ? () => (this.selectLanguage('fr')) : null}>fr</span>
 							</span>
-							<span onClick={this.emptySearch}>
-								<Link to='/profile'>
-									{language.profileLink[this.props.me.language]}
-								</Link>
+							<span className='menuLanguageAlt'>
+								<span className='pointer fontGrey' onClick={this.props.me.language !== 'en' ? () => (this.selectLanguage('en')) : () => (this.selectLanguage('fr'))}><i className='fas fa-globe'></i></span>
+								<span className='separator'></span>
 							</span>
-							<span className='fontGrey spaceLeft spaceRight'>|</span>
+							<Link to='/profile'>
+								<span onClick={this.emptySearch} className='profileSectionLink'>
+									{language.profileLink[this.props.me.language]}
+								</span>
+							</Link>
+							<span className='separator'></span>
 							<Logout />
 						</span>
 					</span>
-					<span className='menuType'>
-						<Link to='/'>
-							<span
-								className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}
-								onClick={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? null : () => (this.emptySearch())}>
-								{language.moviesSectionLink[this.props.me.language]}
-							</span>
-						</Link>
-						<span className='fontGrey spaceLeft spaceRight'>|</span>
-						<Link to='/tv'>
-							<span
-								className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}
-								onClick={this.props.location.pathname.substring(0, 3) === '/tv' ? () => (this.emptySearch()) : null}>
-								{language.tvSectionLink[this.props.me.language]}
-							</span>
-						</Link>
-					</span>
-					<span className='magnifyingGlassLogo'>
-						<i className='fas fa-search'></i>
-					</span>
-					<input
-						className='menuSearch spaceLeft'
-						placeholder={language.quickSearchLabel[this.props.me.language]}
-						type='text' onChange={event => this.search(event)}
-						onKeyDown={event => this.handleKeyDown(event)}
-						ref={this.searchInput} />
+					<div className=''>
+						<span className='menuType'>
+							<Link to='/'>
+								<span
+									className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey moviesSectionLink' : 'moviesSectionLink'}
+									onClick={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? null : () => (this.emptySearch())}>
+									{language.moviesSectionLink[this.props.me.language]}
+								</span>
+							</Link>
+							<span className='separator'></span>
+							<Link to='/tv'>
+								<span
+									className={this.props.location.pathname.substring(0, 3) === '/tv' ? 'tvSectionLink' : 'tvSectionLink fontGrey'}
+									onClick={this.props.location.pathname.substring(0, 3) === '/tv' ? () => (this.emptySearch()) : null}>
+									{language.tvSectionLink[this.props.me.language]}
+								</span>
+							</Link>
+						</span>
+						<span className='magnifyingGlassLogo'>
+							<i className='fas fa-search'></i>
+						</span>
+						<input
+							className='menuSearch spaceLeft'
+							placeholder={language.quickSearchLabel[this.props.me.language]}
+							type='text' onChange={event => this.search(event)}
+							onKeyDown={event => this.handleKeyDown(event)}
+							ref={this.searchInput} />
+					</div>
 				</div>
 
 			</div>
