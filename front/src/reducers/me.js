@@ -15,6 +15,9 @@ export function handleMe(
 ) {
 	switch(action.type) {
 		case SAVE_ME:
+		if (!action.me.language) {
+			action.me.language = 'en';
+		}
 		return Object.assign({}, state, {
 			me: action.me,
 			isAuthenticated: true
