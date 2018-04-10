@@ -186,10 +186,11 @@ class Profile extends Component {
 	}
 
 	render() {
+		console.log(this.props.me);
 		return (
 			<div className='main'>
 			<div className='profileBox formBox'>
-				<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
+				<span className='lignBottom fontBig block'>{language.title[this.props.me.language]}</span>
 				<div className='fontLeft block'>
 					<img
 						alt='Profile'
@@ -200,10 +201,10 @@ class Profile extends Component {
 						/>
 					<form encType='multipart/form-data' onChange={this.handlePictureSubmit}>
 						<span className='fontGrey fontSmall block'>
-							{language.photoLabel[this.props.language]}
+							{language.photoLabel[this.props.me.language]}
 						</span>
 						<div className='inline changePhotoButton'>
-							<label htmlFor='upload'><span className='pointer'>{language.changePhotoButton[this.props.language]}</span></label>
+							<label htmlFor='upload'><span className='pointer'>{language.changePhotoButton[this.props.me.language]}</span></label>
 						</div>
 						<input id='upload' type='file' name='upload' accept='.png,.jpeg,.jpg'/>
 						{
@@ -216,7 +217,7 @@ class Profile extends Component {
 				</div>
 				<form className='fontLeft lignBottom' onSubmit={this.handleSaveSubmit}>
 					<div className='fontGrey block fontSmall floatClear'>
-						<label htmlFor='firstName'>{language.firstNameInputLabel[this.props.language]}</label>
+						<label htmlFor='firstName'>{language.firstNameInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='firstName'
@@ -244,7 +245,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='lastName'>{language.lastNameInputLabel[this.props.language]}</label>
+						<label htmlFor='lastName'>{language.lastNameInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='lastName'
@@ -272,7 +273,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
+						<label htmlFor='login'>{language.loginInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='login'
@@ -299,7 +300,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='email'>{language.emailInputLabel[this.props.language]}</label>
+						<label htmlFor='email'>{language.emailInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='email'
@@ -327,13 +328,13 @@ class Profile extends Component {
 					}
 					<div className='fontRight'>
 						<div className='inline'>
-							<input className='spaceTop' type='submit' value={language.changeInformationsSubmit[this.props.language]}/>
+							<input className='spaceTop' type='submit' value={language.changeInformationsSubmit[this.props.me.language]}/>
 						</div>
 					</div>
 				</form>
 				<form className='fontLeft' onSubmit={this.handlePasswordChangeSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='oldPassword'>{language.oldPasswordInputLabel[this.props.language]}</label>
+						<label htmlFor='oldPassword'>{language.oldPasswordInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='oldPassword'
@@ -354,7 +355,7 @@ class Profile extends Component {
 						null
 					}
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='newPassword'>{language.newPasswordInputLabel[this.props.language]}</label>
+						<label htmlFor='newPassword'>{language.newPasswordInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='newPassword'
@@ -381,7 +382,7 @@ class Profile extends Component {
 					}
 					<div className='fontRight'>
 						<div className='inline'>
-							<input className='spaceTop' type='submit' value={language.changePasswordSubmit[this.props.language]}/>
+							<input className='spaceTop' type='submit' value={language.changePasswordSubmit[this.props.me.language]}/>
 						</div>
 					</div>
 				</form>
@@ -392,10 +393,9 @@ class Profile extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated, language, me } = state.handleMe
+	const { isAuthenticated, me } = state.handleMe
 	return ({
 		isAuthenticated,
-		language,
 		me
 	})
 }

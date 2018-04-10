@@ -102,10 +102,10 @@ class SignUp extends Component {
 		return (
 			<div>
 				<div className='formBox'>
-					<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
+					<span className='lignBottom fontBig block'>{language.title[this.props.me.language]}</span>
 					<form className='fontLeft' onSubmit={this.handleFormSubmit}>
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
+							<label htmlFor='login'>{language.loginInputLabel[this.props.me.language]}</label>
 						</div>
 						<Input
 							id='login'
@@ -131,7 +131,7 @@ class SignUp extends Component {
 							null
 						}
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='firstName'>{language.firstNameInputLabel[this.props.language]}</label>
+							<label htmlFor='firstName'>{language.firstNameInputLabel[this.props.me.language]}</label>
 						</div>
 						<Input
 							id='firstName'
@@ -157,7 +157,7 @@ class SignUp extends Component {
 							null
 						}
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='lastName' className='block'>{language.lastNameInputLabel[this.props.language]}</label>
+							<label htmlFor='lastName' className='block'>{language.lastNameInputLabel[this.props.me.language]}</label>
 						</div>
 						<Input
 							id='lastName'
@@ -183,7 +183,7 @@ class SignUp extends Component {
 							null
 						}
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='email'>{language.emailInputLabel[this.props.language]}</label>
+							<label htmlFor='email'>{language.emailInputLabel[this.props.me.language]}</label>
 						</div>
 						<Input
 							id='email'
@@ -209,7 +209,7 @@ class SignUp extends Component {
 							null
 						}
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='password'>{language.passwordInputLabel[this.props.language]}</label>
+							<label htmlFor='password'>{language.passwordInputLabel[this.props.me.language]}</label>
 						</div>
 						<Input
 							id='password'
@@ -235,18 +235,18 @@ class SignUp extends Component {
 						}
 						<div className='block fontRight'>
 							<div className='inline'>
-								<input type='submit' value={language.submitInput[this.props.language]}/>
+								<input type='submit' value={language.submitInput[this.props.me.language]}/>
 							</div>
 						</div>
 					</form>
 					<div className='lignTop block fontSmall'>
-						<Link to={{pathname: '/'}}>{language.logInLink[this.props.language]}</Link>
+						<Link to={{pathname: '/'}}>{language.logInLink[this.props.me.language]}</Link>
 					</div>
 				</div>
 				<div className='spaceTop halfTransparent'>
-					<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
+					<span className={this.props.me.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
 					<span className='fontGrey spaceLeft spaceRight'>|</span>
-					<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>French</span>
+					<span className={this.props.me.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>Français</span>
 				</div>
 			</div>
 		)
@@ -254,10 +254,10 @@ class SignUp extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated, language } = state.handleMe
+	const { isAuthenticated, me } = state.handleMe
 	return ({
 		isAuthenticated,
-		language
+		me
 	})
 }
 

@@ -6,9 +6,10 @@ import {
 
 export function handleMe(
 	state = {
-		me: {},
+		me: {
+			language: 'en'
+		},
 		isAuthenticated: false,
-		language: 'en'
 	},
 	action
 ) {
@@ -26,7 +27,10 @@ export function handleMe(
 
 		case CHANGE_LANGUAGE:
 		return Object.assign({}, state, {
-			language: action.language
+			me: {
+				...state.me,
+				language: action.language
+			}
 		})
 
 		default:

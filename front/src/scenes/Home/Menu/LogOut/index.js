@@ -19,7 +19,7 @@ class LogOut extends Component {
 	}
 
 	render() {
-		return <div className='inline pointer' onClick={this.logout}><i className="fas fa-sign-out-alt"></i></div>
+		return <div className='inline pointer' onClick={this.logout}><i className="fas fa-power-off"></i></div>
 	}
 }
 

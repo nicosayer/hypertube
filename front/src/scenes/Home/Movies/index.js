@@ -127,13 +127,13 @@ class Movies extends Component {
 							{this.state.movieInfo.vote_average ? <span>{this.state.movieInfo.vote_average} <i className='fas fa-star'></i></span> : null}
 						</div>
 						<div className='spaceTopBig'>
-							<div className='spaceBottom'><b>{language.overviewLabel[this.props.language]}</b></div>
+							<div className='spaceBottom'><b>{language.overviewLabel[this.props.me.language]}</b></div>
 							<div className='movieInfosOverview'>
 								{this.state.movieInfo.overview ? this.state.movieInfo.overview : null}
 							</div>
 						</div>
 						<div className='spaceTopBig'>
-							<div className='spaceBottom'><b>{language.castLabel[this.props.language]}</b></div>
+							<div className='spaceBottom'><b>{language.castLabel[this.props.me.language]}</b></div>
 							{ this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path ? <div className='castContainer'><img className='prodImg' alt={this.state.movieInfo.production_companies[0].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieInfo.production_companies[0].logo_path} /><div>{this.state.movieInfo.production_companies[0].name}</div></div> : null }
 							{ this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path ? <div className='castContainer'><img className='castImg' alt={this.state.movieCast.crew[0].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.crew[0].profile_path} /><div>{this.state.movieCast.crew[0].name}</div></div> : null }
 							{ this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path ? <div className='castContainer'><img className='castImg' alt={this.state.movieCast.cast[0].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[0].profile_path} /><div>{this.state.movieCast.cast[0].name}</div></div> : null }
@@ -143,12 +143,12 @@ class Movies extends Component {
 						{
 							this.props.canal !== 'tv' ?
 							<div className='spaceTopBig'>
-								<div className='spaceBottom'><b>{language.availableInLabel[this.props.language]}</b></div>
+								<div className='spaceBottom'><b>{language.availableInLabel[this.props.me.language]}</b></div>
 								{
 									movieLinks ?
 									movieLinks
 									:
-									<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.movieUnavailable[this.props.language]}</div>
+									<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.movieUnavailable[this.props.me.language]}</div>
 								}
 							</div>
 							:
@@ -169,7 +169,7 @@ class Movies extends Component {
 												}
 											</th>
 											<th className='fontMedium underline'>
-												{language.seasonNumberLabel[this.props.language]} {this.state.seasonNumber}
+												{language.seasonNumberLabel[this.props.me.language]} {this.state.seasonNumber}
 											</th>
 											<th>
 												{
@@ -200,7 +200,7 @@ class Movies extends Component {
 												</td>
 											</tr>)
 											:
-											<tr><td colSpan='3' className='fontGrey'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.seasonUnavailable[this.props.language]}</td></tr>
+											<tr><td colSpan='3' className='fontGrey'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.seasonUnavailable[this.props.me.language]}</td></tr>
 										}
 									</tbody>
 								</table>
@@ -237,7 +237,7 @@ class Movies extends Component {
 								this.state.episodeNumber ?
 								<Player magnet={this.state.episodeNumber} />
 								: null
-							}	
+							}
 						</div>
 					</div>
 				}
@@ -247,9 +247,9 @@ class Movies extends Component {
 }
 
 function mapStateToProps(state) {
-	const { language } = state.handleMe;
+	const { me } = state.handleMe;
 	return ({
-		language
+		me
 	})
 }
 
