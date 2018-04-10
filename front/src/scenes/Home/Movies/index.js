@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import Player from '../../../components/Player';
 
 import { fetchWrap } from '../../../services/fetchWrap';
 
@@ -232,6 +233,11 @@ class Movies extends Component {
 								:
 								null
 							}
+							{
+								this.state.episodeNumber ?
+								<Player magnet={this.state.episodeNumber} />
+								: null
+							}	
 						</div>
 					</div>
 				}
