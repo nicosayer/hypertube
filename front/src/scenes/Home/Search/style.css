@@ -140,14 +140,15 @@
 }
 
 .movieTitle {
+	padding: 5px;
 	display:flex;
 	justify-content:center;
 	align-items:center;
 	opacity: 0;
 	background: rgba(0, 0, 0, 0.85);
 	text-align: center;
-	width: 230px;
-	height: 345px;
+	width: 220px;
+	height: 335px;
 	float: left;
 	position: absolute;
 	left: 0px;
@@ -159,7 +160,6 @@
 
 .movieTitle:hover {
 	opacity: 1;
-	object-fit: cover;
 }
 
 .movieImg {

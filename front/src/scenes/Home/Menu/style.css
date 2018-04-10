@@ -8,9 +8,42 @@
 	width: 100%;
 }
 
-@media only screen and (max-width: 950px) {
-	.menuProfile, .menuLanguage {
-		display: none;
+@media only screen and (max-width: 1000px) {
+	.moviesSectionLink, .tvSectionLink, .profileSectionLink {
+		font-size: 0;
+	}
+
+	.moviesSectionLink::after, .tvSectionLink::after, .profileSectionLink::after {
+		font-family: 'Font Awesome 5 Free';
+		font-size: 14px;
+		width: 10px;
+	}
+
+	.moviesSectionLink::after {
+		content: "\f008";
+		font-weight: 900;
+	}
+
+	.tvSectionLink::after {
+		content: "\f26c";
+		font-weight: 900;
+	}
+
+	.profileSectionLink::after {
+		content: "\f007";
+	}
+}
+
+.separator::after {
+	color: dimgray;
+	margin: 0px 10px;
+	content: "|";
+	transition: margin 0.35s;
+}
+
+@media only screen and (max-width: 750px) {
+	.separator::after {
+		margin: 0px 3px;
 	}
 }
 
@@ -74,6 +107,20 @@
 
 .menuLanguage {
 	margin-right: 50px;
+}
+
+.menuLanguageAlt {
+	display: none;
+}
+
+@media only screen and (max-width: 700px) {
+	.menuLanguage {
+		display: none;
+	}
+
+	.menuLanguageAlt {
+		display: inline-block;
+	}
 }
 
 .menuProfile {

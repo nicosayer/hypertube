@@ -1,47 +1,87 @@
 .movieInfos {
-	text-align: left;
 	display: inline-block;
-	margin: 50px;
-	width: 75vw;
+	margin-top: 50px;
 }
 
-.movieInfosImg {
+.moviesInfosImg {
+	width: 500px;
+	height: 750px;
+	object-fit: cover;
 	border-radius: 3px;
 	box-shadow: 0 0 10px black;
+	display: inline-block;
+}
+
+.movieInfosText {
+	text-align: left;
+	width: 450px;
+	min-height: 650px;
+	margin-left: 50px;
+	display: inline-block;
+	box-shadow: 0 0 10px black;
+	border-radius: 3px;
+	background: #2A292F;
+	vertical-align: top;
+	padding: 50px;
+	overflow: hidden;
 }
 
 .movieInfosOverview {
-	margin-left: calc(520px + 2%);
 	text-align: justify;
 }
 
 .castContainer {
 	display: inline-block;
 	text-align: center;
-	margin-left: 2%;
+	margin-right: 20px;
 }
 
-.prodImg {
+.castImg, .prodImg {
 	background: white;
 	width: 100px;
 	height: 100px;
-	object-fit: contain;
 	border-radius: 3px;
 	box-shadow: 0 0 10px black;
 }
 
+.prodImg {
+	object-fit: contain;
+}
+
 .castImg {
-	width: 100px;
-	height: 100px;
 	object-fit: cover;
-	border-radius: 3px;
-	box-shadow: 0 0 10px black;
+}
+
+.castImgText {
+	width: 90px;
+	height: 90px;
+	position: absolute;
+	float: left;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	background: rgba(0, 0, 0, 0.85);
+	z-index: 900;
+	transition: 0.25s opacity;
+	color: lightgrey;
+	opacity: 0;
+	padding: 5px;
+}
+
+.castImgText:hover {
+	opacity: 1;
+}
+
+.linksContainer {
+	margin: auto;
+	width: 75%;
+	 display: flex;
+	justify-content: space-around;
 }
 
 .torrentQualityButton {
 	text-align: center;
 	display: inline-block;
-	margin-left: 2%;
 	border-radius: 3px;
 	border: 1px solid white;
 	padding: 5px 10px;
@@ -52,8 +92,13 @@
 }
 
 .torrentQualityButton:hover {
-	box-shadow: 0 0 50px black;
+	box-shadow: 0 0 10px white;
 	color: white;
+}
+
+.tvDownload {
+	width: 1100px;
+	margin-bottom: 50px;
 }
 
 .tvEpisodesTable {
@@ -71,7 +116,7 @@
 }
 
 .tvEpisodesTable tr td {
-	padding: 10px 20px;
+	padding: 7px 0px;
 	border-bottom: 1px solid #1A1D23;
 	width: 33%;
 }
