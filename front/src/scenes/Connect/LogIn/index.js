@@ -81,10 +81,10 @@ class LogIn extends Component {
 		return (
 			<div>
 			<div className='formBox'>
-				<span className='lignBottom fontBig block'>{language.title[this.props.language]}</span>
+				<span className='lignBottom fontBig block'>{language.title[this.props.me.language]}</span>
 				<form className='fontLeft' onSubmit={this.handleFormSubmit}>
 					<div className='fontGrey block fontSmall'>
-						<label htmlFor='login'>{language.loginInputLabel[this.props.language]}</label>
+						<label htmlFor='login'>{language.loginInputLabel[this.props.me.language]}</label>
 					</div>
 					<Input
 						id='login'
@@ -104,7 +104,7 @@ class LogIn extends Component {
 						null
 					}
 						<div className='fontGrey block fontSmall'>
-							<label htmlFor='password'>{language.passwordInputLabel[this.props.language]}</label>
+							<label htmlFor='password'>{language.passwordInputLabel[this.props.me.language]}</label>
 						</div>
 					<Input
 						id='password'
@@ -125,11 +125,11 @@ class LogIn extends Component {
 					}
 					<br />
 					<div className='block fontXSmall fontCenter'>
-						<Link to='/reset'>{language.resetPasswordLink[this.props.language]}</Link>
+						<Link to='/reset'>{language.resetPasswordLink[this.props.me.language]}</Link>
 					</div>
 					<div className='block fontRight'>
 						<div className='inline'>
-							<input className='spaceTop' type='submit' value={language.submitInput[this.props.language]}/>
+							<input className='spaceTop' type='submit' value={language.submitInput[this.props.me.language]}/>
 						</div>
 					</div>
 				</form>
@@ -137,13 +137,13 @@ class LogIn extends Component {
 				<AuthFacebook />
 				<AuthGoogle />
 				<div className='lignTop block fontSmall'>
-					<Link to='/signup'>{language.signUpLink[this.props.language]}</Link>
+					<Link to='/signup'>{language.signUpLink[this.props.me.language]}</Link>
 				</div>
 			</div>
 			<div className='spaceTop halfTransparent'>
-				<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
+				<span className={this.props.me.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>English</span>
 				<span className='fontGrey spaceLeft spaceRight'>|</span>
-				<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>French</span>
+				<span className={this.props.me.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>Français</span>
 			</div>
 		</div>
 		)
@@ -151,10 +151,10 @@ class LogIn extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated, language } = state.handleMe
+	const { isAuthenticated, me } = state.handleMe
 	return ({
 		isAuthenticated,
-		language
+		me
 	})
 }
 

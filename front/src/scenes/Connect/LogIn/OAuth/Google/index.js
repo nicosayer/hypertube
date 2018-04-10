@@ -65,7 +65,7 @@ class AuthGoogle extends Component {
 					this.state.loading ?
 					<div className='button wFull spaceTop'><div className='loading'><span><i className="fas fa-spinner"></i></span></div></div>
 					:
-					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className='fab fa-google spaceRight'></i>{language.buttonText[this.props.language]}</span></div>
+					<div className='button wFull spaceTop'  onClick={this.clicked}><span><i className='fab fa-google spaceRight'></i>{language.buttonText[this.props.me.language]}</span></div>
 				}
 			</div>
 		);
@@ -73,10 +73,10 @@ class AuthGoogle extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated, language } = state.handleMe
+	const { isAuthenticated, me } = state.handleMe
 	return ({
 		isAuthenticated,
-		language
+		me
 	})
 }
 

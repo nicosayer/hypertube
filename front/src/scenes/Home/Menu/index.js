@@ -7,6 +7,8 @@ import Logout from './LogOut';
 
 import { changeLanguage } from '../../../actions/me'
 
+import { fetchWrap } from '../../../services/fetchWrap';
+
 import './style.css';
 
 const language = require('./language.json');
@@ -42,6 +44,21 @@ class Menu extends Component {
 		this.searchInput.current.value = '';
 	}
 
+	selectLanguage(language) {
+		fetchWrap('/home/changeLanguage', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify({
+				language
+			})
+		})
+		.then(torrentInfo => this.props.dispatch(changeLanguage(language)))
+		.catch(err => console.log(err))
+	}
+
 	render() {
 
 		return(
@@ -58,13 +75,13 @@ class Menu extends Component {
 					<span className='floatRight'>
 						<span className='menuProfile'>
 							<span className='menuLanguage'>
-								<span className={this.props.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'en' ? () => (this.props.dispatch(changeLanguage('en'))) : null}>en</span>
+								<span className={this.props.me.language === 'en' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'en' ? () => (this.selectLanguage('en')) : null}>en</span>
 								<span className='fontGrey spaceLeft spaceRight'>|</span>
-								<span className={this.props.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.language !== 'fr' ? () => (this.props.dispatch(changeLanguage('fr'))) : null}>fr</span>
+								<span className={this.props.me.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'fr' ? () => (this.selectLanguage('fr')) : null}>fr</span>
 							</span>
 							<span onClick={this.emptySearch}>
 								<Link to='/profile'>
-									{language.profileLink[this.props.language]}
+									{language.profileLink[this.props.me.language]}
 								</Link>
 							</span>
 							<span className='fontGrey spaceLeft spaceRight'>|</span>
@@ -72,12 +89,12 @@ class Menu extends Component {
 						</span>
 					</span>
 					<span className='menuType'>
-						<Link to='/'><span className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}>{language.moviesSectionLink[this.props.language]}</span></Link>
+						<Link to='/'><span className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey' : null}>{language.moviesSectionLink[this.props.me.language]}</span></Link>
 						<span className='fontGrey spaceLeft spaceRight'>|</span>
-						<Link to='/tv'><span className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}>{language.tvSectionLink[this.props.language]}</span></Link>
+						<Link to='/tv'><span className={this.props.location.pathname.substring(0, 3) === '/tv' ? null : 'fontGrey'}>{language.tvSectionLink[this.props.me.language]}</span></Link>
 					</span>
 					<span className='magnifyingGlassLogo'><i className='fas fa-search'></i></span>
-					<input className='menuSearch spaceLeft' placeholder={language.quickSearchLabel[this.props.language]} type='text' onChange={event => this.search(event)} onKeyDown={event => this.handleKeyDown(event)} ref={this.searchInput} />
+					<input className='menuSearch spaceLeft' placeholder={language.quickSearchLabel[this.props.me.language]} type='text' onChange={event => this.search(event)} onKeyDown={event => this.handleKeyDown(event)} ref={this.searchInput} />
 				</div>
 
 			</div>
@@ -86,9 +103,9 @@ class Menu extends Component {
 }
 
 function mapStateToProps(state) {
-	const { language } = state.handleMe;
+	const { me } = state.handleMe;
 	return ({
-		language
+		me
 	})
 }
 

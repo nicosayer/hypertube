@@ -268,17 +268,17 @@ class Search extends Component {
 					>
 					<div className='searchMenu'>
 						<div className='fontRight spaceRight spaceTop fontGrey'><i className="fas fa-bars"></i></div>
-						<div className='spaceLeft spaceRight spaceBottom fontLeft spaceTop'>
-							{language.orderByLabel[this.props.language]}
+						<div className='searchTitle'>
+							{language.orderByLabel[this.props.me.language]}
 						</div>
 
-						<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.language]}</div>
-						<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.language]}</div>
-						<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.language]}</div>
-						<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.language]}</div>
-						<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.language]}</div>
-						<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
-							{language.genreLabel[this.props.language]}
+						<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.me.language]}</div>
+						<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.me.language]}</div>
+						<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.me.language]}</div>
+						<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
+						<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
+						<div className='searchTitle searchTitleLign'>
+							{language.genreLabel[this.props.me.language]}
 						</div>
 						<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
 						{
@@ -291,8 +291,8 @@ class Search extends Component {
 								<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
 							)
 						}
-						<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
-							{language.releaseYearLabel[this.props.language]}
+						<div className='searchTitle searchTitleLign'>
+							{language.releaseYearLabel[this.props.me.language]}
 						</div>
 						<input
 							name='release_date_min'
@@ -309,8 +309,8 @@ class Search extends Component {
 							className='searchRange spaceLeft fontCenter'
 							onChange={(event) => this.discover('release_date_max', event.target.value)}
 							/>
-						<div className='spaceLeft spaceRight spaceBottom fontLeft lignTop'>
-							{language.ratingLabel[this.props.language]}
+						<div className='searchTitle searchTitleLign'>
+							{language.ratingLabel[this.props.me.language]}
 						</div>
 						<input
 							name='ratings_min'
@@ -342,7 +342,7 @@ class Search extends Component {
 								<div className='noMovies'>
 									<i className='fas fa-map-signs'></i>
 								</div>
-								{language.quickSearchUnavailable[this.props.language]}
+								{language.quickSearchUnavailable[this.props.me.language]}
 							</div>
 						}
 					</div>
@@ -354,9 +354,9 @@ class Search extends Component {
 
 
 function mapStateToProps(state) {
-	const { language } = state.handleMe;
+	const { me } = state.handleMe;
 	return ({
-		language
+		me
 	})
 }
 

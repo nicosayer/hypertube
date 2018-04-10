@@ -41,6 +41,7 @@ app.use('/connect/login/oauth/Google', require('./routes/connect/login/oauth/Goo
 app.use('/connect/signup', require('./routes/connect/signup'));
 
 app.use('/home', require('./routes/home'));
+app.use('/home/changeLanguage', require('./routes/home/changeLanguage'));
 
 app.use('/home/logout', require('./routes/home/logout'));
 

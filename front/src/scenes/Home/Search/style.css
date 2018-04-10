@@ -46,6 +46,33 @@
 	margin-left: 230px;
 }
 
+.searchTitle {
+	margin: 10px;
+	text-align: left;
+}
+
+.searchTitleLign {
+	padding-top: 10px;
+	border-top: 1px solid black;
+}
+
+@media only screen and (max-height: 950px) {
+	.searchTitle {
+		margin: 5px 0 5px 10px;
+		text-align: left;
+	}
+
+	.searchChoice, .searchChoiceActive, .searchRange, .searchRange:focus {
+		margin: 0;
+	}
+}
+
+@media only screen and (max-height: 850px) {
+	.searchMenu {
+		font-size: 90%;
+	}
+}
+
 .searchChoice {
 	cursor: pointer;
 	padding: 5px;
@@ -78,6 +105,29 @@
 	position: relative;
 	margin: 15px;
 	display: inline-block;
+}
+
+@media only screen and (max-width: 1550px) {
+	.movie, .movieTitle, .movieImg {
+		width: 150px !important;
+		height: 225px !important;
+	}
+
+	.searchMovies {
+		margin-left: calc((100vw - (100vw - 150px)) / 2);
+		width: calc(100vw - 150px);
+		transition: 0.35s margin-left;
+	}
+
+	.searchMenu {
+		width: 150px !important;
+		left: -100px;
+		font-size: 90%;
+	}
+
+	.searchMenu:hover + .searchMovies{
+		margin-left: 150px;
+	}
 }
 
 .movieTitle {

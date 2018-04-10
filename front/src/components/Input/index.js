@@ -57,7 +57,6 @@ class Input extends React.Component {
 			const name = event.target.name;
 			if (this.props.trimOnBlur) {
 				event.target.value = event.target.value.trim();
-				console.log('[' + this.input.value +']');
 			}
 			if (this.props.validation) {
 				this.validation(name, event.target.value);
