@@ -122,7 +122,7 @@ class Movies extends Component {
 						<div className='inline spaceLeft'>{this.state.movieInfo.release_date ? '(' + this.state.movieInfo.release_date.substring(0, 4) + ')' : this.state.movieInfo.first_air_date ? '(' + this.state.movieInfo.first_air_date.substring(0, 4) + ')' : null}</div>
 						<div className='fontMedium'><i>{this.state.movieInfo.tagline ? this.state.movieInfo.tagline : null}</i></div>
 						<div className='spaceTop'>
-							{this.state.movieInfo.runtime ? Math.trunc(this.state.movieInfo.runtime / 60) + 'h' + this.state.movieInfo.runtime % 60 : this.state.movieInfo.number_of_seasons ? <span>{this.state.movieInfo.number_of_seasons} season{this.state.movieInfo.number_of_seasons > 1 ? 's' : null}</span> : null}
+							{this.state.movieInfo.runtime ? Math.trunc(this.state.movieInfo.runtime / 60) + 'h' + this.state.movieInfo.runtime % 60 : this.state.movieInfo.number_of_seasons ? <span>{this.state.movieInfo.number_of_seasons} {language.season[this.props.me.language]}{this.state.movieInfo.number_of_seasons > 1 ? 's' : null}</span> : null}
 							{(this.state.movieInfo.runtime || this.state.movieInfo.number_of_seasons) && this.state.movieInfo.vote_average ? <span className='fontGrey'> | </span> : null}
 							{this.state.movieInfo.vote_average ? <span>{this.state.movieInfo.vote_average} <i className='fas fa-star'></i></span> : null}
 						</div>

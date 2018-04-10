@@ -1,4 +1,8 @@
 {
+	"season" : {
+		"en": "season",
+		"fr": "saison"
+	},
 	"overviewLabel": {
 		"en": "Overview :",
 		"fr": "Résumé en anglais :"

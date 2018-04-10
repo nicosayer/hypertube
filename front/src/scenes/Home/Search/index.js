@@ -267,7 +267,9 @@ class Search extends Component {
 					useWindow={false}
 					>
 					<div className='searchMenu'>
+
 						<div className='fontRight spaceRight spaceTop fontGrey'><i className="fas fa-bars"></i></div>
+						<div className='searchMenuContent'>
 						<div className='searchTitle'>
 							{language.orderByLabel[this.props.me.language]}
 						</div>
@@ -327,6 +329,7 @@ class Search extends Component {
 							className='searchRange spaceLeft fontCenter'
 							onChange={(event) => this.discover('ratings_max', event.target.value)}
 							/>
+						</div>
 					</div>
 					<div className='searchMovies'>
 						{
