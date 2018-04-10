@@ -95,20 +95,48 @@ class Movies extends Component {
 
 	render() {
 
-		console.log(this.state);
-
 		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes ? this.state.torrentInfo.episodes.filter(episode => episode.season === this.state.seasonNumber).sort((a, b) => a.episode - b.episode) : null;
 
 		const movieLinks =
-		this.state.torrentInfo && this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents ?
-		this.state.torrentInfo.data.movies[0].torrents.map((torrent, key) => {
-			if (torrent.seeds >= 0 && torrent.quality !== '3D') {
-				return <div key={key} className='torrentQualityButton' onClick={() => (this.selectEpisode('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'))}>{torrent.quality}<br/>{torrent.size}</div>
-			}
-			return null;
-		})
+		this.state.torrentInfo && this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents
+		?
+		this.state.torrentInfo.data.movies[0].torrents
+		.filter(torrent => torrent.seeds >= 0 && torrent.quality !== '3D')
+		.map((torrent, key) =>
+		<div key={key} className='torrentQualityButton' onClick={() => (this.selectEpisode('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'))}>
+			{torrent.quality}
+			<br/>
+			{torrent.size}
+		</div>)
 		:
 		null;
+
+		const seasonsPictures =
+		this.state.movieInfo.seasons
+		?
+		this.state.movieInfo.seasons
+		.filter(season => season.poster_path && season.season_number)
+		.map((season, key) =>
+		<div key={key} className='movie pointer' onClick={() => this.selectSeason(season.season_number)}>
+			<div className='movieTitle'>
+				<div>
+					<div className='fontMedium underline'>
+						{season.name ? <b>{season.name}</b> : null}
+					</div>
+					<div>
+						{ season.air_date ? <b>({season.air_date.substring(0, 4)})</b> : null }
+					</div>
+					<div className='spaceTop'>
+						{ season.episode_count ? season.episode_count + ' episodes' : null }
+					</div>
+				</div>
+			</div>
+			<img className='movieImg' alt={season.title} src={'https://image.tmdb.org/t/p/w500' + season.poster_path} />
+		</div>)
+		:
+		null;
+
+		console.log(seasonsPictures)
 
 		return(
 			<div className='main'>
@@ -209,27 +237,10 @@ class Movies extends Component {
 							}
 							{
 								this.props.canal === 'tv' ?
-								this.state.movieInfo.seasons.map((season, key) => {
-									if (season.poster_path && season.season_number) {
-										return <div key={key} className='movie pointer' onClick={() => this.selectSeason(season.season_number)}>
-											<div className='movieTitle'>
-												<div>
-													<div className='fontMedium underline'>
-														{season.name ? <b>{season.name}</b> : null}
-													</div>
-													<div>
-														{ season.air_date ? <b>({season.air_date.substring(0, 4)})</b> : null }
-													</div>
-													<div className='spaceTop'>
-														{ season.episode_count ? season.episode_count + ' episodes' : null }
-													</div>
-												</div>
-											</div>
-											<img className='movieImg' alt={season.title} src={'https://image.tmdb.org/t/p/w500' + season.poster_path} />
-										</div>
-									}
-									return null;
-								})
+								seasonsPictures.length ?
+								seasonsPictures
+								:
+								<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.seasonUnavailable[this.props.me.language]}</div>
 								:
 								null
 							}
