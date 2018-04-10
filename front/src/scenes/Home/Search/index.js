@@ -67,7 +67,7 @@ class Search extends Component {
 	}
 
 	determineTypeOfSearch() {
-		if (this.state.loading || this.state.scrolling) {
+		if (this.state.page && (this.state.loading || this.state.scrolling)) {
 			var endPoint;
 			if (this.state.search) {
 				if (this.props.canal === 'tv'){
@@ -120,7 +120,7 @@ class Search extends Component {
 					this.setState({
 						result,
 						loading: false,
-						scrolling: false,
+						scrolling: page < 3 ? true : false,
 						page,
 						orderBy,
 						release_date_min,
@@ -128,6 +128,10 @@ class Search extends Component {
 						ratings_min,
 						ratings_max,
 						genres,
+					}, () => {
+						if (this.state.page < 3) {
+							this.determineTypeOfSearch()
+						}
 					})
 				}
 			}
