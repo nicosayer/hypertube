@@ -117,9 +117,14 @@
 }
 
 @media only screen and (max-width: 1550px) {
-	.movie, .movieTitle, .movieImg {
+	.movie, .movieImg {
 		width: 150px !important;
 		height: 225px !important;
+	}
+
+	.movieTitle {
+		width: 140px !important;
+		height: 215px !important;
 	}
 
 	.searchMovies {

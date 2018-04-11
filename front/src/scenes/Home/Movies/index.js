@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
 import Player from '../../../components/Player';
 
@@ -20,11 +21,12 @@ class Movies extends Component {
 			torrentInfo: '',
 			loading: true
 		}
-		this.myDownloadLinks = React.createRef();
+		this.myDownloadAnchor = React.createRef();
 	}
 
 	componentDidMount() {
-		var endPointInfo, endPointCast, endPointTorrent;
+		this._isMounted = true;
+		var endPointInfo, endPointCast;
 		if (this.props.canal === 'tv') {
 			endPointInfo = 'https://api.themoviedb.org/3/tv/' + this.props.match.params.id + '?api_key=fc97ca1225d5b618b7a69f5a20a132d8';
 			endPointCast = 'https://api.themoviedb.org/3/tv/' + this.props.match.params.id + '/credits?api_key=fc97ca1225d5b618b7a69f5a20a132d8';
@@ -38,8 +40,7 @@ class Movies extends Component {
 			fetchWrap(endPointCast)
 			.then(movieCast => {
 				if (movieInfo.imdb_id && this.props.canal !== 'tv') {
-					endPointTorrent = 'https://yts.am/api/v2/list_movies.json?quality=720p,1080p&query_term=' + movieInfo.imdb_id;
-					fetchWrap(endPointTorrent)
+					fetchWrap('https://yts.am/api/v2/list_movies.json?quality=720p,1080p&query_term=' + movieInfo.imdb_id)
 					.then(torrentInfo => {
 						this.setState({
 							movieInfo,
@@ -50,7 +51,7 @@ class Movies extends Component {
 					})
 					.catch(err => this.setState({loading: false}))
 				}
-				else if (movieInfo.id){
+				else if (movieInfo.id) {
 					fetchWrap('https://api.themoviedb.org/3/tv/' + movieInfo.id + '/external_ids?api_key=fc97ca1225d5b618b7a69f5a20a132d8')
 					.then(externalIds => {
 						if (externalIds.imdb_id) {
@@ -76,14 +77,25 @@ class Movies extends Component {
 					})
 					.catch(err => this.setState({loading: false}))
 				}
+				else {
+					this.setState({
+						movieInfo,
+						movieCast,
+						loading: false
+					})
+				}
 			})
 			.catch(err => this.setState({loading: false}))
 		})
 		.catch(err => this.setState({loading: false}))
 	}
 
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
 	selectSeason(seasonNumber) {
-		this.myDownloadLinks.current.scrollIntoView({
+		this.myDownloadAnchor.current.scrollIntoView({
 			behavior: 'smooth',
 			block: 'start',
 			inline: 'start'
@@ -101,7 +113,14 @@ class Movies extends Component {
 
 	render() {
 
-		console.log(this.state)
+		if (!this.state.loading && !this.state.movieInfo) {
+			if (this.props.canal === 'tv') {
+				return <Redirect to='/tv' />
+			}
+			else {
+				return <Redirect to='/' />
+			}
+		}
 
 		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes ? this.state.torrentInfo.episodes.filter(episode => episode.season === this.state.seasonNumber).sort((a, b) => a.episode - b.episode) : null;
 
@@ -124,8 +143,8 @@ class Movies extends Component {
 		this.state.movieInfo.seasons
 		.filter(season => season.poster_path && season.season_number)
 		.map((season, key) =>
-		<div key={key} className='movie pointer' onClick={() => this.selectSeason(season.season_number)}>
-			<div className='movieTitle'>
+		<div key={key} className='seasonContainer pointer' onClick={() => this.selectSeason(season.season_number)}>
+			<div className='seasonTitle'>
 				<div>
 					<div className='fontMedium underline'>
 						{season.name ? <b>{season.name}</b> : null}
@@ -138,7 +157,7 @@ class Movies extends Component {
 					</div>
 				</div>
 			</div>
-			<img className='movieImg' alt={season.title} src={'https://image.tmdb.org/t/p/w500' + season.poster_path} />
+			<img className='seasonImg' alt={season.title} src={'https://image.tmdb.org/t/p/w500' + season.poster_path} />
 		</div>)
 		:
 		null;
@@ -170,8 +189,7 @@ class Movies extends Component {
 									this.state.movieInfo.number_of_seasons
 									?
 									<span>
-										{ this.state.movieInfo.number_of_seasons }
-										{ language.season[this.props.me.language] }
+										{ this.state.movieInfo.number_of_seasons } { language.season[this.props.me.language] }
 										{
 											this.state.movieInfo.number_of_seasons > 1
 											?
@@ -289,7 +307,8 @@ class Movies extends Component {
 							:
 							null
 						}
-						<div className='spaceTopBig spaceBottomBig' ref={this.myDownloadLinks}>
+						<div className='spaceBottomBig' ref={this.myDownloadAnchor}></div>
+						<div className='spaceTop spaceBottomBig'>
 							{
 								this.props.canal === 'movie'
 								?
@@ -366,7 +385,7 @@ class Movies extends Component {
 										null
 									}
 									{
-										seasonsPictures.length ?
+										seasonsPictures && seasonsPictures.length ?
 										seasonsPictures
 										:
 										<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.seasonUnavailable[this.props.me.language]}</div>

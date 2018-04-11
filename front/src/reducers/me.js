@@ -10,6 +10,15 @@ export function handleMe(
 			language: 'en'
 		},
 		isAuthenticated: false,
+		searchSettings: {
+			search: '',
+			orderBy: 'popularity.desc',
+			release_date_min: 1900,
+			release_date_max: 2018,
+			ratings_min: 0,
+			ratings_max: 10,
+			genres: []
+		}
 	},
 	action
 ) {
