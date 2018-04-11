@@ -308,8 +308,7 @@ class Search extends Component {
 					useWindow={false}
 					>
 					<div className='searchMenu'>
-
-						<div className='fontRight spaceRight spaceTop fontGrey'><i className="fas fa-bars"></i></div>
+						<i className="fas fa-bars"></i>
 						<div className='searchMenuContent'>
 							<div className='searchTitle'>
 								{language.orderByLabel[this.props.me.language]}

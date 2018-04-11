@@ -1,7 +1,8 @@
 import {
 	SAVE_ME,
 	UPDATE_ME,
-	CHANGE_LANGUAGE
+	CHANGE_LANGUAGE,
+	CHANGE_SEARCH_SETTINGS
 } from '../actions/me'
 
 export function handleMe(
@@ -39,9 +40,17 @@ export function handleMe(
 
 		case CHANGE_LANGUAGE:
 		return Object.assign({}, state, {
-			me: {
+			searchSettings: {
 				...state.me,
 				language: action.language
+			}
+		})
+
+		case CHANGE_SEARCH_SETTINGS:
+		return Object.assign({}, state, {
+			searchSettings: {
+				...state.searchSettings,
+				[action.name]: action.value
 			}
 		})
 
