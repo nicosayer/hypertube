@@ -1,21 +1,78 @@
 {
-	"28": "Action",
-	"12": "Adventure",
-	"16": "Animation",
-	"35": "Comedy",
-	"80": "Crime",
-	"99": "Documentary",
-	"18": "Drama",
-	"10751": "Family",
-	"14": "Fantasy",
-	"36": "History",
-	"27": "Horror",
-	"10402": "Music",
-	"9648": "Mystery",
-	"10749": "Romance",
-	"878": "Science Fiction",
-	"10770": "TV Movie",
-	"53": "Thriller",
-	"10752": "War",
-	"37": "Western"
+	"28": {
+		"en": "Action",
+		"fr": "Action"
+	},
+	"12": {
+		"en": "Adventure",
+		"fr": "Aventure"
+	},
+	"16": {
+		"en": "Animation",
+		"fr": "Animation"
+	},
+	"35": {
+		"en": "Comedy",
+		"fr": "Comedie"
+	},
+	"80": {
+		"en": "Crime",
+		"fr": "Crime"
+	},
+	"99": {
+		"en": "Documentary",
+		"fr": "Documentaire"
+	},
+	"18": {
+		"en": "Drama",
+		"fr": "Drame"
+	},
+	"10751": {
+		"en": "Family",
+		"fr": "Famille"
+	},
+	"14": {
+		"en": "Fantasy",
+		"fr": "Fantastique"
+	},
+	"36": {
+		"en": "History",
+		"fr": "Histoire"
+	},
+	"27": {
+		"en": "Horror",
+		"fr": "Horreur"
+	},
+	"10402": {
+		"en": "Music",
+		"fr": "Musique"
+	},
+	"9648": {
+		"en": "Mystery",
+		"fr": "Mystère"
+	},
+	"10749": {
+		"en": "Romance",
+		"fr": "Romantique"
+	},
+	"878": {
+		"en": "Science Fiction",
+		"fr": "Science Fiction"
+	},
+	"10770": {
+		"en": "TV Movie",
+		"fr": "TV"
+	},
+	"53": {
+		"en": "Thriller",
+		"fr": "Thriller"
+	},
+	"10752": {
+		"en": "War",
+		"fr": "Guerre"
+	},
+	"37": {
+		"en": "Western",
+		"fr": "Western"
+	}
 }

@@ -101,6 +101,8 @@ class Movies extends Component {
 
 	render() {
 
+		console.log(this.state)
+
 		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes ? this.state.torrentInfo.episodes.filter(episode => episode.season === this.state.seasonNumber).sort((a, b) => a.episode - b.episode) : null;
 
 		const movieLinks =
@@ -210,7 +212,7 @@ class Movies extends Component {
 								:
 								null
 							}
-							{ (this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path) || (this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path)
+							{ (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path) || (this.state.movieCast.crew && this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path)
 								?
 								<div className='spaceBottom spaceTopBig'>
 									<b>{language.crewLabel[this.props.me.language]}</b>
@@ -219,7 +221,7 @@ class Movies extends Component {
 								null
 							}
 							{
-								this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path
+								this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path
 								?
 								<div className='castContainer'>
 									<div className='castImgText'>{this.state.movieInfo.production_companies[0].name}</div>
@@ -229,7 +231,7 @@ class Movies extends Component {
 								null
 							}
 							{
-								this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path
+								this.state.movieCast.crew && this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path
 								?
 								<div className='castContainer'>
 									<div className='castImgText'>{this.state.movieCast.crew[0].name}</div>
@@ -239,40 +241,42 @@ class Movies extends Component {
 								null
 							}
 							{
-								(this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path) || (this.state.movieCast.cast[1] && this.state.movieCast.cast[1].profile_path) || (this.state.movieCast.cast[2] && this.state.movieCast.cast[2].profile_path)
+								this.state.movieCast.cast && ((this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path) || (this.state.movieCast.cast[1] && this.state.movieCast.cast[1].profile_path) || (this.state.movieCast.cast[2] && this.state.movieCast.cast[2].profile_path))
 								?
-								<div className='spaceBottom spaceTopBig'>
-									<b>{language.castLabel[this.props.me.language]}</b>
-								</div>
-								:
-								null
-							}
-							{
-								this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path
-								?
-								<div className='castContainer'>
-									<div className='castImgText'>{this.state.movieCast.cast[0].name}</div>
-									<img className='castImg' alt={this.state.movieCast.cast[0].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[0].profile_path} />
-								</div>
-								:
-								null
-							}
-							{
-								this.state.movieCast.cast[1] && this.state.movieCast.cast[1].profile_path
-								?
-								<div className='castContainer'>
-									<div className='castImgText'>{this.state.movieCast.cast[1].name}</div>
-									<img className='castImg' alt={this.state.movieCast.cast[1].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[1].profile_path} />
-								</div>
-								:
-								null
-							}
-							{
-								this.state.movieCast.cast[2] && this.state.movieCast.cast[2].profile_path
-								?
-								<div className='castContainer'>
-									<div className='castImgText'>{this.state.movieCast.cast[2].name}</div>
-									<img className='castImg' alt={this.state.movieCast.cast[2].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[2].profile_path} />
+								<div>
+									<div className='spaceBottom spaceTopBig'>
+										<b>{language.castLabel[this.props.me.language]}</b>
+									</div>
+									{
+										this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path
+										?
+										<div className='castContainer'>
+											<div className='castImgText'>{this.state.movieCast.cast[0].name}</div>
+											<img className='castImg' alt={this.state.movieCast.cast[0].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[0].profile_path} />
+										</div>
+										:
+										null
+									}
+									{
+										this.state.movieCast.cast[1] && this.state.movieCast.cast[1].profile_path
+										?
+										<div className='castContainer'>
+											<div className='castImgText'>{this.state.movieCast.cast[1].name}</div>
+											<img className='castImg' alt={this.state.movieCast.cast[1].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[1].profile_path} />
+										</div>
+										:
+										null
+									}
+									{
+										this.state.movieCast.cast[2] && this.state.movieCast.cast[2].profile_path
+										?
+										<div className='castContainer'>
+											<div className='castImgText'>{this.state.movieCast.cast[2].name}</div>
+											<img className='castImg' alt={this.state.movieCast.cast[2].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.cast[2].profile_path} />
+										</div>
+										:
+										null
+									}
 								</div>
 								:
 								null
@@ -333,12 +337,12 @@ class Movies extends Component {
 														</td>
 														<td>
 															<div className='linksContainer'>
-															{
-																Object.keys(episode.torrents).filter(torrent => torrent !== '0').map((torrent, key) =>
-																<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url)}>
-																	{torrent}
-																</span>)
-															}
+																{
+																	Object.keys(episode.torrents).filter(torrent => torrent !== '0').map((torrent, key) =>
+																	<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url)}>
+																		{torrent}
+																	</span>)
+																}
 															</div>
 														</td>
 													</tr>)

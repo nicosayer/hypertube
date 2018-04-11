@@ -9,8 +9,6 @@ import './style.css';
 
 const genresMovies = require('./genresMovies.json');
 const genresTV = require('./genresTV.json');
-const genresMoviesList = require('./genresMoviesList.json');
-const genresTVList = require('./genresTVList.json');
 const language = require('./language.json');
 
 class Search extends Component {
@@ -81,7 +79,7 @@ class Search extends Component {
 				endPoint = 'https://api.themoviedb.org/3/discover/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&first_air_date.gte=' + this.state.release_date_min + '&vote_count.gte=100&first_air_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&page=' + this.state.page + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
 			}
 			else {
-				endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&page=' + this.state.page + '&vote_count.gte=2000&primary_release_date.gte=' + this.state.release_date_min + '&primary_release_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
+				endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&page=' + this.state.page + '&vote_count.gte=600&primary_release_date.gte=' + this.state.release_date_min + '&primary_release_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
 			}
 			this.search(endPoint);
 		}
@@ -222,7 +220,7 @@ class Search extends Component {
 								{ item.first_air_date ? <b>({item.first_air_date.substring(0, 4)})</b> : null }
 							</div>
 							<div className='spaceTop'>
-								{ item.genre_ids ? item.genre_ids.map(id => ' ' + genresTV[id]): null }
+								{ item.genre_ids ? item.genre_ids.filter(id => genresTV[id]).map(id => ' ' + genresTV[id][this.props.me.language]): null }
 							</div>
 							<div className='spaceTop'>
 								{ item.vote_average ? <span>{item.vote_average} <i className='fas fa-star'></i></span> : null}
@@ -249,7 +247,7 @@ class Search extends Component {
 								{ item.release_date ? <b>({item.release_date.substring(0, 4)})</b> : null }
 							</div>
 							<div className='spaceTop'>
-								{ item.genre_ids ? item.genre_ids.map(id => ' ' + genresMovies[id]): null }
+								{ item.genre_ids ? item.genre_ids.filter(id => genresMovies[id]).map(id => ' ' + genresMovies[id][this.props.me.language]): null }
 							</div>
 							<div className='spaceTop'>
 								{ item.vote_average ? <span>{item.vote_average} <i className='fas fa-star'></i></span> : null}
@@ -289,12 +287,12 @@ class Search extends Component {
 						<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
 						{
 							this.props.canal === 'tv' ?
-							genresTVList.map(elem =>
-								<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
+							Object.keys(genresTV).sort((a, b) => genresTV[a][this.props.me.language].localeCompare(genresTV[b][this.props.me.language])).map(elem =>
+								<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresTV[elem][this.props.me.language]}</div>
 							)
 							:
-							genresMoviesList.map(elem =>
-								<div key={elem.id} className={this.state.genres.includes(elem.id) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem.id)}>{elem.name}</div>
+							Object.keys(genresMovies).sort((a, b) => genresMovies[a][this.props.me.language].localeCompare(genresMovies[b][this.props.me.language])).map(elem =>
+								<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresMovies[elem][this.props.me.language]}</div>
 							)
 						}
 						<div className='searchTitle searchTitleLign'>
