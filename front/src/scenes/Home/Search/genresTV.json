@@ -1,18 +1,66 @@
 {
-	"10759": "Action & Adventure",
-	"16": "Animation",
-	"35": "Comedy",
-	"80": "Crime",
-	"99": "Documentary",
-	"18": "Drama",
-	"10751": "Family",
-	"10762": "Kids",
-	"9648": "Mystery",
-	"10763": "News",
-	"10764": "Reality",
-	"10765": "Sci-Fi & Fantasy",
-	"10766": "Soap",
-	"10767": "Talk",
-	"10768": "War & Politics",
-	"37": "Western"
+	"10759": {
+		"en": "Action & Adventure",
+		"fr": "Action & Aventure"
+	},
+	"16": {
+		"en": "Animation",
+		"fr": "Animation"
+	},
+	"35": {
+		"en": "Comedy",
+		"fr": "Comedie"
+	},
+	"80": {
+		"en": "Crime",
+		"fr": "Crime"
+	},
+	"99": {
+		"en": "Documentary",
+		"fr": "Documentaire"
+	},
+	"18": {
+		"en": "Drama",
+		"fr": "Drame"
+	},
+	"10751": {
+		"en": "Family",
+		"fr": "Famille"
+	},
+	"10762": {
+		"en": "Kids",
+		"fr": "Enfants"
+	},
+	"9648": {
+		"en": "Mystery",
+		"fr": "Mystère"
+	},
+	"10763": {
+		"en": "News",
+		"fr": "Informations"
+	},
+	"10764": {
+		"en": "Reality",
+		"fr": "TV Realité"
+	},
+	"10765": {
+		"en": "Sci-Fi & Fantasy",
+		"fr": "Sci-Fi & Fantastique"
+	},
+	"10766": {
+		"en": "Soap",
+		"fr": "Feuilleton"
+	},
+	"10767": {
+		"en": "Talk",
+		"fr": "Emission"
+	},
+	"10768": {
+		"en": "War & Politics",
+		"fr": "Guerre & Politique"
+	},
+	"37": {
+		"en": "Western",
+		"fr": "Western"
+	}
 }
