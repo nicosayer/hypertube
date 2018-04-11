@@ -300,13 +300,7 @@ class Movies extends Component {
 								null
 							}
 						</div>
-						{
-							this.state.episodeNumber
-							?
-							<Player magnet={this.state.episodeNumber} />
-							:
-							null
-						}
+						<Player magnet={this.state.episodeNumber} />
 						<div className='spaceBottomBig' ref={this.myDownloadAnchor}></div>
 						<div className='spaceTop spaceBottomBig'>
 							{

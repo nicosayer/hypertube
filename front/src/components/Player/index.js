@@ -12,28 +12,49 @@ class Player extends Component {
 		this.state = {
 			video: false,
 			time: 0,
-			subtitles: ''
+			subtitles: '',
+			magnet: ''
 		}
 	}
 
-	componentDidMount() {
-		const time = Date.now()
-		fetchWrap('/sub/' + this.props.magnet, {credentials: 'include'})
-		.then((data) => {
-			console.log(data)
-			this.setState({ subtitles: data.sub }, () => {
-				console.log(this.state);
+	static getDerivedStateFromProps(nextProps, prevState) {
+		console.log(nextProps.magnet)
+		console.log(prevState.magnet)
+		if (nextProps.magnet !== prevState.magnet) {
+			console.log('update')
+			return {
+				magnet: nextProps.magnet,
+				video: false
+			};
+		}
+		else {
+			return null;
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		console.log('hello')
+		if (prevState.magnet !== this.state.magnet) {
+			console.log('hello')
+			console.log(this.state.magnet)
+			const time = Date.now()
+			fetchWrap('/sub/' + this.state.magnet, {credentials: 'include'})
+			.then((data) => {
+				console.log(data)
+				this.setState({ subtitles: data.sub }, () => {
+					console.log(this.state);
+				})
 			})
-		})
-		.catch(error => console.log(error))
-		fetchWrap('/video/' + this.props.magnet + '/' + time + 'first', {credentials: 'include'})
-		.then((data) => {
-			console.log(data)
-			this.setState({ video: true, time: time, url: data.url }, () => {
-				console.log(this.state);
+			.catch(error => console.log(error))
+			fetchWrap('/video/' + this.state.magnet + '/' + time + 'first', {credentials: 'include'})
+			.then((data) => {
+				console.log(data)
+				this.setState({ video: true, time: time, url: data.url }, () => {
+					console.log(this.state);
+				})
 			})
-		})
-		.catch(error => console.log(error))
+			.catch(error => console.log(error))
+		}
 	}
 
 	render() {
@@ -50,7 +71,7 @@ class Player extends Component {
 				{this.state.video && this.state.subtitles.length !== 0 && <ReactPlayer url={
 					this.state.url ?
 					this.state.url :
-					'http://localhost:3001/video/' + this.props.magnet + '/' + this.state.time
+					'http://localhost:3001/video/' + this.state.magnet + '/' + this.state.time
 				} 
 				width="1280px" 
 				height="720px" 
