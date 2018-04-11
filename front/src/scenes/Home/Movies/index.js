@@ -282,13 +282,9 @@ class Movies extends Component {
 								null
 							}
 						</div>
-						{
-							this.state.episodeNumber
-							?
+						
 							<Player magnet={this.state.episodeNumber} />
-							:
-							null
-						}
+							
 						<div className='spaceTopBig spaceBottomBig' ref={this.myDownloadLinks}>
 							{
 								this.props.canal === 'movie'
