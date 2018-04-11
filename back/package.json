@@ -23,10 +23,12 @@
     "ngrok": "^3.0.1",
     "node-cron": "^1.2.1",
     "nodemailer": "^4.6.4",
+    "opensubtitles-api": "^4.0.0",
     "peerflix": "^0.37.0",
     "randomstring": "^1.1.5",
     "socket.io": "^2.1.0",
     "socket.io-stream": "^0.9.1",
+    "srt-to-vtt": "^1.1.1",
     "torrent-search-api": "^1.1.0",
     "torrent-stream": "^1.0.4"
   }

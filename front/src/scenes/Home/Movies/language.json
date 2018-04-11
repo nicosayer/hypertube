@@ -1,11 +1,19 @@
 {
+	"season" : {
+		"en": "season",
+		"fr": "saison"
+	},
 	"overviewLabel": {
 		"en": "Overview :",
-		"fr": "Résumé en anglais :"
+		"fr": "Résumé (en anglais) :"
 	},
 	"castLabel": {
-		"en": "Cast & crew :",
-		"fr": "Equipe & acteurs :"
+		"en": "Cast :",
+		"fr": "Acteurs :"
+	},
+	"crewLabel": {
+		"en": "Crew :",
+		"fr": "Production :"
 	},
 	"availableInLabel": {
 		"en": "Available in :",
@@ -20,7 +28,7 @@
 		"fr": "Cette saison n'est pas encore disponible"
 	},
 	"movieUnavailable": {
-		"en": "We do not have this movie yet",
+		"en": "This movie isn't available yet",
 		"fr": "Ce film n'est pas encore disponible"
 	}
 }

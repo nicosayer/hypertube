@@ -12,11 +12,16 @@
 	overflow-y: scroll;
 }
 
+.searchMenuContent {
+	opacity: 0;
+	transition: opacity 0.35s;
+}
+
 ::-webkit-scrollbar {
 	width: 10px;
 }
 ::-webkit-scrollbar-thumb {
-	-webkit-border-radius: 3px;
+	-webkit-border-radius: 1px;
 	background: dimgray;
 }
 
@@ -34,6 +39,10 @@
 
 .searchMenu:hover {
 	left: 0;
+}
+
+.searchMenu:hover .searchMenuContent {
+	opacity: 1;
 }
 
 .searchMovies {
@@ -131,14 +140,15 @@
 }
 
 .movieTitle {
+	padding: 5px;
 	display:flex;
 	justify-content:center;
 	align-items:center;
 	opacity: 0;
 	background: rgba(0, 0, 0, 0.85);
 	text-align: center;
-	width: 230px;
-	height: 345px;
+	width: 220px;
+	height: 335px;
 	float: left;
 	position: absolute;
 	left: 0px;
@@ -150,7 +160,6 @@
 
 .movieTitle:hover {
 	opacity: 1;
-	object-fit: cover;
 }
 
 .movieImg {
