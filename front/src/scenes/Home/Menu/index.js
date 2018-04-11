@@ -80,7 +80,7 @@ class Menu extends Component {
 								<span className={this.props.me.language === 'fr' ? 'pointer' : 'fontGrey pointer'} onClick={this.props.me.language !== 'fr' ? () => (this.selectLanguage('fr')) : null}>fr</span>
 							</span>
 							<span className='menuLanguageAlt'>
-								<span className='pointer fontGrey' onClick={this.props.me.language !== 'en' ? () => (this.selectLanguage('en')) : () => (this.selectLanguage('fr'))}><i className='fas fa-globe'></i></span>
+								<span className='pointer fontGrey' onClick={this.props.me.language !== 'en' ? () => (this.selectLanguage('en')) : () => (this.selectLanguage('fr'))}><i className='fas fa-language'></i></span>
 								<span className='separator'></span>
 							</span>
 							<Link to='/profile'>

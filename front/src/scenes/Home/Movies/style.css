@@ -120,3 +120,42 @@
 	border-bottom: 1px solid #1A1D23;
 	width: 33%;
 }
+
+.seasonContainer {
+	width: 150px;
+	height: 225px;
+	position: relative;
+	margin: 10px;
+	display: inline-block;
+}
+
+.seasonTitle {
+	padding: 5px;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	opacity: 0;
+	background: rgba(0, 0, 0, 0.85);
+	text-align: center;
+	width: 140px;
+	height: 215px;
+	float: left;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 900;
+	transition: 0.25s opacity;
+	color: lightgrey;
+}
+
+.seasonTitle:hover {
+	opacity: 1;
+}
+
+.seasonImg {
+	box-shadow: 0 0 10px black;
+	width: 150px;
+	height: 225px;
+	object-fit: cover;
+	border-radius: 3px;
+}

@@ -205,60 +205,99 @@ class Search extends Component {
 	}
 
 	render() {
-		const movies = this.state.result.map((item, key) =>
+
+		const movies = this.state.result
+		.filter(elem => elem.poster_path)
+		.map((item, key) =>
 		this.props.canal === 'tv' ?
 		<Link key={key} to={'/tv/' + item.id}>
-			{
-				item.poster_path ?
-				<div className='movie'>
-					<div className='movieTitle'>
+			<div className='movie'>
+				<div className='movieTitle'>
+					<div>
+						<div className='fontMedium underline'>
+							{item.name ? <b>{item.name}</b> : null}
+						</div>
 						<div>
-							<div className='fontMedium underline'>
-								{item.name ? <b>{item.name}</b> : null}
-							</div>
-							<div>
-								{ item.first_air_date ? <b>({item.first_air_date.substring(0, 4)})</b> : null }
-							</div>
-							<div className='spaceTop'>
-								{ item.genre_ids ? item.genre_ids.filter(id => genresTV[id]).map(id => ' ' + genresTV[id][this.props.me.language]): null }
-							</div>
-							<div className='spaceTop'>
-								{ item.vote_average ? <span>{item.vote_average} <i className='fas fa-star'></i></span> : null}
-							</div>
+							{
+								item.first_air_date
+								?
+								<b>({item.first_air_date.substring(0, 4)})</b>
+								:
+								null
+							}
+						</div>
+						<div className='spaceTop'>
+							{
+								item.genre_ids
+								?
+								item.genre_ids
+								.filter(id => genresTV[id])
+								.map(id => ' ' + genresTV[id][this.props.me.language])
+								:
+								null
+							}
+						</div>
+						<div className='spaceTop'>
+							{
+								item.vote_average
+								?
+								<span>{item.vote_average} <i className='fas fa-star'></i></span>
+								:
+								null
+							}
 						</div>
 					</div>
-					<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
 				</div>
-				:
-				null
-			}
+				<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
+			</div>
 		</Link>
 		:
 		<Link key={key} to={'/' + item.id}>
-			{
-				item.poster_path ?
-				<div className='movie'>
-					<div className='movieTitle'>
+			<div className='movie'>
+				<div className='movieTitle'>
+					<div>
+						<div className='fontMedium underline'>
+							{
+								item.title
+								?
+								<b>{item.title}</b>
+								:
+								null
+							}
+						</div>
 						<div>
-							<div className='fontMedium underline'>
-								{item.title ? <b>{item.title}</b> : null}
-							</div>
-							<div>
-								{ item.release_date ? <b>({item.release_date.substring(0, 4)})</b> : null }
-							</div>
-							<div className='spaceTop'>
-								{ item.genre_ids ? item.genre_ids.filter(id => genresMovies[id]).map(id => ' ' + genresMovies[id][this.props.me.language]): null }
-							</div>
-							<div className='spaceTop'>
-								{ item.vote_average ? <span>{item.vote_average} <i className='fas fa-star'></i></span> : null}
-							</div>
+							{
+								item.release_date
+								?
+								<b>({item.release_date.substring(0, 4)})</b>
+								:
+								null
+							}
+						</div>
+						<div className='spaceTop'>
+							{
+								item.genre_ids
+								?
+								item.genre_ids
+								.filter(id => genresMovies[id])
+								.map(id => ' ' + genresMovies[id][this.props.me.language])
+								:
+								null
+							}
+						</div>
+						<div className='spaceTop'>
+							{
+								item.vote_average
+								?
+								<span>{item.vote_average} <i className='fas fa-star'></i></span>
+								:
+								null
+							}
 						</div>
 					</div>
-					<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
 				</div>
-				:
-				null
-			}
+				<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
+			</div>
 		</Link>)
 
 		return(
@@ -272,65 +311,69 @@ class Search extends Component {
 
 						<div className='fontRight spaceRight spaceTop fontGrey'><i className="fas fa-bars"></i></div>
 						<div className='searchMenuContent'>
-						<div className='searchTitle'>
-							{language.orderByLabel[this.props.me.language]}
-						</div>
+							<div className='searchTitle'>
+								{language.orderByLabel[this.props.me.language]}
+							</div>
 
-						<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.me.language]}</div>
-						<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.me.language]}</div>
-						<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.me.language]}</div>
-						<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
-						<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
-						<div className='searchTitle searchTitleLign'>
-							{language.genreLabel[this.props.me.language]}
-						</div>
-						<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
-						{
-							this.props.canal === 'tv' ?
-							Object.keys(genresTV).sort((a, b) => genresTV[a][this.props.me.language].localeCompare(genresTV[b][this.props.me.language])).map(elem =>
-								<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresTV[elem][this.props.me.language]}</div>
-							)
-							:
-							Object.keys(genresMovies).sort((a, b) => genresMovies[a][this.props.me.language].localeCompare(genresMovies[b][this.props.me.language])).map(elem =>
-								<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresMovies[elem][this.props.me.language]}</div>
-							)
-						}
-						<div className='searchTitle searchTitleLign'>
-							{language.releaseYearLabel[this.props.me.language]}
-						</div>
-						<input
-							name='release_date_min'
-							type='text'
-							placeholder='1900'
-							className='searchRange spaceRight fontCenter'
-							onChange={(event) => this.discover('release_date_min', event.target.value)}
-							/>
-						-
-						<input
-							name='release_date_max'
-							type='text'
-							placeholder={(new Date()).getFullYear()}
-							className='searchRange spaceLeft fontCenter'
-							onChange={(event) => this.discover('release_date_max', event.target.value)}
-							/>
-						<div className='searchTitle searchTitleLign'>
-							{language.ratingLabel[this.props.me.language]}
-						</div>
-						<input
-							name='ratings_min'
-							type='text'
-							placeholder='0'
-							className='searchRange spaceRight fontCenter'
-							onChange={(event) => this.discover('ratings_min', event.target.value)}
-							/>
-						-
-						<input
-							name='ratings_max'
-							type='text'
-							placeholder='10'
-							className='searchRange spaceLeft fontCenter'
-							onChange={(event) => this.discover('ratings_max', event.target.value)}
-							/>
+							<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.me.language]}</div>
+							<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.me.language]}</div>
+							<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.me.language]}</div>
+							<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
+							<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
+							<div className='searchTitle searchTitleLign'>
+								{language.genreLabel[this.props.me.language]}
+							</div>
+							<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
+							{
+								this.props.canal === 'tv' ?
+								Object.keys(genresTV)
+								.sort((a, b) => genresTV[a][this.props.me.language].localeCompare(genresTV[b][this.props.me.language]))
+								.map(elem =>
+									<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresTV[elem][this.props.me.language]}</div>
+								)
+								:
+								Object.keys(genresMovies)
+								.sort((a, b) => genresMovies[a][this.props.me.language].localeCompare(genresMovies[b][this.props.me.language]))
+								.map(elem =>
+									<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresMovies[elem][this.props.me.language]}</div>
+								)
+							}
+							<div className='searchTitle searchTitleLign'>
+								{language.releaseYearLabel[this.props.me.language]}
+							</div>
+							<input
+								name='release_date_min'
+								type='text'
+								placeholder='1900'
+								className='searchRange spaceRight fontCenter'
+								onChange={(event) => this.discover('release_date_min', event.target.value)}
+								/>
+							-
+							<input
+								name='release_date_max'
+								type='text'
+								placeholder={(new Date()).getFullYear()}
+								className='searchRange spaceLeft fontCenter'
+								onChange={(event) => this.discover('release_date_max', event.target.value)}
+								/>
+							<div className='searchTitle searchTitleLign'>
+								{language.ratingLabel[this.props.me.language]}
+							</div>
+							<input
+								name='ratings_min'
+								type='text'
+								placeholder='0'
+								className='searchRange spaceRight fontCenter'
+								onChange={(event) => this.discover('ratings_min', event.target.value)}
+								/>
+							-
+							<input
+								name='ratings_max'
+								type='text'
+								placeholder='10'
+								className='searchRange spaceLeft fontCenter'
+								onChange={(event) => this.discover('ratings_max', event.target.value)}
+								/>
 						</div>
 					</div>
 					<div className='searchMovies'>
