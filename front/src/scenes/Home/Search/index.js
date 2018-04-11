@@ -308,7 +308,7 @@ class Search extends Component {
 					useWindow={false}
 					>
 					<div className='searchMenu'>
-						<i className="fas fa-bars"></i>
+						<div className='searchMenuLogoContainer'><i className="fas fa-bars"></i></div>
 						<div className='searchMenuContent'>
 							<div className='searchTitle'>
 								{language.orderByLabel[this.props.me.language]}

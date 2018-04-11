@@ -12,6 +12,12 @@
 	overflow-y: scroll;
 }
 
+.searchMenuLogoContainer {
+	text-align : right;
+	color: dimgray;
+	margin: 10px 10px 0 0;
+}
+
 .searchMenuContent {
 	opacity: 0;
 	transition: opacity 0.35s;
