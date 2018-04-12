@@ -5,7 +5,7 @@ var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
 var mongo = require('../../../mongo');
-var child_process = require('child_process')
+const m3u8stream = require('m3u8stream');
 
 const ngrok = require('ngrok');
 const ngrokConnect = ngrok.connect(3001)
@@ -19,7 +19,6 @@ ngrokConnect.then(data => {
 
 var user = {};
 var ext;
-var first = 1;
 
 router.get('/:magnet/:time', function(req, res, next) {
 
@@ -60,14 +59,22 @@ router.get('/:magnet/:time', function(req, res, next) {
 						res.status(201).json({url: null});
 					}
 					else if (ext === 'mkv') {
-						
-						// if (!fs.existsSync('public/movies/' + file.name) && fs.existsSync('public/movies/' + file.name.substring(0, file.name.length - 4))) {
-						// 	res.status(201).json({
-						// 		url: url + '/movies/' + file.name.substring(0, file.name.length - 4) + '/' + file.name.replace(".mkv", ".m3u8")
-						// 	});
-						// } else {
-							download_transcript(user[id], res);
-						// }
+
+						collection.findOne({path: file.path.split('/')[0]}, function(err, result) {
+							console.log(result);
+							if (result && result.downloaded) {
+								console.log("is downloaded");
+								fs.unlinkSync('public/movies/' + file.name);
+								
+								const m3u8name = file.name.replace(".mkv", ".m3u8");
+								res.statusCode = 206;
+								m3u8stream(url + '/movies/' + m3u8name + '/' + m3u8name).pipe(res);
+
+							} else {
+								console.log("is NOT downloaded")
+								download_transcript(user[id], res);
+							}
+						})
 					}
 				})
 			}
@@ -91,13 +98,14 @@ download_no_transcript = function(file, req, res) {
 	const range = req.headers.range
 	var parts;
 	
-	if (typeof range == 'undefined')
-		parts = [0, file.length-1]
-	else
-		parts = range.replace(/bytes=/, "").split("-")
+	if (typeof range == 'undefined') {
+		parts = [0, file.length-1];
+	} else {
+		parts = range.replace(/bytes=/, "").split("-");
+	}
 
-	const start = parseInt(parts[0], 10) > file.length? 0 : parseInt(parts[0], 10)
-	const end = parts[1] ? parseInt(parts[1], 10) : file.length-1
+	const start = parseInt(parts[0], 10) > file.length? 0 : parseInt(parts[0], 10);
+	const end = parts[1] ? parseInt(parts[1], 10) : file.length - 1;
 
 	var stream = file.createReadStream({start: start, end: end})
 
@@ -113,10 +121,14 @@ download_no_transcript = function(file, req, res) {
 
 download_transcript = function(file, res) {
 	var stream = file.createReadStream();
+	const db = mongo.getDb();
+	const collection = db.collection('movies');
+	var first = 1;
 
 	const folderName = file.name.substring(0, file.name.length - 4);
-	const fileName = file.name.replace(".mkv", ".m3u8");
-	const ngrokUrl = url + '/movies/' + fileName + '/' + fileName;
+	// const mp4name = file.name.replace(".mkv", ".mp4");
+	const m3u8name = file.name.replace(".mkv", ".m3u8");
+	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
 
 	ffmpeg(stream, { timeout: 432000 }).addOptions([
 	    '-profile:v baseline', // baseline profile (level 3.0) for H264 video codec
@@ -131,9 +143,13 @@ download_transcript = function(file, res) {
 	.on('start', () => {
 		console.log("started transcripting!");
 
-		if (!fs.existsSync('public/movies/' + fileName)) {
-			fs.mkdirSync('public/movies/' + fileName);
+		if (!fs.existsSync('public/movies/' + m3u8name)) {
+			fs.mkdirSync('public/movies/' + m3u8name);
 		}
+
+		// if (!fs.existsSync('public/movies/' + mp4name)) {
+		// 	fs.mkdirSync('public/movies/' + mp4name);
+		// }
 	})
 	.on('error', function(err, err1, err2) {
 		console.log(err);
@@ -141,17 +157,21 @@ download_transcript = function(file, res) {
 		console.log(err2);
     })
     .on('progress', function(progress) {
-    	console.log("transcripting...");
+    	console.log("Transcripting " + file.name);
 
-    	if (first && fs.existsSync('public/movies/' + fileName + '/' + fileName)) {
+    	if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
+			console.log("m3u8 Created.");
+			
 			first = 0;
-			console.log("m3u8 created");
 			res.status(201).json({url: ngrokUrl});
 		}
     })
-	.output('public/movies/' + fileName + '/' + fileName)
+	.output('public/movies/' + m3u8name + '/' + m3u8name)
+	// .output('public/movies/' + mp4name + '/' + mp4name)
 	.on('end', () => {
 		console.log('transcripting done!');
+
+		const path = file.path.split('/')
 		collection.update({path: path[0]}, {$set: {downloaded: true}}, {upsert: true});
 		fs.unlinkSync('public/movies/' + file.name);
 	})
@@ -159,3 +179,4 @@ download_transcript = function(file, res) {
 }
 
 module.exports = router;
+
