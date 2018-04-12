@@ -15,7 +15,8 @@ class Movies extends Component {
 		super(props)
 		this.state = {
 			seasonNumber: 0,
-			episodeNumber: '',
+			episodeNumber: 0,
+			magnet: '',
 			movieInfo: '',
 			movieCast: '',
 			torrentInfo: '',
@@ -105,9 +106,13 @@ class Movies extends Component {
 		});
 	}
 
-	selectEpisode(magnet) {
+	selectEpisode(magnet, episodeNumber) {
+		if (!episodeNumber) {
+			episodeNumber = 0;
+		}
 		this.setState({
-			episodeNumber: encodeURIComponent(magnet)
+			magnet: encodeURIComponent(magnet),
+			episodeNumber
 		})
 	}
 
@@ -303,7 +308,7 @@ class Movies extends Component {
 							}
 						</div>
 						<Player
-							magnet={this.state.episodeNumber}
+							magnet={this.state.magnet}
 							movieLanguage={
 								this.props.canal === 'tv'
 								?
@@ -318,7 +323,30 @@ class Movies extends Component {
 								this.state.movieInfo.spoken_languages[0].iso_639_1
 								:
 								null
-							}/>
+							}
+							canal={this.props.canal}
+							seasonNumber={
+								this.state.seasonNumber
+								?
+								this.state.seasonNumber
+								:
+								null
+							}
+							episodeNumber={
+								this.state.episodeNumber
+								?
+								this.state.episodeNumber
+								:
+								null
+							}
+							releaseYear={
+								this.state.movieInfo.release_date
+								?
+								this.state.movieInfo.release_date.substring(0, 4)
+								:
+								null
+							}
+							/>
 							<div className='spaceBottomBig' ref={this.myDownloadAnchor}></div>
 							<div className='spaceTop spaceBottomBig'>
 								{
@@ -374,7 +402,7 @@ class Movies extends Component {
 																<div className='linksContainer'>
 																	{
 																		Object.keys(episode.torrents).filter(torrent => torrent !== '0').map((torrent, key) =>
-																		<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url)}>
+																		<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url, episode.episode)}>
 																			{torrent}
 																		</span>)
 																	}

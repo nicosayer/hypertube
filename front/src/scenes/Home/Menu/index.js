@@ -54,7 +54,6 @@ class Menu extends Component {
 	}
 
 	render() {
-
 		return(
 			<div>
 				<div className='menuBar'>
@@ -98,11 +97,15 @@ class Menu extends Component {
 										'moviesSectionLink'
 									}
 									onClick={
-										this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv'
+										this.props.location.pathname !== '/profile' && this.props.location.pathname.substring(0, 3) !== '/tv'
 										?
-										() => this.props.dispatch(changeSearch(this.props.search))
-										:
+										/^\/[0-9]+\/*$/.test(this.props.location.pathname)
+										?
 										null
+										:
+										() => this.props.dispatch(changeSearch())
+										:
+										() => this.props.dispatch(changeSearch(this.props.search))
 									}>
 									{language.moviesSectionLink[this.props.me.language]}
 								</span>
@@ -124,7 +127,7 @@ class Menu extends Component {
 										?
 										null
 										:
-										() => this.props.dispatch(changeSearchSettings(null, null))
+										() => this.props.dispatch(changeSearch())
 										:
 										() => this.props.dispatch(changeSearch(this.props.search))
 									}>
@@ -136,7 +139,13 @@ class Menu extends Component {
 							<i className='fas fa-search'></i>
 						</span>
 						<input
-							value={this.props.search}
+							value={
+								this.props.search
+								?
+								this.props.search
+								:
+								''
+							}
 							className='menuSearch spaceLeft'
 							placeholder={language.quickSearchLabel[this.props.me.language]}
 							type='text' onChange={event => this.search(event)}
