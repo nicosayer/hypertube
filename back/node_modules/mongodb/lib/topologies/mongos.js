@@ -58,7 +58,8 @@ var legalOptionNames = [
   'promoteLongs',
   'promoteValues',
   'promoteBuffers',
-  'promiseLibrary'
+  'promiseLibrary',
+  'monitorCommands'
 ];
 
 /**
@@ -89,6 +90,7 @@ var legalOptionNames = [
  * @param {number} [options.socketOptions.connectTimeoutMS=0] TCP Connection timeout setting
  * @param {number} [options.socketOptions.socketTimeoutMS=0] TCP Socket timeout setting
  * @param {boolean} [options.domainsEnabled=false] Enable the wrapping of the callback in the current domain, disabled by default to avoid perf hit.
+ * @param {boolean} [options.monitorCommands=false] Enable command monitoring for this topology
  * @fires Mongos#connect
  * @fires Mongos#ha
  * @fires Mongos#joined
@@ -99,6 +101,9 @@ var legalOptionNames = [
  * @fires Mongos#error
  * @fires Mongos#timeout
  * @fires Mongos#parseError
+ * @fires Mongos#commandStarted
+ * @fires Mongos#commandSucceeded
+ * @fires Mongos#commandFailed
  * @property {string} parserType the parser type used (c++ or js).
  * @return {Mongos} a Mongos instance.
  */
@@ -149,7 +154,9 @@ class Mongos extends TopologyBase {
         cursorFactory: Cursor,
         reconnect: reconnect,
         emitError: typeof options.emitError === 'boolean' ? options.emitError : true,
-        size: typeof options.poolSize === 'number' ? options.poolSize : 5
+        size: typeof options.poolSize === 'number' ? options.poolSize : 5,
+        monitorCommands:
+          typeof options.monitorCommands === 'boolean' ? options.monitorCommands : false
       }
     );
 
@@ -300,7 +307,10 @@ class Mongos extends TopologyBase {
       'serverClosed',
       'topologyOpening',
       'topologyClosed',
-      'topologyDescriptionChanged'
+      'topologyDescriptionChanged',
+      'commandStarted',
+      'commandSucceeded',
+      'commandFailed'
     ];
     events.forEach(function(e) {
       self.s.coreTopology.removeAllListeners(e);
@@ -316,6 +326,9 @@ class Mongos extends TopologyBase {
     self.s.coreTopology.on('topologyOpening', relay('topologyOpening'));
     self.s.coreTopology.on('topologyClosed', relay('topologyClosed'));
     self.s.coreTopology.on('topologyDescriptionChanged', relay('topologyDescriptionChanged'));
+    self.s.coreTopology.on('commandStarted', relay('commandStarted'));
+    self.s.coreTopology.on('commandSucceeded', relay('commandSucceeded'));
+    self.s.coreTopology.on('commandFailed', relay('commandFailed'));
 
     // Set up listeners
     self.s.coreTopology.once('timeout', connectErrorHandler('timeout'));
@@ -440,6 +453,27 @@ define.classMethod('connections', { callback: false, promise: false, returns: [A
  * Mongos parseError event
  *
  * @event Mongos#parseError
+ * @type {object}
+ */
+
+/**
+ * An event emitted indicating a command was started, if command monitoring is enabled
+ *
+ * @event Mongos#commandStarted
+ * @type {object}
+ */
+
+/**
+ * An event emitted indicating a command succeeded, if command monitoring is enabled
+ *
+ * @event Mongos#commandSucceeded
+ * @type {object}
+ */
+
+/**
+ * An event emitted indicating a command failed, if command monitoring is enabled
+ *
+ * @event Mongos#commandFailed
  * @type {object}
  */
 

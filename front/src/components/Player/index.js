@@ -71,11 +71,11 @@ class Player extends Component {
 					this.state.url ?
 					this.state.url :
 					'http://localhost:3001/video/' + this.state.magnet + '/' + this.state.time
-				} 
-				width="1280px" 
-				height="720px" 
-				playing 
-				controls 
+				}
+				width="1280px"
+				height="720px"
+				playing
+				controls
 				config={config}
 				/>}
 			</div>
