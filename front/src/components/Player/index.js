@@ -12,16 +12,19 @@ class Player extends Component {
 		this.state = {
 			video: false,
 			time: 0,
-			subtitles: 'subDef.vtt',
-			magnet: ''
+			subtitles: [{language: 'en', file: 'subDef.vtt'}],
+			magnet: '',
+			movieLanguage: 'en'
 		}
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (nextProps.magnet !== prevState.magnet) {
-			console.log('update')
+			console.log('update', nextProps)
 			return {
 				magnet: nextProps.magnet,
+				movieLanguage: nextProps.movieLanguage,
+				subtitles: [{language: 'en', file: 'subDef.vtt'}],
 				video: false
 			};
 		}
@@ -34,14 +37,25 @@ class Player extends Component {
 		if (prevState.magnet !== this.state.magnet) {
 			const time = Date.now()
 
-			fetchWrap('/sub/' + this.state.magnet, {credentials: 'include'})
+			/*fetchWrap('/sub', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					magnet: this.state.magnet,
+					languageVideo: this.state.movieLanguage,
+					languageUser: this.props.me.language
+				})
+			})
 			.then((data) => {
-				console.log(data)
+				console.log('subs',data)
 				this.setState({ subtitles: data.sub }, () => {
 					console.log(this.state);
 				})
 			})
-			.catch(error => console.log(error))
+			.catch(error => console.log(error))*/
 			fetchWrap('/video/' + this.state.magnet + '/' + time + 'first', {credentials: 'include'})
 			.then((data) => {
 				console.log(data)
@@ -54,16 +68,11 @@ class Player extends Component {
 	}
 
 	render() {
-		const config = { file: {
-						    tracks: [
-						      {kind: 'subtitles', src: '/subtitles/' + this.state.subtitles, srcLang: 'en', default: true},
-						    ]
-						}}
-
-		console.log
+		const tracks = this.state.subtitles
+			.map((item, key) => ({kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true}))
 
 
-		console.log(this.state.subtitles)
+		console.log('la',this.state)
 
 		return(
 			<div  >
@@ -76,7 +85,10 @@ class Player extends Component {
 				height="720px" 
 				playing 
 				controls 
-				config={config}
+				config={{ file: {
+						    tracks: tracks
+							}
+						}}
 				/>}
 			</div>
 		);
@@ -84,9 +96,10 @@ class Player extends Component {
 }
 
 function mapStateToProps(state) {
-	const { isAuthenticated } = state.handleMe;
+	const { isAuthenticated, me } = state.handleMe;
 	return ({
-		isAuthenticated
+		isAuthenticated,
+		me
 	});
 }
 
