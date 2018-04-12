@@ -14,7 +14,11 @@ class Player extends Component {
 			time: 0,
 			subtitles: [{language: 'en', file: 'subDef.vtt'}],
 			magnet: '',
-			movieLanguage: 'en'
+			movieLanguage: 'en',
+			canal: 'movie',
+			seasonNumber: 0,
+			episodeNumber: 0,
+			releaseYear: 1900
 		}
 	}
 
@@ -25,7 +29,11 @@ class Player extends Component {
 				magnet: nextProps.magnet,
 				movieLanguage: nextProps.movieLanguage,
 				subtitles: [{language: 'en', file: 'subDef.vtt'}],
-				video: false
+				video: false,
+				canal: nextProps.canal,
+				seasonNumber: nextProps.seasonNumber,
+				episodeNumber: nextProps.episodeNumber,
+				releaseYear: nextProps.releaseYear
 			};
 		}
 		else {
@@ -37,7 +45,7 @@ class Player extends Component {
 		if (prevState.magnet !== this.state.magnet) {
 			const time = Date.now()
 
-			/*fetchWrap('/sub', {
+			fetchWrap('/sub', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {
@@ -46,7 +54,11 @@ class Player extends Component {
 				body: JSON.stringify({
 					magnet: this.state.magnet,
 					languageVideo: this.state.movieLanguage,
-					languageUser: this.props.me.language
+					languageUser: this.props.me.language,
+					canal: this.state.canal,
+					seasonNumber: this.state.seasonNumber,
+					episodeNumber: this.state.episodeNumber,
+					releaseYear: this.state.releaseYear
 				})
 			})
 			.then((data) => {
@@ -55,7 +67,7 @@ class Player extends Component {
 					console.log(this.state);
 				})
 			})
-			.catch(error => console.log(error))*/
+			.catch(error => console.log(error))
 			fetchWrap('/video/' + this.state.magnet + '/' + time + 'first', {credentials: 'include'})
 			.then((data) => {
 				console.log(data)
