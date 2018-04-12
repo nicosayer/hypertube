@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import Logout from './LogOut';
 
-import { changeLanguage } from '../../../actions/me'
+import { changeLanguage, changeSearch, changeSearchSettings } from '../../../actions/me'
 
 import { fetchWrap } from '../../../services/fetchWrap';
 
@@ -17,7 +17,6 @@ class Menu extends Component {
 
 	constructor(props) {
 		super(props)
-		this.emptySearch = this.emptySearch.bind(this);
 		this.searchInput = React.createRef();
 	}
 
@@ -28,20 +27,15 @@ class Menu extends Component {
 		else {
 			this.props.history.push('/');
 		}
-		if (event.target) {
-			this.props.handleSearch(event.target.value);
+		if (event && event.target) {
+			this.props.dispatch(changeSearch(event.target.value));
 		}
 	}
 
 	handleKeyDown(event) {
-		if (event.which && event.which === 13) {
+		if (event && event.which && event.which === 13) {
 			this.search(event);
 		}
-	}
-
-	emptySearch() {
-		this.props.handleSearch('');
-		this.searchInput.current.value = '';
 	}
 
 	selectLanguage(language) {
@@ -96,16 +90,44 @@ class Menu extends Component {
 						<span className='menuType'>
 							<Link to='/'>
 								<span
-									className={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? 'fontGrey moviesSectionLink' : 'moviesSectionLink'}
-									onClick={this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv' ? null : () => (this.emptySearch())}>
+									className={
+										this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv'
+										?
+										'fontGrey moviesSectionLink'
+										:
+										'moviesSectionLink'
+									}
+									onClick={
+										this.props.location.pathname === '/profile' || this.props.location.pathname.substring(0, 3) === '/tv'
+										?
+										() => this.props.dispatch(changeSearch(this.props.search))
+										:
+										null
+									}>
 									{language.moviesSectionLink[this.props.me.language]}
 								</span>
 							</Link>
 							<span className='separator'></span>
 							<Link to='/tv'>
 								<span
-									className={this.props.location.pathname.substring(0, 3) === '/tv' ? 'tvSectionLink' : 'tvSectionLink fontGrey'}
-									onClick={this.props.location.pathname.substring(0, 3) === '/tv' ? () => (this.emptySearch()) : null}>
+									className={
+										this.props.location.pathname.substring(0, 3) === '/tv'
+										?
+										'tvSectionLink'
+										:
+										'tvSectionLink fontGrey'
+									}
+									onClick={
+										this.props.location.pathname.substring(0, 3) === '/tv'
+										?
+										this.props.location.pathname.substring(0, 4) === '/tv/'
+										?
+										null
+										:
+										() => this.props.dispatch(changeSearchSettings(null, null))
+										:
+										() => this.props.dispatch(changeSearch(this.props.search))
+									}>
 									{language.tvSectionLink[this.props.me.language]}
 								</span>
 							</Link>
@@ -114,6 +136,7 @@ class Menu extends Component {
 							<i className='fas fa-search'></i>
 						</span>
 						<input
+							value={this.props.search}
 							className='menuSearch spaceLeft'
 							placeholder={language.quickSearchLabel[this.props.me.language]}
 							type='text' onChange={event => this.search(event)}
@@ -128,9 +151,10 @@ class Menu extends Component {
 }
 
 function mapStateToProps(state) {
-	const { me } = state.handleMe;
+	const { me, searchSettings } = state.handleMe;
 	return ({
-		me
+		me,
+		search: searchSettings.search
 	})
 }
 

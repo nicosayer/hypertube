@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 
+import { changeSearchSettings } from '../../../actions/me'
+
 import { fetchWrap } from '../../../services/fetchWrap'
 
 import './style.css';
@@ -16,13 +18,6 @@ class Search extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			search: '',
-			orderBy: 'popularity.desc',
-			release_date_min: 1900,
-			release_date_max: 2018,
-			ratings_min: 0,
-			ratings_max: 10,
-			genres: [],
 			page: 1,
 			result: [],
 			lastApiCallTimestamp : 0,
@@ -39,24 +34,13 @@ class Search extends Component {
 		this.determineTypeOfSearch();
 	}
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (nextProps.search !== prevState.search) {
-			return {
-				result: [],
-				search: nextProps.search,
-				loading: true,
-				scrolling: false,
-				page: 1
-			};
-		}
-		else {
-			return null;
-		}
-	}
-
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState !== this.state && prevProps !== this.props) {
-			this.determineTypeOfSearch();
+		if (prevProps.searchSettings.search !== this.props.searchSettings.search) {
+			this.setState({
+				result: [],
+				loading: true,
+				page: 1
+			}, () => this.determineTypeOfSearch())
 		}
 	}
 
@@ -67,19 +51,19 @@ class Search extends Component {
 	determineTypeOfSearch() {
 		if (this.state.page && (this.state.loading || this.state.scrolling)) {
 			var endPoint;
-			if (this.state.search) {
-				if (this.props.canal === 'tv'){
-					endPoint = 'https://api.themoviedb.org/3/search/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.state.search + '&page=' + this.state.page;
+			if (this.props.searchSettings.search) {
+				if (this.props.canal === 'tv') {
+					endPoint = 'https://api.themoviedb.org/3/search/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.props.searchSettings.search + '&page=' + this.state.page;
 				}
 				else {
-					endPoint = 'https://api.themoviedb.org/3/search/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.state.search + '&page=' + this.state.page;
+					endPoint = 'https://api.themoviedb.org/3/search/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&query=' + this.props.searchSettings.search + '&page=' + this.state.page;
 				}
 			}
-			else if (this.props.canal === 'tv'){
-				endPoint = 'https://api.themoviedb.org/3/discover/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&first_air_date.gte=' + this.state.release_date_min + '&vote_count.gte=100&first_air_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&page=' + this.state.page + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
+			else if (this.props.canal === 'tv') {
+				endPoint = 'https://api.themoviedb.org/3/discover/tv?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.props.searchSettings.orderBy + '&first_air_date.gte=' + this.props.searchSettings.release_date_min + '&vote_count.gte=100&first_air_date.lte=' + (parseInt(this.props.searchSettings.release_date_max, 10) + 1) + '&page=' + this.state.page + '&vote_average.gte=' + this.props.searchSettings.ratings_min + '&vote_average.lte=' + this.props.searchSettings.ratings_max + '&with_genres=' + this.props.searchSettings.genres.join(',');
 			}
 			else {
-				endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.state.orderBy + '&page=' + this.state.page + '&vote_count.gte=600&primary_release_date.gte=' + this.state.release_date_min + '&primary_release_date.lte=' + (parseInt(this.state.release_date_max, 10) + 1) + '&vote_average.gte=' + this.state.ratings_min + '&vote_average.lte=' + this.state.ratings_max + '&with_genres=' + this.state.genres.join(',');
+				endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=fc97ca1225d5b618b7a69f5a20a132d8&sort_by=' + this.props.searchSettings.orderBy + '&page=' + this.state.page + '&vote_count.gte=600&primary_release_date.gte=' + this.props.searchSettings.release_date_min + '&primary_release_date.lte=' + (parseInt(this.props.searchSettings.release_date_max, 10) + 1) + '&vote_average.gte=' + this.props.searchSettings.ratings_min + '&vote_average.lte=' + this.props.searchSettings.ratings_max + '&with_genres=' + this.props.searchSettings.genres.join(',');
 			}
 			this.search(endPoint);
 		}
@@ -106,26 +90,11 @@ class Search extends Component {
 			}
 			if (this._isMounted) {
 				if (actualTimestamp === this.state.lastApiCallTimestamp) {
-					var { orderBy, release_date_min, release_date_max, ratings_min, ratings_max, genres } = this.state;
-					if (this.state.search) {
-						orderBy = 'popularity.desc';
-						release_date_min = 1900;
-						release_date_max = 2018;
-						ratings_min = 0;
-						ratings_max = 10;
-						genres = [];
-					}
 					this.setState({
 						result,
 						loading: false,
 						scrolling: page < 3 ? true : false,
-						page,
-						orderBy,
-						release_date_min,
-						release_date_max,
-						ratings_min,
-						ratings_max,
-						genres,
+						page
 					}, () => {
 						if (this.state.page < 3) {
 							this.determineTypeOfSearch()
@@ -140,13 +109,13 @@ class Search extends Component {
 	discover(name, value) {
 		if (name === 'genres') {
 			if (value) {
-				if (this.state.genres.includes(value)) {
-					const genresCopy = this.state.genres;
+				if (this.props.searchSettings.genres.includes(value)) {
+					const genresCopy = this.props.searchSettings.genres;
 					genresCopy.splice(genresCopy.indexOf(value), 1);
 					value = genresCopy;
 				}
 				else {
-					value = this.state.genres.concat(value);
+					value = this.props.searchSettings.genres.concat(value);
 				}
 			}
 			else {
@@ -186,12 +155,12 @@ class Search extends Component {
 			}
 		}
 		if (value) {
+			this.props.dispatch(changeSearchSettings(name, value));
 			this.setState({
 				search: '',
 				result: [],
 				page: 1,
-				loading: true,
-				[name]: value
+				loading: true
 			}, () => this.determineTypeOfSearch())
 		}
 	}
@@ -314,27 +283,27 @@ class Search extends Component {
 								{language.orderByLabel[this.props.me.language]}
 							</div>
 
-							<div className={this.state.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.me.language]}</div>
-							<div className={this.state.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.me.language]}</div>
-							<div className={this.state.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.me.language]}</div>
-							<div className={this.state.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
-							<div className={this.state.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
+							<div className={this.props.searchSettings.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.me.language]}</div>
+							<div className={this.props.searchSettings.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.me.language]}</div>
+							<div className={this.props.searchSettings.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.me.language]}</div>
+							<div className={this.props.searchSettings.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
+							<div className={this.props.searchSettings.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
 							<div className='searchTitle searchTitleLign'>
 								{language.genreLabel[this.props.me.language]}
 							</div>
-							<div className={!this.state.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
+							<div className={!this.props.searchSettings.genres.length ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres')}>All</div>
 							{
 								this.props.canal === 'tv' ?
 								Object.keys(genresTV)
 								.sort((a, b) => genresTV[a][this.props.me.language].localeCompare(genresTV[b][this.props.me.language]))
 								.map(elem =>
-									<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresTV[elem][this.props.me.language]}</div>
+									<div key={elem} className={this.props.searchSettings.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresTV[elem][this.props.me.language]}</div>
 								)
 								:
 								Object.keys(genresMovies)
 								.sort((a, b) => genresMovies[a][this.props.me.language].localeCompare(genresMovies[b][this.props.me.language]))
 								.map(elem =>
-									<div key={elem} className={this.state.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresMovies[elem][this.props.me.language]}</div>
+									<div key={elem} className={this.props.searchSettings.genres.includes(elem) ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('genres', elem)}>{genresMovies[elem][this.props.me.language]}</div>
 								)
 							}
 							<div className='searchTitle searchTitleLign'>
@@ -401,9 +370,10 @@ class Search extends Component {
 
 
 function mapStateToProps(state) {
-	const { me } = state.handleMe;
+	const { me, searchSettings } = state.handleMe;
 	return ({
-		me
+		me,
+		searchSettings
 	})
 }
 

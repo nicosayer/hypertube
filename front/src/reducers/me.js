@@ -2,6 +2,7 @@ import {
 	SAVE_ME,
 	UPDATE_ME,
 	CHANGE_LANGUAGE,
+	CHANGE_SEARCH,
 	CHANGE_SEARCH_SETTINGS
 } from '../actions/me'
 
@@ -40,19 +41,33 @@ export function handleMe(
 
 		case CHANGE_LANGUAGE:
 		return Object.assign({}, state, {
-			searchSettings: {
+			me: {
 				...state.me,
 				language: action.language
 			}
-		})
+		});
+
+		case CHANGE_SEARCH:
+		return Object.assign({}, state, {
+			searchSettings: {
+				search: action.search,
+				orderBy: 'popularity.desc',
+				release_date_min: 1900,
+				release_date_max: 2018,
+				ratings_min: 0,
+				ratings_max: 10,
+				genres: []
+			}
+		});
 
 		case CHANGE_SEARCH_SETTINGS:
 		return Object.assign({}, state, {
 			searchSettings: {
 				...state.searchSettings,
+				search: '',
 				[action.name]: action.value
 			}
-		})
+		});
 
 		default:
 		return state
