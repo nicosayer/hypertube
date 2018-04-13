@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
+import { NotificationManager } from 'react-notifications';
+
+import Comments from './Comments';
 import Player from '../../../components/Player';
 
 import { fetchWrap } from '../../../services/fetchWrap';
@@ -119,6 +122,7 @@ class Movies extends Component {
 	render() {
 
 		if (!this.state.loading && !this.state.movieInfo) {
+			NotificationManager.warning('This movie seems corrupted');
 			if (this.props.canal === 'tv') {
 				return <Redirect to='/tv' />
 			}
@@ -166,8 +170,6 @@ class Movies extends Component {
 		</div>)
 		:
 		null;
-
-		console.log(this.state)
 
 		return(
 			<div className='main'>
@@ -237,7 +239,7 @@ class Movies extends Component {
 								:
 								null
 							}
-							{ (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path) || (this.state.movieCast.crew && this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path)
+							{ (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path) || (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[1] && this.state.movieInfo.production_companies[1].logo_path) || (this.state.movieCast.crew && this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path)
 								?
 								<div className='spaceBottom spaceTopBig'>
 									<b>{language.crewLabel[this.props.me.language]}</b>
@@ -261,6 +263,16 @@ class Movies extends Component {
 								<div className='castContainer'>
 									<div className='castImgText'>{this.state.movieCast.crew[0].name}</div>
 									<img className='castImg' alt={this.state.movieCast.crew[0].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.crew[0].profile_path} />
+								</div>
+								:
+								null
+							}
+							{
+								this.state.movieCast.crew && this.state.movieCast.crew[1] && this.state.movieCast.crew[1].profile_path
+								?
+								<div className='castContainer'>
+									<div className='castImgText'>{this.state.movieCast.crew[1].name}</div>
+									<img className='castImg' alt={this.state.movieCast.crew[1].name} src={'https://image.tmdb.org/t/p/w500' + this.state.movieCast.crew[1].profile_path} />
 								</div>
 								:
 								null
@@ -308,7 +320,8 @@ class Movies extends Component {
 							}
 						</div>
 						<Player
-							magnet={this.state.magnet}
+							magnet={ this.state.magnet }
+							movieId={ this.props.match.params.id }
 							movieLanguage={
 								this.props.canal === 'tv'
 								?
@@ -324,7 +337,7 @@ class Movies extends Component {
 								:
 								null
 							}
-							canal={this.props.canal}
+							canal={ this.props.canal }
 							seasonNumber={
 								this.state.seasonNumber
 								?
@@ -347,7 +360,7 @@ class Movies extends Component {
 								null
 							}
 							/>
-							<div className='spaceBottomBig' ref={this.myDownloadAnchor}></div>
+						<div className='spaceBottomBig' ref={this.myDownloadAnchor}></div>
 							<div className='spaceTop spaceBottomBig'>
 								{
 									this.props.canal === 'movie'
@@ -357,7 +370,7 @@ class Movies extends Component {
 										<div className='spaceBottom'>
 											<b>{language.availableInLabel[this.props.me.language]}</b>
 										</div>
-										<div className='linksContainer'>{movieLinks}</div>
+										{movieLinks}
 									</div>
 									:
 									<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.movieUnavailable[this.props.me.language]}</div>
@@ -399,14 +412,12 @@ class Movies extends Component {
 																<b>{episode.title}</b>
 															</td>
 															<td>
-																<div className='linksContainer'>
 																	{
 																		Object.keys(episode.torrents).filter(torrent => torrent !== '0').map((torrent, key) =>
 																		<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url, episode.episode)}>
 																			{torrent}
 																		</span>)
 																	}
-																</div>
 															</td>
 														</tr>)
 														:
@@ -433,6 +444,10 @@ class Movies extends Component {
 									</div>
 								}
 							</div>
+							<Comments
+								canal={ this.props.canal }
+								id={ this.props.match.params.id }
+								/>
 						</div>
 					}
 				</div>
