@@ -5,7 +5,7 @@ var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
 var mongo = require('../../../mongo');
-const m3u8stream = require('m3u8stream');
+var rimraf = require('rimraf');
 
 const ngrok = require('ngrok');
 const ngrokConnect = ngrok.connect(3001)
@@ -61,18 +61,30 @@ router.get('/:magnet/:time', function(req, res, next) {
 					else if (ext === 'mkv') {
 
 						collection.findOne({path: file.path.split('/')[0]}, function(err, result) {
-							console.log(result);
+
+							const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
+
 							if (result && result.downloaded) {
-								console.log("is downloaded");
+								console.log("This torrent is already downloaded");
+							
 								fs.unlinkSync('public/movies/' + file.name);
 								
-								const m3u8name = file.name.replace(".mkv", ".m3u8");
-								res.statusCode = 206;
-								m3u8stream(url + '/movies/' + m3u8name + '/' + m3u8name).pipe(res);
+								res.status(206).json({
+									url: url + '/movies/' + m3u8name + '/' + m3u8name
+								});
 
 							} else {
 								console.log("is NOT downloaded")
-								download_transcript(user[id], res);
+							
+								// if (fs.existsSync('public/movies/' + m3u8name) && fs.existsSync('public/movies/' + file.name)) {
+
+								// 	// doesn't work
+								// 	rimraf('public/movies/' + m3u8name, () => {
+								// 		download_transcript(user[id], res);
+								// 	});
+								// } else { 
+									download_transcript(user[id], res);
+								// }
 							}
 						})
 					}
@@ -126,8 +138,7 @@ download_transcript = function(file, res) {
 	var first = 1;
 
 	const folderName = file.name.substring(0, file.name.length - 4);
-	// const mp4name = file.name.replace(".mkv", ".mp4");
-	const m3u8name = file.name.replace(".mkv", ".m3u8");
+	const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
 	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
 
 	ffmpeg(stream, { timeout: 432000 }).addOptions([
@@ -135,9 +146,9 @@ download_transcript = function(file, res) {
 	    '-level 3.0', 
 	    '-s 640x360',          // 640px width, 360px height output video dimensions
 	    '-start_number 0',     // start the first .ts segment at index 0
-	    '-hls_time 10',        // 10 second segment duration
+	    '-hls_time 2',        // 10 second segment duration
 	    '-hls_list_size 0',
-	    '-hls_playlist_type event',
+	    '-hls_playlist_type vod',
 	    '-f hls'               // HLS format
 	])
 	.on('start', () => {
@@ -146,10 +157,6 @@ download_transcript = function(file, res) {
 		if (!fs.existsSync('public/movies/' + m3u8name)) {
 			fs.mkdirSync('public/movies/' + m3u8name);
 		}
-
-		// if (!fs.existsSync('public/movies/' + mp4name)) {
-		// 	fs.mkdirSync('public/movies/' + mp4name);
-		// }
 	})
 	.on('error', function(err, err1, err2) {
 		console.log(err);
@@ -167,7 +174,6 @@ download_transcript = function(file, res) {
 		}
     })
 	.output('public/movies/' + m3u8name + '/' + m3u8name)
-	// .output('public/movies/' + mp4name + '/' + mp4name)
 	.on('end', () => {
 		console.log('transcripting done!');
 
