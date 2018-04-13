@@ -20,6 +20,8 @@ class Player extends Component {
 			episodeNumber: 0,
 			releaseYear: 1900
 		}
+
+		this.myRef = React.createRef();
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -68,7 +70,13 @@ class Player extends Component {
 				})
 			})
 			.catch(error => console.log(error))
-			fetchWrap('/video/' + this.state.magnet + '/' + time + 'first', {credentials: 'include'})
+			fetchWrap('/video/'+
+					this.state.canal + '/' +
+					this.props.tmdbId + '/' +
+					this.state.magnet + '/' + 
+					time +
+					'first',
+				{credentials: 'include'})
 			.then((data) => {
 				console.log(data)
 				this.setState({ video: true, time: time, url: data.url }, () => {
@@ -88,19 +96,34 @@ class Player extends Component {
 
 		return(
 			<div  >
-				{this.state.video && <ReactPlayer url={
-					this.state.url ?
-					this.state.url :
-					'http://localhost:3001/video/' + this.state.magnet + '/' + this.state.time
+				{
+					this.state.video && <ReactPlayer url={
+					this.state.url
+					?
+					this.state.url
+					:
+					'http://localhost:3001/video/' + 
+					this.state.canal + '/' +
+					this.props.tmdbId + '/' +
+					this.state.magnet + '/' +
+					this.state.time
 				} 
 				width="1280px" 
 				height="720px" 
 				playing 
 				controls 
-				config={{ file: {
-						    tracks: tracks
-							}
-						}}
+				config={
+					{ file: {
+					    tracks: tracks
+						}
+					}
+				}
+				onReady={() => console.log('onReady')}
+				onStart={() => {
+					this.myRef.current.seekTo(0);
+					console.log('onStart');
+				}}
+				ref={this.myRef}
 				/>}
 			</div>
 		);
