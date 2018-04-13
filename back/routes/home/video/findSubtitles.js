@@ -113,13 +113,13 @@ function hashAndDL(file, req, res) {
 					var links = []
 					var arraySub = []
 
-					if (subsEnglish.length != 0) {
-						links.push(subsEnglish[0].SubDownloadLink)
-						arraySub.push({language: 'en', file: subsEnglish[0].MovieReleaseName + '.en.vtt'})
-					}
 					if (subsOther !== undefined && subsOther.length != 0) {
 						links.push(subsOther[0].SubDownloadLink)
 						arraySub.push({language: languageUser, file: subsOther[0].MovieReleaseName + '.' + languageUser + '.vtt'})
+					}
+					if (subsEnglish.length != 0) {
+						links.push(subsEnglish[0].SubDownloadLink)
+						arraySub.push({language: 'en', file: subsEnglish[0].MovieReleaseName + '.en.vtt'})
 					}
 					console.log(links, arraySub)
 					var buffer;
