@@ -1,0 +1,22 @@
+{
+	"title": {
+		"en": "Comments",
+		"fr": "Commentaires"
+	},
+	"myCommentPlaceholder" : {
+		"en": "Add your thoughts",
+		"fr": "Laisser un commentaire"
+	},
+	"howToSubmit": {
+		"en": "Press Enter to submit",
+		"fr": "Appuyez sur Entrer pour valider"
+	},
+	"today": {
+		"en": "today",
+		"fr": "aujourd'hui"
+	},
+	"yesterday": {
+		"en": "yesterday",
+		"fr": "hier"
+	}
+}

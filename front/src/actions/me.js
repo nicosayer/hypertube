@@ -1,5 +1,3 @@
-import { connectSocket } from './socket'
-
 export const SAVE_ME = 'SAVE_ME';
 export const UPDATE_ME = 'UPDATE_ME';
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
@@ -9,7 +7,6 @@ export const CHANGE_SEARCH_SETTINGS = 'CHANGE_SEARCH_SETTINGS';
 export function logMe(me) {
 	return ((dispatch) => {
 		dispatch(saveMe(me))
-		dispatch(connectSocket())
 	})
 }
 

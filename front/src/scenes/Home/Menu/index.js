@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import Logout from './LogOut';
 
-import { changeLanguage, changeSearch, changeSearchSettings } from '../../../actions/me'
+import { changeLanguage, changeSearch } from '../../../actions/me'
 
 import { fetchWrap } from '../../../services/fetchWrap';
 

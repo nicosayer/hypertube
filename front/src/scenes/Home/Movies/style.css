@@ -72,13 +72,6 @@
 	opacity: 1;
 }
 
-.linksContainer {
-	margin: auto;
-	width: 75%;
-	 display: flex;
-	justify-content: space-around;
-}
-
 .torrentQualityButton {
 	text-align: center;
 	display: inline-block;
@@ -89,6 +82,10 @@
 	box-shadow: 0 0 10px black;
 	transition: 0.35s box-shadow, 0.35s color;
 	cursor: pointer;
+}
+
+.torrentQualityButton {
+	margin-right: 10px;
 }
 
 .torrentQualityButton:hover {
@@ -158,4 +155,14 @@
 	height: 225px;
 	object-fit: cover;
 	border-radius: 3px;
+}
+
+.commentSection {
+	margin: 10px 0;
+	padding: 20px;
+	text-align: left;
+	box-shadow: 0 0 10px black;
+	border-radius: 3px;
+	background: #2A292F;
+	overflow: hidden;
 }

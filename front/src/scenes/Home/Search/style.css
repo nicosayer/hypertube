@@ -32,13 +32,13 @@
 }
 
 @media only screen and (max-height: 1200px) {
-	.searchChoice, .searchChoiceActive, .searchRange, .searchRange:focus {
+	.searchChoice, .searchChoiceActive {
 		padding: 2px !important;
 	}
 }
 
 @media only screen and (max-height: 1050px) {
-	.searchChoice, .searchChoiceActive, .searchRange, .searchRange:focus {
+	.searchChoice, .searchChoiceActive {
 		padding: 0 !important;
 	}
 }
@@ -73,12 +73,16 @@
 
 @media only screen and (max-height: 950px) {
 	.searchTitle {
-		margin: 5px 0 5px 10px;
-		text-align: left;
+		margin: 5px 0 5px 5px !important;
 	}
 
-	.searchChoice, .searchChoiceActive, .searchRange, .searchRange:focus {
+	.searchChoice, .searchChoiceActive {
 		margin: 0;
+	}
+
+	.searchRange, .searchRange:focus {
+		margin: 0 10px !important;
+		padding: 0 !important;
 	}
 }
 

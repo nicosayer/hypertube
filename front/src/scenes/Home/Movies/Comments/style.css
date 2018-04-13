@@ -1,0 +1,55 @@
+.commentSection {
+	margin: 10px 0;
+	padding: 20px;
+	width: 1060px;
+	text-align: left;
+	box-shadow: 0 0 10px black;
+	border-radius: 3px;
+	background: #2A292F;
+	overflow: hidden;
+}
+
+.commentPicture {
+	width: 75px;
+	height: 75px;
+	object-fit: cover;
+	margin-left: 20px;
+	box-shadow: 0 0 10px black;
+	float: left;
+}
+
+.myCommentInput {
+	width: 900px;
+	border: 1px solid white;
+	vertical-align: top;
+	margin: 10px 20px;
+	height: 55px;
+	border-radius: 3px;
+	padding: 0px 10px;
+	transition: 0.35s box-shadow;
+}
+
+.myCommentInput:hover {
+	box-shadow: 0 0 25px black;
+}
+
+.myCommentInput:focus {
+	padding: 0px 10px;
+	box-shadow: 0 0 50px black;
+}
+
+.commentContainer {
+	clear: both;
+	min-height: 75px;
+	margin: 30px 10px;
+}
+
+.commentTextContainer {
+	vertical-align: top;
+	margin-left: 110px;
+}
+
+.commentText {
+	margin-top: 10px;
+	color: lightgrey;
+}
