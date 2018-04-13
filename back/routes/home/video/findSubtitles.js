@@ -6,60 +6,15 @@ const got = require('got');
 var zlib = require("zlib");
 var request = require('request')
 var srt2vtt = require('srt-to-vtt')
-var mongo = require('../../../mongo');
 
 
 router.post('/', function(req, res, next) {
-
-	const { languageVideo } = req.body
-	const { languageUser } = req.body
-	var { magnet } = req.body
-	magnet = decodeURIComponent(magnet)
-
-	const db = mongo.getDb();
-	const collection = db.collection('magnets');
-	
-	collection.findOne({magnet: magnet}, function (err, result) {
-		if (result && result.subs.length > 0) {
-			var count = 0
-			var countfinal = 1
-			var arraySub = []
-			if (languageVideo != languageUser && languageUser != 'en') {
-				countfinal++
-			}
-			for (var i = 0; i < result.subs.length; i++) {
-				if (result.subs[i].language == 'en') {
-					count++
-					arraySub.push(result.subs[i])
-				}
-				if (countfinal > 1 && result.subs[i].language == languageUser) {
-					count++
-					arraySub.push(result.subs[i])
-				}
-			}
-			if (count == countfinal) {
-				res.status(201).json({ sub: arraySub })
-			}
-			else {
-				DLStartEndMagnet(req, res)
-			}
-		}
-		else {
-			DLStartEndMagnet(req, res)
-		}
-	})
-})
-
-function DLStartEndMagnet(req, res) {
 	var timeout = false
-	const { languageVideo } = req.body
-	const { languageUser } = req.body
+	const { languageVideo, languageUser } = req.body
 	var { magnet } = req.body
 	magnet = decodeURIComponent(magnet)
 
 	setTimeout(() => {
-		console.log('timeout')
-		console.log(timeout)
 		if (timeout === false) {
 			res.status(300).json({message: 'no subtitles'})
 			timeout = true
@@ -109,15 +64,10 @@ function DLStartEndMagnet(req, res) {
 			console.log('data2')
 		})
 	})
-}
+})
 		
 function hashAndDL(file, req, res) {
-	const { languageVideo } = req.body
-	const { languageUser } = req.body
-	const { canal } = req.body
-	const { seasonNumber } = req.body
-	const { episodeNumber } = req.body
-	const { releaseYear } = req.body
+	const { languageVideo, languageUser, canal, seasonNumber, episodeNumber, releaseYear } = req.body
 	var { magnet } = req.body
 	magnet = decodeURIComponent(magnet)
 
@@ -131,9 +81,7 @@ function hashAndDL(file, req, res) {
 			})
 			.then((subs) => {
 				var secondLanguage = 'en'
-
 				subs = JSON.parse(subs.body)
-				
 				var subs = subs.filter(sub => {
 					if (canal == 'tv') {
 						if (sub.SeriesSeason == seasonNumber && sub.SeriesEpisode == episodeNumber) {
@@ -155,14 +103,13 @@ function hashAndDL(file, req, res) {
 				var subsEnglish = subs.filter(sub => {
 					return sub.ISO639 == 'en'
 				})
+
 				if (languageVideo != languageUser && languageUser != 'en') {
 					var subsOther = subs.filter(sub => {
 						return sub.ISO639 == languageUser
 					})
 				}
 				if (subsEnglish.length != 0 || (subsOther !== undefined && subsOther.length != 0)) {
-					//console.log(subsEnglish)
-					//console.log(subsOther)
 					var links = []
 					var arraySub = []
 
@@ -175,7 +122,6 @@ function hashAndDL(file, req, res) {
 						arraySub.push({language: languageUser, file: subsOther[0].MovieReleaseName + '.' + languageUser + '.vtt'})
 					}
 					console.log(links, arraySub)
-					//console.log(subs[0])
 					var buffer;
 					var streamsub;
 					var gunzip;
@@ -198,18 +144,6 @@ function hashAndDL(file, req, res) {
 				            count++
 				            console.log('end srt to vtt: ', count, links.length)
 				            if (count == links.length) {
-				            	const db = mongo.getDb();
-								const collection = db.collection('magnets');
-								collection.findOne({magnet: magnet}, function (err, result) {
-									if (result) {
-										result.subs = arrayUnique(result.subs.concat(arraySub));
-										collection.save(result)
-									}
-									else {
-										collection.insert({magnet: magnet, subs: arraySub}, function (err, result) {
-										});
-									}
-								})
 				            	res.status(201).json({ sub: arraySub })
 				            }
 				        }).on("error", function(e) {
