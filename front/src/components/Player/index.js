@@ -21,6 +21,8 @@ class Player extends Component {
 			episodeNumber: 0,
 			releaseYear: 1900
 		}
+
+		this.myRef = React.createRef();
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -29,6 +31,7 @@ class Player extends Component {
 				magnet: nextProps.magnet,
 				movieLanguage: nextProps.movieLanguage,
 				canal: nextProps.canal,
+				movieId: nextProps.movieId,
 				seasonNumber: nextProps.seasonNumber,
 				episodeNumber: nextProps.episodeNumber,
 				releaseYear: nextProps.releaseYear
@@ -67,6 +70,13 @@ class Player extends Component {
 				this.setState({ subtitles: data.sub })
 			})
 			.catch(error => console.log(error))
+			fetchWrap('/video/'+
+					this.state.canal + '/' +
+					this.state.movieId + '/' +
+					this.state.magnet + '/' + 
+					time +
+					'first',
+				{credentials: 'include'})
 		}
 		if (prevState.magnet !== this.state.magnet) {
 			const time = Date.now()
@@ -98,15 +108,34 @@ class Player extends Component {
 
 		return(
 			<div  >
-				{this.state.video && <ReactPlayer url={
-					this.state.url ?
-					this.state.url :
-					'http://localhost:3001/video/' + this.state.magnet + '/' + this.state.time
+				{
+					this.state.video && <ReactPlayer url={
+					this.state.url
+					?
+					this.state.url
+					:
+					'http://localhost:3001/video/' + 
+					this.state.canal + '/' +
+					this.state.movieId + '/' +
+					this.state.magnet + '/' +
+					this.state.time
 				} 
 				width="1280px" 
 				height="720px" 
 				playing 
-				controls 
+				controls
+				config={
+					{ file: {
+					    tracks: tracks
+						}
+					}
+				}
+				onReady={() => console.log('onReady')}
+				onStart={() => {
+					this.myRef.current.seekTo(0);
+					console.log('onStart');
+				}}
+				ref={this.myRef}
 				config={{ file: {
 						    tracks: this.state.subtitles.length === 0 ? [] : tracks
 							}

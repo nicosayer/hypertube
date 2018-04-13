@@ -5,12 +5,15 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongo = require('./mongo');
 const session = require('express-session');
+const initCron = require('./cron');
 
 const app = express();
 
 mongo.connect(error => {
 	if (error) throw error;
 });
+
+initCron.initCron();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

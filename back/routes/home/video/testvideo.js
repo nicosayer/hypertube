@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs')
+const fs = require('fs');
 var torrentStream = require('torrent-stream');
 const parseRange = require('range-parser');
 const ffmpeg = require('fluent-ffmpeg');
 var mongo = require('../../../mongo');
-var rimraf = require('rimraf');
-
+const mongodb = mongo.getMongodb();
+const rimraf = require('rimraf');
 const ngrok = require('ngrok');
 const ngrokConnect = ngrok.connect(3001)
 
@@ -16,91 +16,100 @@ ngrokConnect.then(data => {
 	url = data;
 });
 
-
 var user = {};
 var ext;
 
-router.get('/:magnet/:time', function(req, res, next) {
+
+router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 	if (req.session && req.session._id) {
 
 		const id = req.session._id.toString()
-		const { magnet } = req.params
-		const { time } = req.params
+		const { magnet, time, canal, movieId } = req.params
 
 		if (time.slice(time.length - 5, time.length) == 'first') {
 			const db = mongo.getDb();
-			const collection = db.collection('movies');
+			const magnetsCollection = db.collection('magnets');
+			const usersCollection = db.collection('users');
 
 			if (magnet.match(/^magnet:\?xt=urn:/i) != null) {
-				var engine = torrentStream(magnet, {path: './public/movies'})
 
-				engine.on('ready', function() {
+				magnetsCollection.findOne({magnet: magnet}, function(err, result) {
+					if (result && result.downloaded) {
+						if (result.path) {
+							magnetsCollection.update({magnet: magnet}, {$set: {date: Date.now()}});
 
-					console.log("readyyyyyyy")
-
-					var size = 0
-					var file;
-
-					engine.files.forEach(function(fileTmp, key) {
-						if (key === 0)
-						{
-							const path = fileTmp.path.split('/')
-							collection.update({path: path[0]}, {$set: {date: Date.now()}}, {upsert: true})
+							const m3u8name = result.path.replace(".mkv", ".m3u8").replace(/\s/g, "_")
+							res.status(201).json({url: url + '/movies/' + m3u8name + '/' + m3u8name})
+						} else {
+							res.sendStatus(300)
 						}
-						if (fileTmp.length > size) {
-							size = fileTmp.length
-							file = fileTmp;
-							ext = file.name.substr(file.name.length - 3);			
-						}
-					})
-					user[id] = file;
-					if (ext === 'mp4' || ext === 'webm') {
-						res.status(201).json({url: null});
-					}
-					else if (ext === 'mkv') {
+					} else {
 
-						collection.findOne({path: file.path.split('/')[0]}, function(err, result) {
+						var engine = torrentStream(magnet, {path: './public/movies'})
 
-							const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
+						engine.on('ready', function() {
 
-							if (result && result.downloaded) {
-								console.log("This torrent is already downloaded");
-							
-								fs.unlinkSync('public/movies/' + file.name);
-								
-								res.status(206).json({
-									url: url + '/movies/' + m3u8name + '/' + m3u8name
-								});
+							console.log("readyyyyyyy")
 
-							} else {
-								console.log("is NOT downloaded")
-							
-								// if (fs.existsSync('public/movies/' + m3u8name) && fs.existsSync('public/movies/' + file.name)) {
+							var size = 0
+							var file;
 
-								// 	// doesn't work
-								// 	rimraf('public/movies/' + m3u8name, () => {
-								// 		download_transcript(user[id], res);
-								// 	});
-								// } else { 
-									download_transcript(user[id], res);
-								// }
+							engine.files.forEach(function(fileTmp, key) {
+								if (key === 0) {
+									var path;
+									const paths = fileTmp.path.split('/');
+
+									if (fileTmp.name.substr(fileTmp.name.length - 3) === 'mkv') {
+										path = paths[0].replace(".mkv", ".m3u8").replace(/\s/g, "_")
+									} else {
+										path = paths[0];
+									}
+
+									magnetsCollection.update(
+										{magnet: magnet},
+										{$set: 
+											{date: Date.now(), path: path}
+										},
+										{upsert: true}
+									);
+
+									usersCollection.update(
+										{_id: new mongodb.ObjectId(req.session._id)},
+										{$addToSet:
+											{"seenMovies": {canal: canal, movieId: movieId}}
+										},
+										{upsert: true}
+									)
+								}
+
+								if (fileTmp.length > size) {
+									size = fileTmp.length
+									file = fileTmp;
+									ext = file.name.substr(file.name.length - 3);			
+								}
+							})
+
+							user[id] = file;
+
+							if (ext === 'mp4' || ext === 'webm') {
+								res.status(201).json({url: null});
+							} else if (ext === 'mkv') {
+								console.log("is NOT downloaded");
+								download_transcript(user[id], req, res);
 							}
 						})
 					}
 				})
-			}
-			else {
+			} else {
 				res.sendStatus(300)
 			}
-		}
-		else {
+		} else {
 			if (ext === 'mp4' || ext === 'webm') {
 				download_no_transcript(user[id], req, res);
 			}
 		}
-	}
-	else {
+	} else {
 		res.sendStatus(300);
 	}
 })
@@ -131,10 +140,12 @@ download_no_transcript = function(file, req, res) {
 }
 
 
-download_transcript = function(file, res) {
+download_transcript = function(file, req, res) {
+
 	var stream = file.createReadStream();
 	const db = mongo.getDb();
-	const collection = db.collection('movies');
+	const magnetsCollection = db.collection('magnets');
+	const { magnet } = req.params
 	var first = 1;
 
 	const folderName = file.name.substring(0, file.name.length - 4);
@@ -142,17 +153,19 @@ download_transcript = function(file, res) {
 	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
 
 	ffmpeg(stream, { timeout: 432000 }).addOptions([
-	    '-profile:v baseline', // baseline profile (level 3.0) for H264 video codec
+	    '-profile:v baseline',
 	    '-level 3.0', 
-	    '-s 640x360',          // 640px width, 360px height output video dimensions
-	    '-start_number 0',     // start the first .ts segment at index 0
-	    '-hls_time 2',        // 10 second segment duration
+	    '-s 1280x720',
+	    '-start_number 0',
+	    '-hls_time 2',
 	    '-hls_list_size 0',
 	    '-hls_playlist_type vod',
-	    '-f hls'               // HLS format
+	    '-f hls'
 	])
 	.on('start', () => {
 		console.log("started transcripting!");
+
+		magnetsCollection.update({magnet: magnet}, {$set: {downloaded: true}});
 
 		if (!fs.existsSync('public/movies/' + m3u8name)) {
 			fs.mkdirSync('public/movies/' + m3u8name);
@@ -175,11 +188,13 @@ download_transcript = function(file, res) {
     })
 	.output('public/movies/' + m3u8name + '/' + m3u8name)
 	.on('end', () => {
-		console.log('transcripting done!');
+		console.log('Transcripting done!');
 
-		const path = file.path.split('/')
-		collection.update({path: path[0]}, {$set: {downloaded: true}}, {upsert: true});
-		fs.unlinkSync('public/movies/' + file.name);
+		if (fs.existsSync('public/movies/' + file.name)) {
+			rimraf('public/movies/' + file.name, function(err) {
+				if (err) console.log(err);
+			});
+		}
 	})
 	.run()			
 }
