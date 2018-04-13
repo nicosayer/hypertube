@@ -31,6 +31,7 @@ class Player extends Component {
 				magnet: nextProps.magnet,
 				movieLanguage: nextProps.movieLanguage,
 				canal: nextProps.canal,
+				movieId: nextProps.movieId,
 				seasonNumber: nextProps.seasonNumber,
 				episodeNumber: nextProps.episodeNumber,
 				releaseYear: nextProps.releaseYear
@@ -75,7 +76,7 @@ class Player extends Component {
 			.catch(error => console.log(error))
 			fetchWrap('/video/'+
 					this.state.canal + '/' +
-					this.props.tmdbId + '/' +
+					this.state.movieId + '/' +
 					this.state.magnet + '/' + 
 					time +
 					'first',
@@ -104,7 +105,7 @@ class Player extends Component {
 					:
 					'http://localhost:3001/video/' + 
 					this.state.canal + '/' +
-					this.props.tmdbId + '/' +
+					this.state.movieId + '/' +
 					this.state.magnet + '/' +
 					this.state.time
 				} 
