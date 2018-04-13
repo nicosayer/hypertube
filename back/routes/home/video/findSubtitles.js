@@ -6,18 +6,55 @@ const got = require('got');
 var zlib = require("zlib");
 var request = require('request')
 var srt2vtt = require('srt-to-vtt')
-const OS = require('opensubtitles-api')
-
-const OpenSubtitles = new OS({
-	useragent: 'TemporaryUserAgent', 
-    ssl: true
-});
+var mongo = require('../../../mongo');
 
 
 router.post('/', function(req, res, next) {
 
+	const { languageVideo } = req.body
+	const { languageUser } = req.body
 	var { magnet } = req.body
+	magnet = decodeURIComponent(magnet)
+
+	const db = mongo.getDb();
+	const collection = db.collection('magnets');
+	
+	collection.findOne({magnet: magnet}, function (err, result) {
+		if (result && result.subs.length > 0) {
+			var count = 0
+			var countfinal = 1
+			var arraySub = []
+			if (languageVideo != languageUser && languageUser != 'en') {
+				countfinal++
+			}
+			for (var i = 0; i < result.subs.length; i++) {
+				if (result.subs[i].language == 'en') {
+					count++
+					arraySub.push(result.subs[i])
+				}
+				if (countfinal > 1 && result.subs[i].language == languageUser) {
+					count++
+					arraySub.push(result.subs[i])
+				}
+			}
+			if (count == countfinal) {
+				res.status(201).json({ sub: arraySub })
+			}
+			else {
+				DLStartEndMagnet(req, res)
+			}
+		}
+		else {
+			DLStartEndMagnet(req, res)
+		}
+	})
+})
+
+function DLStartEndMagnet(req, res) {
 	var timeout = false
+	const { languageVideo } = req.body
+	const { languageUser } = req.body
+	var { magnet } = req.body
 	magnet = decodeURIComponent(magnet)
 
 	setTimeout(() => {
@@ -65,8 +102,14 @@ router.post('/', function(req, res, next) {
 				hashAndDL(file, req, res)
 			}
 		})
+		stream.on('data', () => {
+			console.log('data1')
+		})
+		stream2.on('data', () => {
+			console.log('data2')
+		})
 	})
-})
+}
 		
 function hashAndDL(file, req, res) {
 	const { languageVideo } = req.body
@@ -75,6 +118,8 @@ function hashAndDL(file, req, res) {
 	const { seasonNumber } = req.body
 	const { episodeNumber } = req.body
 	const { releaseYear } = req.body
+	var { magnet } = req.body
+	magnet = decodeURIComponent(magnet)
 
 	setTimeout(() => {
 		computeHash('./public/movies/' + file.path, file.length)
@@ -91,8 +136,6 @@ function hashAndDL(file, req, res) {
 				
 				var subs = subs.filter(sub => {
 					if (canal == 'tv') {
-						console.log(sub.SeriesSeason, seasonNumber)
-						console.log(sub.SeriesEpisode, episodeNumber)
 						if (sub.SeriesSeason == seasonNumber && sub.SeriesEpisode == episodeNumber) {
 							return true
 						}
@@ -118,8 +161,8 @@ function hashAndDL(file, req, res) {
 					})
 				}
 				if (subsEnglish.length != 0 || (subsOther !== undefined && subsOther.length != 0)) {
-					console.log(subsEnglish)
-					console.log(subsOther)
+					//console.log(subsEnglish)
+					//console.log(subsOther)
 					var links = []
 					var arraySub = []
 
@@ -154,8 +197,21 @@ function hashAndDL(file, req, res) {
 				            buffer.join("");
 				            count++
 				            console.log('end srt to vtt: ', count, links.length)
-				            if (count == links.length)
+				            if (count == links.length) {
+				            	const db = mongo.getDb();
+								const collection = db.collection('magnets');
+								collection.findOne({magnet: magnet}, function (err, result) {
+									if (result) {
+										result.subs = arrayUnique(result.subs.concat(arraySub));
+										collection.save(result)
+									}
+									else {
+										collection.insert({magnet: magnet, subs: arraySub}, function (err, result) {
+										});
+									}
+								})
 				            	res.status(201).json({ sub: arraySub })
+				            }
 				        }).on("error", function(e) {
 				            callback(e);
 				        })
@@ -278,6 +334,18 @@ function padLeft(str, c, length) {
         str = c.toString() + str
     }
     return str
+}
+
+function arrayUnique(array) {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i].language === a[j].language)
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
 }
 
 

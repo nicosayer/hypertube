@@ -15,6 +15,7 @@ class Player extends Component {
 			subtitles: [{language: 'en', file: 'subDef.vtt'}],
 			magnet: '',
 			movieLanguage: 'en',
+			meLanguage: 'en',
 			canal: 'movie',
 			seasonNumber: 0,
 			episodeNumber: 0,
@@ -26,16 +27,18 @@ class Player extends Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (nextProps.magnet !== prevState.magnet) {
-			console.log('update', nextProps)
 			return {
 				magnet: nextProps.magnet,
 				movieLanguage: nextProps.movieLanguage,
-				subtitles: [{language: 'en', file: 'subDef.vtt'}],
-				video: false,
 				canal: nextProps.canal,
 				seasonNumber: nextProps.seasonNumber,
 				episodeNumber: nextProps.episodeNumber,
 				releaseYear: nextProps.releaseYear
+			};
+		}
+		else if (nextProps.me.language !== prevState.meLanguage) {
+			return {
+				meLanguage: nextProps.me.language
 			};
 		}
 		else {
@@ -44,7 +47,7 @@ class Player extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.magnet !== this.state.magnet) {
+		if (prevState.magnet !== this.state.magnet || (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0)) {
 			const time = Date.now()
 
 			fetchWrap('/sub', {
@@ -56,7 +59,7 @@ class Player extends Component {
 				body: JSON.stringify({
 					magnet: this.state.magnet,
 					languageVideo: this.state.movieLanguage,
-					languageUser: this.props.me.language,
+					languageUser: this.state.meLanguage,
 					canal: this.state.canal,
 					seasonNumber: this.state.seasonNumber,
 					episodeNumber: this.state.episodeNumber,
@@ -90,9 +93,6 @@ class Player extends Component {
 	render() {
 		const tracks = this.state.subtitles
 			.map((item, key) => ({kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true}))
-
-
-		console.log('la',this.state)
 
 		return(
 			<div  >
