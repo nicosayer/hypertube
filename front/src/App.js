@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider, connect } from 'react-redux'
-import {NotificationContainer} from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 
 import Home from './scenes/Home/'
 import LogIn from './scenes/Connect/LogIn'

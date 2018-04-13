@@ -58,10 +58,8 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		stream.on('data', () => {
-			console.log('data1')
 		})
 		stream2.on('data', () => {
-			console.log('data2')
 		})
 	})
 })
@@ -113,13 +111,13 @@ function hashAndDL(file, req, res) {
 					var links = []
 					var arraySub = []
 
-					if (subsEnglish.length != 0) {
-						links.push(subsEnglish[0].SubDownloadLink)
-						arraySub.push({language: 'en', file: subsEnglish[0].MovieReleaseName + '.en.vtt'})
-					}
 					if (subsOther !== undefined && subsOther.length != 0) {
 						links.push(subsOther[0].SubDownloadLink)
 						arraySub.push({language: languageUser, file: subsOther[0].MovieReleaseName + '.' + languageUser + '.vtt'})
+					}
+					if (subsEnglish.length != 0) {
+						links.push(subsEnglish[0].SubDownloadLink)
+						arraySub.push({language: 'en', file: subsEnglish[0].MovieReleaseName + '.en.vtt'})
 					}
 					console.log(links, arraySub)
 					var buffer;
@@ -190,7 +188,6 @@ function computeHash(path, size) {
             if (err) return reject(err)
 
             file_size = size
-        console.log('|||||file_size: '+file_size)
 
             checksumReady(file_size.toString(16))
 

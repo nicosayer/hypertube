@@ -239,7 +239,7 @@ class Movies extends Component {
 								:
 								null
 							}
-							{ (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path) || (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[1] && this.state.movieInfo.production_companies[1].logo_path) || (this.state.movieCast.crew && this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path)
+							{ (this.state.movieInfo.production_companies && this.state.movieInfo.production_companies[0] && this.state.movieInfo.production_companies[0].logo_path) || (this.state.movieCast.crew && this.state.movieCast.crew[0] && this.state.movieCast.crew[0].profile_path)
 								?
 								<div className='spaceBottom spaceTopBig'>
 									<b>{language.crewLabel[this.props.me.language]}</b>
@@ -278,7 +278,7 @@ class Movies extends Component {
 								null
 							}
 							{
-								this.state.movieCast.cast && ((this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path) || (this.state.movieCast.cast[1] && this.state.movieCast.cast[1].profile_path) || (this.state.movieCast.cast[2] && this.state.movieCast.cast[2].profile_path))
+								this.state.movieCast.cast && this.state.movieCast.cast[0] && this.state.movieCast.cast[0].profile_path
 								?
 								<div>
 									<div className='spaceBottom spaceTopBig'>
@@ -446,7 +446,7 @@ class Movies extends Component {
 							</div>
 							<Comments
 								canal={ this.props.canal }
-								id={ this.props.match.params.id }
+								movieId={ this.props.match.params.id }
 								/>
 						</div>
 					}

@@ -12,7 +12,7 @@ class Player extends Component {
 		this.state = {
 			video: false,
 			time: 0,
-			subtitles: [{language: 'en', file: 'subDef.vtt'}],
+			subtitles: [],
 			magnet: '',
 			movieLanguage: 'en',
 			meLanguage: 'en',
@@ -49,8 +49,7 @@ class Player extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.magnet !== this.state.magnet || (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0)) {
-			const time = Date.now()
-
+			this.setState({subtitles: []})
 			fetchWrap('/sub', {
 				method: 'POST',
 				credentials: 'include',
@@ -68,10 +67,7 @@ class Player extends Component {
 				})
 			})
 			.then((data) => {
-				console.log('subs',data)
-				this.setState({ subtitles: data.sub }, () => {
-					console.log(this.state);
-				})
+				this.setState({ subtitles: data.sub })
 			})
 			.catch(error => console.log(error))
 			fetchWrap('/video/'+
@@ -81,6 +77,11 @@ class Player extends Component {
 					time +
 					'first',
 				{credentials: 'include'})
+		}
+		if (prevState.magnet !== this.state.magnet) {
+			const time = Date.now()
+
+			fetchWrap('/video/' + this.state.magnet + '/' + time + 'first', {credentials: 'include'})
 			.then((data) => {
 				console.log(data)
 				this.setState({ video: true, time: time, url: data.url }, () => {
@@ -93,7 +94,17 @@ class Player extends Component {
 
 	render() {
 		const tracks = this.state.subtitles
-			.map((item, key) => ({kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true}))
+			.map((item, key) => {
+				if (item.language === 'en' && this.state.subtitles.length === 1) {
+					return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true }
+				}
+				else if (item.language !== 'en') {
+					return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true }
+				}
+				else {
+					return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language}
+				}
+			})
 
 		return(
 			<div  >
@@ -112,7 +123,7 @@ class Player extends Component {
 				width="1280px" 
 				height="720px" 
 				playing 
-				controls 
+				controls
 				config={
 					{ file: {
 					    tracks: tracks
@@ -125,6 +136,10 @@ class Player extends Component {
 					console.log('onStart');
 				}}
 				ref={this.myRef}
+				config={{ file: {
+						    tracks: this.state.subtitles.length === 0 ? [] : tracks
+							}
+						}}
 				/>}
 			</div>
 		);
