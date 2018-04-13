@@ -58,10 +58,8 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		stream.on('data', () => {
-			console.log('data1')
 		})
 		stream2.on('data', () => {
-			console.log('data2')
 		})
 	})
 })
@@ -190,7 +188,6 @@ function computeHash(path, size) {
             if (err) return reject(err)
 
             file_size = size
-        console.log('|||||file_size: '+file_size)
 
             checksumReady(file_size.toString(16))
 

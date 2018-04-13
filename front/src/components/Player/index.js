@@ -46,7 +46,6 @@ class Player extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.magnet !== this.state.magnet || (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0)) {
-			var tmpSubs = this.state.subtitles
 			this.setState({subtitles: []})
 			fetchWrap('/sub', {
 				method: 'POST',

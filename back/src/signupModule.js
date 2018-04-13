@@ -101,7 +101,17 @@ module.exports = function(req, post, url, isOAuth, callback) {
 	}
 
 	if (isOAuth) {
-		collection.findOne({$or: [{'oauth.google': post.oauth.google},{'oauth.42': post.oauth['42']}, {'oauth.facebook': post.oauth.facebook}]}, function (err, result) {
+		var oauthWhich
+		if (post.oauth.google !== undefined) {
+			oauthWhich = {'google': post.oauth.google}
+		}
+		else if (post.oauth.facebook !== undefined) {
+			oauthWhich = {'facebook': post.oauth.facebook}
+		}
+		else {
+			oauthWhich = {'42': post.oauth['42']}
+		}
+		collection.findOne({oauth: oauthWhich}, function (err, result) {
 			if (err) throw err;
 
 			if (!result) {
@@ -124,7 +134,9 @@ module.exports = function(req, post, url, isOAuth, callback) {
 							}
 							else {
 								req.session._id = userResult._id;
-								fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
+								if (typeof url == 'undefined') {
+									fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
+								}
 								callback(result.value);
 							}
 						});
@@ -168,7 +180,9 @@ module.exports = function(req, post, url, isOAuth, callback) {
 				}
 				else {
 					req.session._id = result._id;
-					fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
+					if (typeof url == 'undefined') {
+						fs.createWriteStream('./public/pictures/' + req.session._id + '.png');
+					}
 					callback(result);
 				}
 			}
