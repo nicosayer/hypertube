@@ -49,6 +49,10 @@
 	opacity: 1;
 }
 
+.commentPicture:hover + .profilePageContainer .profilePage {
+	width: 100%;
+}
+
 .profilePageContainer {
 	opacity: 0;
 	transition: 0.35s opacity;
@@ -56,7 +60,8 @@
 }
 
 .profilePage {
-	width: 100%;
+	white-space: nowrap;
+	width: 0;
 	height: 60px;
 	position: relative;
 	top: 7px;
@@ -69,6 +74,7 @@
 	padding-left: 55px;
 	overflow: hidden;
 	box-sizing: border-box;
+	transition: 0.35s width;
 }
 
 .commentTextContainer {
