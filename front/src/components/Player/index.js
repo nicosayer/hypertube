@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 
-import { fetchWrap } from '../../services/fetchWrap'
+import { updateProfileInfos } from '../../actions/me'
 
+import { fetchWrap } from '../../services/fetchWrap'
 
 class Player extends Component {
 
@@ -49,7 +50,9 @@ class Player extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0) {
-			this.setState({subtitles: []})
+			if (this._isMounted) {
+				this.setState({subtitles: []})
+			}
 			fetchWrap('/sub', {
 				method: 'POST',
 				credentials: 'include',
@@ -67,13 +70,29 @@ class Player extends Component {
 				})
 			})
 			.then((data) => {
-				this.setState({ subtitles: data.sub })
+				if (this._isMounted) {
+					this.setState({ subtitles: data.sub })
+				}
 			})
 			.catch(error => console.log(error))
 		}
 		if (prevState.magnet !== this.state.magnet) {
-			const time = Date.now()
 
+			var user = this.props.me;
+			const actualMovie = {
+				canal: this.state.canal,
+				movieId: this.state.movieId
+			};
+
+			if (user.seenMovies) {
+				user.seenMovies.push(actualMovie);
+			}
+			else {
+				user.seenMovies = [actualMovie];
+			}
+			this.props.dispatch(updateProfileInfos(user));
+
+			const time = Date.now()
 			fetchWrap('/video/'+
 			this.state.canal + '/' +
 			this.state.movieId + '/' +
@@ -82,13 +101,24 @@ class Player extends Component {
 			'first',
 			{credentials: 'include'})
 			.then((data) => {
-				console.log(data)
-				this.setState({ video: true, time: time, url: data.url }, () => {
-					console.log(this.state);
-				})
+				if (this._isMounted) {
+					this.setState({
+						video: true,
+						time,
+						url: data.url
+					})
+				}
 			})
 			.catch(error => console.log(error))
 		}
+	}
+
+	componentDidMount() {
+		this._isMounted = true;
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
 	}
 
 	render() {

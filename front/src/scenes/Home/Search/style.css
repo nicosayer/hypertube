@@ -189,6 +189,7 @@
 	position: absolute;
 	left: calc(100% - 17px);
 	top: calc(100% - 21px);
+	opacity: 0.75;
 }
 
 .noMovies {
