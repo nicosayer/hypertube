@@ -60,8 +60,6 @@ class Comments extends Component {
 
 	render() {
 
-		console.log(this.state.comments)
-
 		const comments =
 		[...this.state.comments].reverse().filter(comment => comment.user && (comment.user.login || (comment.user.firstName && comment.user.lastName)) && comment.date && comment.comment).map((comment, key) =>
 		<div key={key} className='commentContainer'>

@@ -55,7 +55,7 @@ class Movies extends Component {
 					})
 					.catch(err => this.setState({loading: false}))
 				}
-				else if (movieInfo.id) {
+				else if (movieInfo.id && this.props.canal === 'tv') {
 					fetchWrap('https://api.themoviedb.org/3/tv/' + movieInfo.id + '/external_ids?api_key=fc97ca1225d5b618b7a69f5a20a132d8')
 					.then(externalIds => {
 						if (externalIds.imdb_id) {
