@@ -74,7 +74,13 @@ class Player extends Component {
 		if (prevState.magnet !== this.state.magnet) {
 			const time = Date.now()
 
-			fetchWrap('/video/' + this.state.magnet + '/' + time + 'first', {credentials: 'include'})
+			fetchWrap('/video/'+
+					this.state.canal + '/' +
+					this.state.movieId + '/' +
+					this.state.magnet + '/' + 
+					time +
+					'first',
+				{credentials: 'include'})
 			.then((data) => {
 				console.log(data)
 				this.setState({ video: true, time: time, url: data.url }, () => {
