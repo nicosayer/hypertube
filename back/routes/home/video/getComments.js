@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
 			var count = 0;
 			result.forEach((comment, index ) => {
 				count++;
-				collection.findOne({ _id: new mongodb.ObjectId(req.session._id) }, (e, r) => {
+				collection.findOne({ _id: new mongodb.ObjectId(comment.userId) }, (e, r) => {
 					count--;
 					result[index].user = r;
 					if (!count) {
