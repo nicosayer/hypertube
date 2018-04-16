@@ -186,10 +186,16 @@
 }
 
 .seenMovieLogo {
+	border-radius: 25px;
+	background: #FF3333;
+	z-index: 2000;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
 	position: absolute;
-	left: calc(100% - 17px);
-	top: calc(100% - 21px);
-	opacity: 0.75;
+	left: calc(100% - 20px);
+	top: calc(100% - 20px);
+	opacity: 0.90;
 }
 
 .noMovies {

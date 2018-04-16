@@ -221,7 +221,7 @@ class Search extends Component {
 					this.props.me.seenMovies && this.props.me.seenMovies.find(movie => movie.canal === this.props.canal && parseInt(movie.movieId, 10) === item.id)
 					?
 					<div className='seenMovieLogo'>
-						<i className="fas fa-check-circle"></i>
+						<i className="fas fa-check"></i>
 					</div>
 					:
 					null
