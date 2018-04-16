@@ -40,17 +40,17 @@ router.post('/', function(req, res, next) {
 
 		collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
 			if (error) throw error;
-
+			var oauth = false;
+			if (!result.password) {
+				oauth = true;
+				result.password = '';
+			}
 			bcrypt.compare(oldPassword, result.password, function(error, result) {
 				if (error) throw error;
 
-				if (result !== true) {
+				if (result !== true && !oauth) {
 					errors.oldPassword = 'wrong'
-
-					collection.findOne({_id: new mongodb.ObjectId(req.session._id)}, function (error, result) {
-						if (error) throw error;
-						res.status(300).json(errors);
-					});
+					res.status(300).json(errors);
 				}
 				else {
 					bcrypt.genSalt(10, function(err, salt) {

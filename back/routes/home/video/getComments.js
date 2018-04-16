@@ -17,6 +17,9 @@ router.post('/', function(req, res, next) {
 			]
 		})
 		.toArray((error, result) => {
+			if (!result.length) {
+				res.status(200).json([]);
+			}
 			const collection = mongo.getDb().collection('users');
 			var count = 0;
 			result.forEach((comment, index ) => {
