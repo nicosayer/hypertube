@@ -69,10 +69,30 @@ class Comments extends Component {
 				src={'http://localhost:3001/pictures/' + comment.userId + '.png'}
 				onError={event => event.target.src = 'http://localhost:3001/pictures/default.png'}
 				/>
+			<div className='profilePageContainer'>
+				<div className='profilePage'>
+					{
+						comment.user.firstName && comment.user.lastName
+						?
+						<b className='capital'>{comment.user.firstName} {comment.user.lastName}</b>
+						:
+						null
+					}
+					<br/>
+						{
+							comment.user.login
+							?
+							<span className='fontGrey'>{comment.user.login}</span>
+							:
+							null
+						}
+				</div>
+			</div>
 			<div className='commentTextContainer'>
 				<div>
 					{
-						comment.user.login ?
+						comment.user.login
+						?
 						comment.user.login
 						:
 						comment.user.firstName + ' ' + comment.user.lastName
