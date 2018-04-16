@@ -22,8 +22,7 @@ class Player extends Component {
 			meLanguage: 'en',
 			canal: 'movie',
 			seasonNumber: 0,
-			episodeNumber: 0,
-			releaseYear: 1900
+			episodeNumber: 0
 		}
 
 		this.myRef = React.createRef();
@@ -39,7 +38,7 @@ class Player extends Component {
 				movieId: nextProps.movieId,
 				seasonNumber: nextProps.seasonNumber,
 				episodeNumber: nextProps.episodeNumber,
-				releaseYear: nextProps.releaseYear
+				imdbId: nextProps.imdbId
 			};
 		}
 		else if (nextProps.me.language !== prevState.meLanguage) {
@@ -53,7 +52,7 @@ class Player extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0) {
+		if (prevState.magnet !== this.state.magnet || (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0)) {
 			if (this._isMounted) {
 				this.setState({
 					subtitles: []
@@ -72,7 +71,7 @@ class Player extends Component {
 					canal: this.state.canal,
 					seasonNumber: this.state.seasonNumber,
 					episodeNumber: this.state.episodeNumber,
-					releaseYear: this.state.releaseYear
+					imdbId: this.state.imdbId
 				})
 			})
 			.then((data) => {
