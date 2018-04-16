@@ -21,7 +21,7 @@ div {
 .formBox {
 	margin-top: 50px;
 	display: inline-block;
-	min-width: 350px;
+	min-width: 250px;
 	width: 15vw;
 	border-radius: 3px;
 	background: #2A292F;

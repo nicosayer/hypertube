@@ -26,6 +26,30 @@
 	overflow: hidden;
 }
 
+@media only screen and (max-width: 1100px) {
+	.moviesInfosImg {
+		display: none;
+	}
+
+	.movieInfosText {
+		margin-top: 20px;
+		margin-left: 0px;
+	}
+
+	.tvDownload {
+		width: 550px !important;
+		margin: auto;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.movieInfosText, .tvDownload {
+		padding: 10px;
+		font-size: 75%;
+		width: 250px !important;
+	}
+}
+
 .movieInfosOverview {
 	text-align: justify;
 }
@@ -155,14 +179,4 @@
 	height: 225px;
 	object-fit: cover;
 	border-radius: 3px;
-}
-
-.commentSection {
-	margin: 10px 0;
-	padding: 20px;
-	text-align: left;
-	box-shadow: 0 0 10px black;
-	border-radius: 3px;
-	background: #2A292F;
-	overflow: hidden;
 }

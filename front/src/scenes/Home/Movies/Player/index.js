@@ -14,6 +14,7 @@ class Player extends Component {
 		super(props)
 		this.state = {
 			video: false,
+			loading: false,
 			time: 0,
 			subtitles: [],
 			magnet: '',
@@ -31,6 +32,7 @@ class Player extends Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (nextProps.magnet !== prevState.magnet) {
 			return {
+				loading: true,
 				magnet: nextProps.magnet,
 				movieLanguage: nextProps.movieLanguage,
 				canal: nextProps.canal,
@@ -53,7 +55,9 @@ class Player extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0) {
 			if (this._isMounted) {
-				this.setState({subtitles: []})
+				this.setState({
+					subtitles: []
+				})
 			}
 			fetchWrap('/sub', {
 				method: 'POST',
@@ -73,7 +77,9 @@ class Player extends Component {
 			})
 			.then((data) => {
 				if (this._isMounted) {
-					this.setState({ subtitles: data.sub })
+					this.setState({
+						subtitles: data.sub
+					})
 				}
 			})
 			.catch(error => console.log(error))
@@ -106,6 +112,7 @@ class Player extends Component {
 				if (this._isMounted) {
 					this.setState({
 						video: true,
+						loading: false,
 						time,
 						url: data.url
 					})
@@ -140,6 +147,10 @@ class Player extends Component {
 		return(
 			<div className='videoPlayerContainer'>
 				{
+					this.state.loading
+					?
+					<div className='loading fontMedium'><span><i className='fas fa-spinner'></i></span></div>
+					:
 					this.state.video && <ReactPlayer url={
 						this.state.url
 						?
@@ -151,7 +162,6 @@ class Player extends Component {
 						this.state.magnet + '/' +
 						this.state.time
 					}
-					className='videoPlayer test'
 					width='100%'
 					height='100%'
 					playing
