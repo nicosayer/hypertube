@@ -48,7 +48,7 @@ class Player extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.magnet !== this.state.magnet || (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0)) {
+		if (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0) {
 			this.setState({subtitles: []})
 			fetchWrap('/sub', {
 				method: 'POST',
@@ -70,13 +70,6 @@ class Player extends Component {
 				this.setState({ subtitles: data.sub })
 			})
 			.catch(error => console.log(error))
-			fetchWrap('/video/'+
-					this.state.canal + '/' +
-					this.state.movieId + '/' +
-					this.state.magnet + '/' + 
-					time +
-					'first',
-				{credentials: 'include'})
 		}
 		if (prevState.magnet !== this.state.magnet) {
 			const time = Date.now()
