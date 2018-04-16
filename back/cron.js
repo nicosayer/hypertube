@@ -1,6 +1,7 @@
 const express = require('express');
 var cron = require('node-cron');
 var mongo = require('./mongo');
+const rimraf = require('rimraf');
 const fs = require('fs');
 
 exports.initCron = function() {
