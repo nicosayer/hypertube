@@ -75,12 +75,12 @@ class Player extends Component {
 			const time = Date.now()
 
 			fetchWrap('/video/'+
-					this.state.canal + '/' +
-					this.state.movieId + '/' +
-					this.state.magnet + '/' + 
-					time +
-					'first',
-				{credentials: 'include'})
+			this.state.canal + '/' +
+			this.state.movieId + '/' +
+			this.state.magnet + '/' +
+			time +
+			'first',
+			{credentials: 'include'})
 			.then((data) => {
 				console.log(data)
 				this.setState({ video: true, time: time, url: data.url }, () => {
@@ -93,39 +93,39 @@ class Player extends Component {
 
 	render() {
 		const tracks = this.state.subtitles
-			.map((item, key) => {
-				if (item.language === 'en' && this.state.subtitles.length === 1) {
-					return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true }
-				}
-				else if (item.language !== 'en') {
-					return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true }
-				}
-				else {
-					return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language}
-				}
-			})
+		.map((item, key) => {
+			if (item.language === 'en' && this.state.subtitles.length === 1) {
+				return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true }
+			}
+			else if (item.language !== 'en') {
+				return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language, default: true }
+			}
+			else {
+				return {kind: 'subtitles', src: '/subtitles/' + item.file, srcLang: item.language}
+			}
+		})
 
 		return(
 			<div  >
 				{
 					this.state.video && <ReactPlayer url={
-					this.state.url
-					?
-					this.state.url
-					:
-					'http://localhost:3001/video/' + 
-					this.state.canal + '/' +
-					this.state.movieId + '/' +
-					this.state.magnet + '/' +
-					this.state.time
-				} 
-				width="1280px" 
-				height="720px" 
-				playing 
-				controls
-				config={
-					{ file: {
-					    tracks: tracks
+						this.state.url
+						?
+						this.state.url
+						:
+						'http://localhost:3001/video/' +
+						this.state.canal + '/' +
+						this.state.movieId + '/' +
+						this.state.magnet + '/' +
+						this.state.time
+					}
+					width="1280px"
+					height="720px"
+					playing
+					controls
+					config={
+						{ file: {
+							tracks: tracks
 						}
 					}
 				}
@@ -135,10 +135,11 @@ class Player extends Component {
 					console.log('onStart');
 				}}
 				ref={this.myRef}
-				config={{ file: {
-						    tracks: this.state.subtitles.length === 0 ? [] : tracks
-							}
-						}}
+				config={{
+					file: {
+						tracks: this.state.subtitles.length === 0 ? [] : tracks
+					}
+				}}
 				/>}
 			</div>
 		);

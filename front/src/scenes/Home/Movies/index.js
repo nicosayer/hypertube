@@ -46,12 +46,14 @@ class Movies extends Component {
 				if (movieInfo.imdb_id && this.props.canal !== 'tv') {
 					fetchWrap('https://yts.am/api/v2/list_movies.json?quality=720p,1080p&query_term=' + movieInfo.imdb_id)
 					.then(torrentInfo => {
-						this.setState({
-							movieInfo,
-							movieCast,
-							torrentInfo,
-							loading: false
-						})
+						if (this._isMounted) {
+							this.setState({
+								movieInfo,
+								movieCast,
+								torrentInfo,
+								loading: false
+							})
+						}
 					})
 					.catch(err => this.setState({loading: false}))
 				}
@@ -62,16 +64,18 @@ class Movies extends Component {
 							movieInfo.imdb_id = externalIds.imdb_id;
 							fetchWrap('https://tv-v2.api-fetch.website/show/' + movieInfo.imdb_id)
 							.then(torrentInfo => {
-								this.setState({
-									movieInfo,
-									movieCast,
-									torrentInfo,
-									loading: false
-								})
+								if (this._isMounted) {
+									this.setState({
+										movieInfo,
+										movieCast,
+										torrentInfo,
+										loading: false
+									})
+								}
 							})
 							.catch(err => this.setState({loading: false}))
 						}
-						else {
+						else if (this._isMounted) {
 							this.setState({
 								movieInfo,
 								movieCast,
@@ -81,7 +85,7 @@ class Movies extends Component {
 					})
 					.catch(err => this.setState({loading: false}))
 				}
-				else {
+				else if (this._isMounted) {
 					this.setState({
 						movieInfo,
 						movieCast,
@@ -361,105 +365,105 @@ class Movies extends Component {
 							}
 							/>
 						<div className='spaceBottomBig' ref={this.myDownloadAnchor}></div>
-							<div className='spaceTop spaceBottomBig'>
-								{
-									this.props.canal === 'movie'
-									?
-									movieLinks ?
-									<div>
-										<div className='spaceBottom'>
-											<b>{language.availableInLabel[this.props.me.language]}</b>
-										</div>
-										{movieLinks}
+						<div className='spaceTop spaceBottomBig'>
+							{
+								this.props.canal === 'movie'
+								?
+								movieLinks ?
+								<div>
+									<div className='spaceBottom'>
+										<b>{language.availableInLabel[this.props.me.language]}</b>
 									</div>
-									:
-									<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.movieUnavailable[this.props.me.language]}</div>
-									:
-									<div className='tvDownload'>
-										{
-											this.state.seasonNumber ?
-											<table className='tvEpisodesTable'>
-												<thead>
+									{movieLinks}
+								</div>
+								:
+								<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.movieUnavailable[this.props.me.language]}</div>
+								:
+								<div className='tvDownload'>
+									{
+										this.state.seasonNumber ?
+										<table className='tvEpisodesTable'>
+											<thead>
+												<tr>
+													<th>
+														{
+															this.state.seasonNumber > 1 ?
+															<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber - 1)}><i className="fas fa-angle-double-left"></i></div>
+															:
+															<span><i className="transparent fas fa-angle-double-left"></i></span>
+														}
+													</th>
+													<th className='fontMedium underline'>
+														{language.seasonNumberLabel[this.props.me.language]} {this.state.seasonNumber}
+													</th>
+													<th>
+														{
+															this.state.seasonNumber < this.state.movieInfo.number_of_seasons ?
+															<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber + 1)}><i className="fas fa-angle-double-right"></i></div>
+															:
+															<span><i className="transparent fas fa-angle-double-right"></i></span>
+														}
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												{
+													actualSeason && actualSeason.length ?
+													actualSeason.map((episode, key) =>
+													<tr key={key}>
+														<td><i className="fab fa-slack-hash"></i>{episode.episode}</td>
+														<td>
+															<b>{episode.title}</b>
+														</td>
+														<td>
+															{
+																Object.keys(episode.torrents).filter(torrent => torrent !== '0').map((torrent, key) =>
+																<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url, episode.episode)}>
+																	{torrent}
+																</span>)
+															}
+														</td>
+													</tr>)
+													:
 													<tr>
-														<th>
-															{
-																this.state.seasonNumber > 1 ?
-																<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber - 1)}><i className="fas fa-angle-double-left"></i></div>
-																:
-																<span><i className="transparent fas fa-angle-double-left"></i></span>
-															}
-														</th>
-														<th className='fontMedium underline'>
-															{language.seasonNumberLabel[this.props.me.language]} {this.state.seasonNumber}
-														</th>
-														<th>
-															{
-																this.state.seasonNumber < this.state.movieInfo.number_of_seasons ?
-																<div className='pointer' onClick={() => this.selectSeason(this.state.seasonNumber + 1)}><i className="fas fa-angle-double-right"></i></div>
-																:
-																<span><i className="transparent fas fa-angle-double-right"></i></span>
-															}
-														</th>
+														<td colSpan='3' className='fontGrey'>
+															<div className='spaceBottom fontBig'>
+																<i className="fas fa-map-signs"></i>
+															</div>
+															{language.seasonUnavailable[this.props.me.language]}
+														</td>
 													</tr>
-												</thead>
-												<tbody>
-													{
-														actualSeason && actualSeason.length ?
-														actualSeason.map((episode, key) =>
-														<tr key={key}>
-															<td><i className="fab fa-slack-hash"></i>{episode.episode}</td>
-															<td>
-																<b>{episode.title}</b>
-															</td>
-															<td>
-																	{
-																		Object.keys(episode.torrents).filter(torrent => torrent !== '0').map((torrent, key) =>
-																		<span key={key} className='torrentQualityButton' onClick={() => this.selectEpisode(episode.torrents[torrent].url, episode.episode)}>
-																			{torrent}
-																		</span>)
-																	}
-															</td>
-														</tr>)
-														:
-														<tr>
-															<td colSpan='3' className='fontGrey'>
-																<div className='spaceBottom fontBig'>
-																	<i className="fas fa-map-signs"></i>
-																</div>
-																{language.seasonUnavailable[this.props.me.language]}
-															</td>
-														</tr>
-													}
-												</tbody>
-											</table>
-											:
-											null
-										}
-										{
-											seasonsPictures && seasonsPictures.length ?
-											seasonsPictures
-											:
-											<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.seasonUnavailable[this.props.me.language]}</div>
-										}
-									</div>
-								}
-							</div>
-							<Comments
-								canal={ this.props.canal }
-								movieId={ this.props.match.params.id }
-								/>
+												}
+											</tbody>
+										</table>
+										:
+										null
+									}
+									{
+										seasonsPictures && seasonsPictures.length ?
+										seasonsPictures
+										:
+										<div className='fontGrey fontCenter'><div className='spaceBottom fontBig'><i className="fas fa-map-signs"></i></div>{language.seasonUnavailable[this.props.me.language]}</div>
+									}
+								</div>
+							}
 						</div>
-					}
-				</div>
-			);
-		}
+						<Comments
+							canal={ this.props.canal }
+							movieId={ this.props.match.params.id }
+							/>
+					</div>
+				}
+			</div>
+		);
 	}
+}
 
-	function mapStateToProps(state) {
-		const { me } = state.handleMe;
-		return ({
-			me
-		})
-	}
+function mapStateToProps(state) {
+	const { me } = state.handleMe;
+	return ({
+		me
+	})
+}
 
-	export default connect(mapStateToProps)(Movies)
+export default connect(mapStateToProps)(Movies)
