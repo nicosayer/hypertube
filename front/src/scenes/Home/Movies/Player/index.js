@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 
-import { updateProfileInfos } from '../../actions/me'
+import { updateProfileInfos } from '../../../../actions/me'
 
-import { fetchWrap } from '../../services/fetchWrap'
+import { fetchWrap } from '../../../../services/fetchWrap'
+
+import './style.css';
 
 class Player extends Component {
 
@@ -136,35 +138,36 @@ class Player extends Component {
 		})
 
 		return(
-			<div  >
+			<div className='videoPlayerContainer'>
 				{
 					this.state.video && <ReactPlayer url={
-					this.state.url
-					?
-					this.state.url
-					:
-					'http://localhost:3001/video/' + 
-					this.state.canal + '/' +
-					this.state.movieId + '/' +
-					this.state.magnet + '/' +
-					this.state.time
-				} 
-				width="1280px" 
-				height="720px" 
-				playing 
-				controls
-				onReady={() => console.log('onReady')}
-				onStart={() => {
-					this.myRef.current.seekTo(0);
-					console.log('onStart');
-				}}
-				ref={this.myRef}
-				config={{
-					file: {
-						tracks: this.state.subtitles.length === 0 ? [] : tracks
+						this.state.url
+						?
+						this.state.url
+						:
+						'http://localhost:3001/video/' +
+						this.state.canal + '/' +
+						this.state.movieId + '/' +
+						this.state.magnet + '/' +
+						this.state.time
 					}
-				}}
-				/>}
+					className='videoPlayer test'
+					width='100%'
+					height='100%'
+					playing
+					controls
+					onReady={() => console.log('onReady')}
+					onStart={() => {
+						this.myRef.current.seekTo(0);
+						console.log('onStart');
+					}}
+					ref={this.myRef}
+					config={{
+						file: {
+							tracks: this.state.subtitles.length === 0 ? [] : tracks
+						}
+					}}/>
+				}
 			</div>
 		);
 	}

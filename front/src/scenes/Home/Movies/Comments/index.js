@@ -77,15 +77,29 @@ class Comments extends Component {
 						<b className='capital'>{comment.user.firstName} {comment.user.lastName}</b>
 						:
 						null
+					} - {
+						comment.user.login
+						?
+						<span className='fontGrey'>{comment.user.login}</span>
+						:
+						null
 					}
 					<br/>
+					<span className='fontGrey'><b>
 						{
-							comment.user.login
+							comment.user.seenMovies
 							?
-							<span className='fontGrey'>{comment.user.login}</span>
+							comment.user.seenMovies.filter(v => v.canal === 'movie').length
 							:
-							null
-						}
+							'0'
+						}</b>{language.movieCounter[this.props.me.language]}<b>{
+							comment.user.seenMovies
+							?
+							comment.user.seenMovies.filter(v => v.canal === 'tv').length
+							:
+							0
+						}</b>{language.tvShowCounter[this.props.me.language]}
+					</span>
 				</div>
 			</div>
 			<div className='commentTextContainer'>
