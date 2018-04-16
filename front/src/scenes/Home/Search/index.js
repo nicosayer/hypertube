@@ -217,6 +217,15 @@ class Search extends Component {
 						</div>
 					</div>
 				</div>
+				{
+					this.props.me.seenMovies && this.props.me.seenMovies.find(movie => movie.canal === this.props.canal && parseInt(movie.movieId, 10) === item.id)
+					?
+					<div className='seenMovieLogo'>
+						<i className="fas fa-check-circle"></i>
+					</div>
+					:
+					null
+				}
 				<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
 			</div>
 		</Link>
@@ -265,6 +274,15 @@ class Search extends Component {
 						</div>
 					</div>
 				</div>
+				{
+					this.props.me.seenMovies && this.props.me.seenMovies.find(movie => movie.canal === this.props.canal && parseInt(movie.movieId, 10) === item.id)
+					?
+					<div className='seenMovieLogo'>
+						<i className="fas fa-check-circle"></i>
+					</div>
+					:
+					null
+				}
 				<img className='movieImg' alt={item.title} src={'https://image.tmdb.org/t/p/w500' + item.poster_path} />
 			</div>
 		</Link>)
@@ -286,8 +304,16 @@ class Search extends Component {
 							<div className={this.props.searchSettings.orderBy === 'popularity.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'popularity.desc')}>{language.orderByPopularity[this.props.me.language]}</div>
 							<div className={this.props.searchSettings.orderBy === 'vote_average.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_average.desc')}>{language.orderByRating[this.props.me.language]}</div>
 							<div className={this.props.searchSettings.orderBy === 'release_date.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'release_date.desc')}>{language.orderByReleaseDate[this.props.me.language]}</div>
-							<div className={this.props.searchSettings.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
-							<div className={this.props.searchSettings.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
+							{
+								this.props.canal !== 'tv'
+								?
+								<div>
+									<div className={this.props.searchSettings.orderBy === 'revenue.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'revenue.desc')}>{language.orderByRevenue[this.props.me.language]}</div>
+									<div className={this.props.searchSettings.orderBy === 'vote_count.desc' ? 'searchChoiceActive' : 'searchChoice'} onClick={() => this.discover('orderBy', 'vote_count.desc')}>{language.orderByVoteCount[this.props.me.language]}</div>
+								</div>
+								:
+								null
+							}
 							<div className='searchTitle searchTitleLign'>
 								{language.genreLabel[this.props.me.language]}
 							</div>

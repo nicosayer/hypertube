@@ -17,11 +17,14 @@ router.post('/', function(req, res, next) {
 			]
 		})
 		.toArray((error, result) => {
+			if (!result.length) {
+				res.status(200).json([]);
+			}
 			const collection = mongo.getDb().collection('users');
 			var count = 0;
 			result.forEach((comment, index ) => {
 				count++;
-				collection.findOne({ _id: new mongodb.ObjectId(req.session._id) }, (e, r) => {
+				collection.findOne({ _id: new mongodb.ObjectId(comment.userId) }, (e, r) => {
 					count--;
 					result[index].user = r;
 					if (!count) {

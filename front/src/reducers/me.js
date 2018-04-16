@@ -36,7 +36,10 @@ export function handleMe(
 
 		case UPDATE_ME:
 		return Object.assign({}, state, {
-			me: action.userInfos
+			me: {
+				...state.me,
+				...action.userInfos
+			}
 		})
 
 		case CHANGE_LANGUAGE:

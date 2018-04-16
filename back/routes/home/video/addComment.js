@@ -8,7 +8,6 @@ router.post('/', function(req, res, next) {
 
 	if (req && req.session && req.session._id && req.body) {
 		const collection = mongo.getDb().collection('comments');
-		console.log(req.body.comment);
 		collection.insert({
 			userId: req.session._id,
 			comment: req.body.comment,

@@ -185,6 +185,13 @@
 	border-radius: 3px;
 }
 
+.seenMovieLogo {
+	position: absolute;
+	left: calc(100% - 17px);
+	top: calc(100% - 21px);
+	opacity: 0.75;
+}
+
 .noMovies {
 	font-size: 300%;
 	margin-top: 100px;
