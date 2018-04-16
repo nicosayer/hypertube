@@ -221,7 +221,7 @@ class Search extends Component {
 					this.props.me.seenMovies && this.props.me.seenMovies.find(movie => movie.canal === this.props.canal && parseInt(movie.movieId, 10) === item.id)
 					?
 					<div className='seenMovieLogo'>
-						<i className="fas fa-check"></i>
+						<i className='fas fa-check'></i>
 					</div>
 					:
 					null
@@ -278,7 +278,7 @@ class Search extends Component {
 					this.props.me.seenMovies && this.props.me.seenMovies.find(movie => movie.canal === this.props.canal && parseInt(movie.movieId, 10) === item.id)
 					?
 					<div className='seenMovieLogo'>
-						<i className="fas fa-check-circle"></i>
+						<i className='fas fa-check'></i>
 					</div>
 					:
 					null
@@ -295,7 +295,7 @@ class Search extends Component {
 					useWindow={false}
 					>
 					<div className='searchMenu'>
-						<div className='searchMenuLogoContainer'><i className="fas fa-bars"></i></div>
+						<div className='searchMenuLogoContainer'><i className='fas fa-bars'></i></div>
 						<div className='searchMenuContent'>
 							<div className='searchTitle'>
 								{language.orderByLabel[this.props.me.language]}
