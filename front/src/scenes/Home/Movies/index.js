@@ -125,8 +125,6 @@ class Movies extends Component {
 
 	render() {
 
-		console.log(this.state)
-
 		if (!this.state.loading && !this.state.movieInfo) {
 			NotificationManager.warning('This movie seems corrupted');
 			if (this.props.canal === 'tv') {
