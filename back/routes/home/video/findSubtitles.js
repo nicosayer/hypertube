@@ -65,9 +65,11 @@ router.post('/', function(req, res, next) {
 })
 		
 function hashAndDL(file, req, res) {
-	const { languageVideo, languageUser, canal, seasonNumber, episodeNumber, releaseYear } = req.body
+	const { languageVideo, languageUser, canal, seasonNumber, episodeNumber, releaseYear, imdb } = req.body
 	var { magnet } = req.body
 	magnet = decodeURIComponent(magnet)
+
+	console.log(imdb)
 
 	setTimeout(() => {
 		computeHash('./public/movies/' + file.path, file.length)
@@ -80,6 +82,7 @@ function hashAndDL(file, req, res) {
 			.then((subs) => {
 				var secondLanguage = 'en'
 				subs = JSON.parse(subs.body)
+				console.log(subs)
 				var subs = subs.filter(sub => {
 					if (canal == 'tv') {
 						if (sub.SeriesSeason == seasonNumber && sub.SeriesEpisode == episodeNumber) {
@@ -136,11 +139,9 @@ function hashAndDL(file, req, res) {
 				            buffer.push(data.toString())
 
 				        }).on("end", function() {
-				        	console.log('res')
 				            // response and decompression complete, join the buffer and return
 				            buffer.join("");
 				            count++
-				            console.log('end srt to vtt: ', count, links.length)
 				            if (count == links.length) {
 				            	res.status(201).json({ sub: arraySub })
 				            }

@@ -1,11 +1,12 @@
 const express = require('express');
 var cron = require('node-cron');
 var mongo = require('./mongo');
+const rimraf = require('rimraf');
 const fs = require('fs');
 
 exports.initCron = function() {
 
-	cron.schedule('* * * * *', function() {
+	cron.schedule('0 0 * * *', function() {
 		const db = mongo.getDb();
 		const magnetsCollection = db.collection('magnets');
 		var one_day = 1000 * 60 * 60 * 24;

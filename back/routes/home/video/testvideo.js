@@ -35,7 +35,8 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 			if (magnet.match(/^magnet:\?xt=urn:/i) != null) {
 
 				magnetsCollection.findOne({magnet: magnet}, function(err, result) {
-					if (result && result.downloaded) {
+					if (result && ((result.downloaded && result.endDL) || (result.downloaded && Date.now() - result.dateProgress < 1000 * 60 * 2))) {
+						console.log('deja telecharge')
 						if (result.path) {
 							magnetsCollection.update({magnet: magnet}, {$set: {date: Date.now()}});
 
@@ -45,7 +46,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 							res.sendStatus(300)
 						}
 					} else {
-
+						console.log('newwwwwwwwww')
 						var engine = torrentStream(magnet, {path: './public/movies'})
 
 						engine.on('ready', function() {
@@ -88,6 +89,9 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 									file = fileTmp;
 									ext = file.name.substr(file.name.length - 3);			
 								}
+							})
+							engine.on('idle', () => {
+								magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
 							})
 
 							user[id] = file;
@@ -142,15 +146,33 @@ download_no_transcript = function(file, req, res) {
 
 download_transcript = function(file, req, res) {
 
+	var sizetot= 0 
 	var stream = file.createReadStream();
+	stream.on('data', (data) => {
+		sizetot += data.length
+	})
 	const db = mongo.getDb();
 	const magnetsCollection = db.collection('magnets');
 	const { magnet } = req.params
-	var first = 1;
+	var first = true;
+	var minDL = true;
+	var response = false
 
 	const folderName = file.name.substring(0, file.name.length - 4);
 	const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
 	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
+
+	setTimeout(() => {
+		if (!response) {
+			response = true;
+			if (first) {
+				res.sendStatus(300)
+			}
+			else {
+				res.status(201).json({url: ngrokUrl});
+			}
+		}
+	}, 105000)
 
 	ffmpeg(stream, { timeout: 432000 }).addOptions([
 	    '-profile:v baseline',
@@ -179,17 +201,23 @@ download_transcript = function(file, req, res) {
     .on('progress', function(progress) {
     	console.log("Transcripting " + file.name);
 
+    	magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
     	if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
 			console.log("m3u8 Created.");
 			
-			first = 0;
+			first = false;
+		}
+		if (!first && minDL && sizetot > 15000000) {
+			minDL = false
+			response = true
 			res.status(201).json({url: ngrokUrl});
 		}
     })
 	.output('public/movies/' + m3u8name + '/' + m3u8name)
 	.on('end', () => {
 		console.log('Transcripting done!');
-
+		
+		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
 		if (fs.existsSync('public/movies/' + file.name)) {
 			rimraf('public/movies/' + file.name, function(err) {
 				if (err) console.log(err);
