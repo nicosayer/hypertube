@@ -125,6 +125,8 @@ class Movies extends Component {
 
 	render() {
 
+		console.log(this.state)
+
 		if (!this.state.loading && !this.state.movieInfo) {
 			NotificationManager.warning('This movie seems corrupted');
 			if (this.props.canal === 'tv') {
@@ -356,10 +358,10 @@ class Movies extends Component {
 								:
 								null
 							}
-							releaseYear={
-								this.state.movieInfo.release_date
+							imdbId={
+								this.state.movieInfo.imdb_id
 								?
-								this.state.movieInfo.release_date.substring(0, 4)
+								this.state.movieInfo.imdb_id
 								:
 								null
 							}
