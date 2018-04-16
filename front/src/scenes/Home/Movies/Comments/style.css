@@ -6,6 +6,31 @@
 	box-shadow: 0 0 10px black;
 	border-radius: 3px;
 	overflow: hidden;
+	background: #2A292F;
+}
+
+@media only screen and (max-width: 1100px) {
+	.commentSection {
+		width: 500px;
+		margin: auto;
+	}
+
+	.myCommentInput {
+		width: 300px !important;
+	}
+}
+
+@media only screen and (max-width: 700px) {
+	.commentSection {
+		font-size: 75%;
+		width: 250px;
+		margin: auto;
+	}
+
+	.myCommentInput {
+		font-size: 75%;
+		width: 90px !important;
+	}
 }
 
 .commentPicture {

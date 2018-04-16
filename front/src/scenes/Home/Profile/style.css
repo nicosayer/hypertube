@@ -16,7 +16,10 @@
 	cursor: pointer;
 }
 
-.profileBox {
-	width: 50vw;
-	margin: 50px;
+@media only screen and (max-width: 700px) {
+	.profileBox {
+		width: 250px !important;
+		font-size: 75%;
+		margin: 0px;
+	}
 }
