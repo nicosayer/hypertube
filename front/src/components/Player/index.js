@@ -48,7 +48,7 @@ class Player extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0) {
+		if (prevState.magnet !== this.state.magnet || (prevState.meLanguage !== this.state.meLanguage && this.state.magnet.length > 0)) {
 			this.setState({subtitles: []})
 			fetchWrap('/sub', {
 				method: 'POST',
@@ -123,12 +123,6 @@ class Player extends Component {
 				height="720px" 
 				playing 
 				controls
-				config={
-					{ file: {
-					    tracks: tracks
-						}
-					}
-				}
 				onReady={() => console.log('onReady')}
 				onStart={() => {
 					this.myRef.current.seekTo(0);
