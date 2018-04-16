@@ -11,6 +11,14 @@
 		"en": "Press Enter to submit",
 		"fr": "Appuyez sur Entrer pour valider"
 	},
+	"movieCounter": {
+		"en": " movies and ",
+		"fr": " films et "
+	},
+	"tvShowCounter": {
+		"en": " shows watched",
+		"fr": " séries regardés"
+	},
 	"today": {
 		"en": "today",
 		"fr": "aujourd'hui"
