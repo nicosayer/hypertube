@@ -65,11 +65,16 @@ router.post('/', function(req, res, next) {
 })
 		
 function hashAndDL(file, req, res) {
-	const { languageVideo, languageUser, canal, seasonNumber, episodeNumber, releaseYear, imdb } = req.body
-	var { magnet } = req.body
+	console.log(req.body)
+	const { languageVideo, languageUser, canal, seasonNumber, episodeNumber } = req.body
+	var { magnet, imdbId } = req.body
 	magnet = decodeURIComponent(magnet)
 
-	console.log(imdb)
+	imdbId = imdbId.replace('tt','');
+	var i = 0;
+	while (imdbId[0] == '0') {
+		imdbId = imdbId.substr(1)
+	}
 
 	setTimeout(() => {
 		computeHash('./public/movies/' + file.path, file.length)
@@ -82,7 +87,6 @@ function hashAndDL(file, req, res) {
 			.then((subs) => {
 				var secondLanguage = 'en'
 				subs = JSON.parse(subs.body)
-				console.log(subs)
 				var subs = subs.filter(sub => {
 					if (canal == 'tv') {
 						if (sub.SeriesSeason == seasonNumber && sub.SeriesEpisode == episodeNumber) {
@@ -93,7 +97,7 @@ function hashAndDL(file, req, res) {
 						}
 					}
 					if (canal == 'movie') {
-						if (sub.MovieYear == releaseYear) {
+						if (sub.IDMovieImdb == imdbId) {
 							return true
 						}
 						else {
@@ -122,7 +126,6 @@ function hashAndDL(file, req, res) {
 						links.push(subsEnglish[0].SubDownloadLink)
 						arraySub.push({language: 'en', file: subsEnglish[0].MovieReleaseName + '.en.vtt'})
 					}
-					console.log(links, arraySub)
 					var buffer;
 					var streamsub;
 					var gunzip;
@@ -131,7 +134,6 @@ function hashAndDL(file, req, res) {
 						buffer = []
 						streamsub = request(links[i])
 						gunzip = zlib.createGunzip();
-						console.log(links[i])
 						
 						streamsub.pipe(gunzip).pipe(srt2vtt()).pipe(fs.createWriteStream('./public/subtitles/' + arraySub[i].file))
 						gunzip.on('data', function(data) {
