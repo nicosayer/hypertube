@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 
-import { updateProfileInfos } from '../../actions/me'
+import { updateProfileInfos } from '../../../../actions/me'
 
-import { fetchWrap } from '../../services/fetchWrap'
+import { fetchWrap } from '../../../../services/fetchWrap'
 
 class Player extends Component {
 
@@ -143,15 +143,15 @@ class Player extends Component {
 					?
 					this.state.url
 					:
-					'http://localhost:3001/video/' + 
+					'http://localhost:3001/video/' +
 					this.state.canal + '/' +
 					this.state.movieId + '/' +
 					this.state.magnet + '/' +
 					this.state.time
-				} 
-				width="1280px" 
-				height="720px" 
-				playing 
+				}
+				width="1280px"
+				height="720px"
+				playing
 				controls
 				onReady={() => console.log('onReady')}
 				onStart={() => {

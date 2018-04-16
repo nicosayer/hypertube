@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { NotificationManager } from 'react-notifications';
 
 import Comments from './Comments';
-import Player from '../../../components/Player';
+import Player from './Player';
 
 import { fetchWrap } from '../../../services/fetchWrap';
 
