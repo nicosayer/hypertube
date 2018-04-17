@@ -134,6 +134,10 @@ function hashAndDL(file, req, res) {
 						buffer = []
 						streamsub = request(links[i])
 						gunzip = zlib.createGunzip();
+
+						streamsub.on('data', () => {
+							console.log('datas venant des subs')
+						})
 						
 						streamsub.pipe(gunzip).pipe(srt2vtt()).pipe(fs.createWriteStream('./public/subtitles/' + arraySub[i].file))
 						gunzip.on('data', function(data) {
