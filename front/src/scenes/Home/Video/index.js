@@ -135,7 +135,13 @@ class Video extends Component {
 			}
 		}
 
-		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes ? this.state.torrentInfo.episodes.filter(episode => episode.season === this.state.seasonNumber).sort((a, b) => a.episode - b.episode) : null;
+		const actualSeason = this.state.torrentInfo && this.state.torrentInfo.episodes
+		?
+		this.state.torrentInfo.episodes
+		.filter(episode => episode.season === this.state.seasonNumber)
+		.sort((a, b) => a.episode - b.episode)
+		:
+		null;
 
 		const movieLinks =
 		this.state.torrentInfo && this.state.torrentInfo.data && this.state.torrentInfo.data.movies && this.state.torrentInfo.data.movies[0] && this.state.torrentInfo.data.movies[0].torrents
