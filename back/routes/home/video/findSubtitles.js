@@ -148,7 +148,7 @@ function hashAndDL(file, req, res) {
 				            	res.status(201).json({ sub: arraySub })
 				            }
 				        }).on("error", function(e) {
-				            callback(e);
+				            res.status(300).json({message: 'no subtitles'})
 				        })
 			    	}
 		    	}

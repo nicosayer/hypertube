@@ -22,8 +22,11 @@ class Player extends Component {
 			meLanguage: 'en',
 			canal: 'movie',
 			seasonNumber: 0,
-			episodeNumber: 0
+			episodeNumber: 0,
+			playing: true
 		}
+
+		this.onKeyPressed = this.onKeyPressed.bind(this)
 
 		this.myRef = React.createRef();
 	}
@@ -123,10 +126,20 @@ class Player extends Component {
 
 	componentDidMount() {
 		this._isMounted = true;
+		document.addEventListener("keydown", this.onKeyPressed);
+
 	}
 
 	componentWillUnmount() {
 		this._isMounted = false;
+		document.removeEventListener("keydown", this.onKeyPressed);
+	}
+
+	onKeyPressed(e) {
+		if (e.code === 'Space') {
+			e.preventDefault()
+			this.setState({ playing: !this.state.playing })
+		}
 	}
 
 	render() {
@@ -163,7 +176,7 @@ class Player extends Component {
 					}
 					width='100%'
 					height='100%'
-					playing
+					playing={this.state.playing}
 					controls
 					onReady={() => console.log('onReady')}
 					onStart={() => {
