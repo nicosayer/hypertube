@@ -148,7 +148,7 @@ function hashAndDL(file, req, res) {
 				            	res.status(201).json({ sub: arraySub })
 				            }
 				        }).on("error", function(e) {
-				            callback(e);
+				            console.log(e)
 				        })
 			    	}
 		    	}
