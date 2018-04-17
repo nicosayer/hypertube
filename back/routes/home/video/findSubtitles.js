@@ -19,14 +19,11 @@ router.post('/', function(req, res, next) {
 			res.status(300).json({message: 'no subtitles'})
 			timeout = true
 		}
-	}, 115000)
+	}, 118000)
 	
 	var engine = torrentStream(magnet, {path: './public/movies'})
 
 	engine.on('ready', function() {
-
-		console.log("readyyyyyyy subs")
-
 		var size = 0
 		var file;
 
@@ -42,7 +39,6 @@ router.post('/', function(req, res, next) {
 		var stream2 = file.createReadStream({start: file.length - 65536*2, end: file.length - 1})
 
 		stream.on('end', () => {
-			console.log('end1')
 			count++
 			if (count == 2 && timeout === false) {
 				timeout = true
@@ -50,7 +46,6 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		stream2.on('end', () => {
-			console.log('end2')
 			count++
 			if (count == 2 && timeout === false) {
 				timeout = true
@@ -65,7 +60,6 @@ router.post('/', function(req, res, next) {
 })
 		
 function hashAndDL(file, req, res) {
-	console.log(req.body)
 	const { languageVideo, languageUser, canal, seasonNumber, episodeNumber } = req.body
 	var { magnet, imdbId } = req.body
 	magnet = decodeURIComponent(magnet)
@@ -156,9 +150,9 @@ function hashAndDL(file, req, res) {
 		    		res.status(300).json({message: 'no subtitles'})
 		    	}
 			})
-			.catch((error) => console.log(error))
+			.catch((error) => res.sendStatus(300))
 		})
-	}, 2000)
+	}, 3000)
 }
 
 function computeHash(path, size) {
