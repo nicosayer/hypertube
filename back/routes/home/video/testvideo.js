@@ -166,6 +166,7 @@ download_no_transcript = function(file, req, res) {
 
 download_transcript = function(file, req, res, time) {
 
+	const paths = file.path.split('/');
 	var sizetot= 0 
 	var stream = file.createReadStream();
 	stream.on('data', (data) => {
@@ -177,9 +178,16 @@ download_transcript = function(file, req, res, time) {
 	var first = true;
 	var minDL = true;
 	var response = false
+	var m3u8name
 
-	const folderName = file.name.substring(0, file.name.length - 4);
-	const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
+	if (paths[0].substr(paths[0].length - 4) === '.mkv') {
+		m3u8name = paths[0].replace(".mkv", ".m3u8").replace(/\s/g, "_")
+	} else if (paths[0].substr(paths[0].length - 4) === '.avi') {
+		m3u8name = paths[0].replace(".avi", ".m3u8").replace(/\s/g, "_")
+	} else {
+		m3u8name = (paths[0] + ".m3u8").replace(/\s/g, "_");
+	}
+
 	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
 
 	setTimeout(() => {
@@ -222,7 +230,7 @@ download_transcript = function(file, req, res, time) {
 			
 			first = false;
 		}
-		if (!first && minDL && sizetot > 15000000) {
+		if (!first && minDL && sizetot > 15000000 && !response) {
 			minDL = false
 			response = true
 			res.status(201).json({url: ngrokUrl});
