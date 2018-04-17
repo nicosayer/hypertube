@@ -135,6 +135,7 @@
 	.movieTitle {
 		width: 140px !important;
 		height: 215px !important;
+		font-size: 75%;
 	}
 
 	.searchMovies {
@@ -157,6 +158,7 @@
 .movieTitle {
 	padding: 5px;
 	display:flex;
+	overflow: hidden;
 	justify-content:center;
 	align-items:center;
 	opacity: 0;

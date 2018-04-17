@@ -419,7 +419,7 @@ class Video extends Component {
 													<tr key={key}>
 														<td><i className="fab fa-slack-hash"></i>{episode.episode}</td>
 														<td>
-															<b>{episode.title}</b>
+															<b>{(new DOMParser).parseFromString('<!doctype html><body>' + episode.title, 'text/html').body.textContent}</b>
 														</td>
 														<td>
 															{
