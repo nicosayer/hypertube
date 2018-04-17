@@ -80,14 +80,13 @@ class Player extends Component {
 				})
 			})
 			.then((data) => {
-				console.log('subs',data)
 				if (this._isMounted) {
 					this.setState({
 						subtitles: data.sub
 					})
 				}
 			})
-			.catch(error => console.log(error))
+			.catch(error => {})
 		}
 		if (prevState.magnet !== this.state.magnet) {
 
@@ -127,6 +126,11 @@ class Player extends Component {
 				if (error && error.message) {
 					NotificationManager.error(error.message);
 				}
+				if (this._isMounted) {
+					this.setState({
+						loading: false
+					})
+				}
 			})
 		}
 	}
@@ -143,8 +147,8 @@ class Player extends Component {
 	}
 
 	onKeyPressed(e) {
-		if (e.code === 'Space') {
-			e.preventDefault()
+		if (e.code === 'Space' && document.activeElement.className !== 'myCommentInput') {
+			e.preventDefault();
 			this.setState({ playing: !this.state.playing })
 		}
 	}
@@ -185,10 +189,8 @@ class Player extends Component {
 					height='100%'
 					playing={this.state.playing}
 					controls
-					onReady={() => console.log('onReady')}
 					onStart={() => {
 						this.myRef.current.seekTo(0);
-						console.log('onStart');
 					}}
 					ref={this.myRef}
 					config={{
