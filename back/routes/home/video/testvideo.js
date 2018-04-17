@@ -8,6 +8,7 @@ var mongo = require('../../../mongo');
 const mongodb = mongo.getMongodb();
 const rimraf = require('rimraf');
 const ngrok = require('ngrok');
+var Timer = require('easytimer')
 const ngrokConnect = ngrok.connect(3001)
 
 var url;
@@ -22,6 +23,8 @@ var ext;
 
 router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
+	var timer = new Timer();
+	timer.start();
 	if (req.session && req.session._id) {
 
 		const id = req.session._id.toString()
@@ -53,10 +56,19 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 						}
 					} else {
 						var engine = torrentStream(magnet, {path: './public/movies'})
+						var response = false
 
+						setTimeout(() => {
+							if (!response) {
+								response = true;
+								res.sendStatus(300)
+							}
+						}, 115000)
 						engine.on('ready', function() {
 
 							console.log("Engine Ready!")
+							
+							var time = timer.getTimeValues().seconds + 60 * timer.getTimeValues().minutes
 
 							var size = 0
 							var file;
@@ -76,7 +88,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 									magnetsCollection.update(
 										{magnet: magnet},
-										{$set:
+										{$set: 
 											{date: Date.now(), path: path}
 										},
 										{upsert: true}
@@ -94,18 +106,20 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 								if (fileTmp.length > size) {
 									size = fileTmp.length
 									file = fileTmp;
-									ext = file.name.substr(file.name.length - 3);
+									ext = file.name.substr(file.name.length - 3);			
 								}
 							})
 
-							user[id] = file;
-
-							if (ext === 'mp4' || ext === 'webm') {
-								res.status(201).json({url: null});
-							} else if (ext === 'mkv' || ext === 'avi') {
-								download_transcript(user[id], req, res);
-							} else{
-								res.sendStatus(300);
+							user[id] = {file: file, engine: engine};
+							if (!response) {
+								response =  true
+								if (ext === 'mp4' || ext === 'webm') {
+									res.status(201).json({url: null});
+								} else if (ext === 'mkv' || ext === 'avi') {
+									download_transcript(user[id].file, req, res, time);
+								} else {
+									res.status(300).json({message: 'unhandled video extension'});
+								}
 							}
 						})
 					}
@@ -123,11 +137,22 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 	}
 })
 
-download_no_transcript = function(file, req, res) {
+download_no_transcript = function(user, req, res) {	
 
 	const range = req.headers.range
 	var parts;
+	var response = false;
+	var time = false;
+	const file = user.file
+	console.log(file)
 
+	setTimeout(() => {
+		if (!response) {
+			response = true;
+			res.sendStatus(300)
+		}
+	}, 115000)
+	
 	if (typeof range == 'undefined') {
 		parts = [0, file.length-1];
 	} else {
@@ -144,14 +169,27 @@ download_no_transcript = function(file, req, res) {
 	res.setHeader('Content-Length', 1 + end - start);
 	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
-	stream.pipe(res);
+	console.log(user.engine)
+	user.engine.on('upload', () => {
+		console.log('upload')
+	})
+	user.engine.on('download', () => {
+		console.log('download')
+		if (!response && time) {
+			response = true
+			stream.pipe(res)
+		}
+	})
+	setTimeout(() => {
+		time = true
+	}, 30000)
 
 }
 
 
-download_transcript = function(file, req, res) {
+download_transcript = function(file, req, res, time) {
 
-	var sizetot= 0
+	var sizetot= 0 
 	var stream = file.createReadStream();
 	stream.on('data', (data) => {
 		sizetot += data.length
@@ -184,17 +222,17 @@ download_transcript = function(file, req, res) {
 				res.status(201).json({url: ngrokUrl});
 			}
 		}
-	}, 105000)
+	}, 120000 - 5000 - time * 1000)
 
 	ffmpeg(stream, { timeout: 432000 }).addOptions([
-		'-profile:v baseline',
-		'-level 3.0',
-		'-s 1280x720',
-		'-start_number 0',
-		'-hls_time 2',
-		'-hls_list_size 0',
-		'-hls_playlist_type vod',
-		'-f hls'
+	    '-profile:v baseline',
+	    '-level 3.0', 
+	    '-s 1280x720',
+	    '-start_number 0',
+	    '-hls_time 2',
+	    '-hls_list_size 0',
+	    '-hls_playlist_type vod',
+	    '-f hls'
 	])
 	.on('start', () => {
 		console.log("started transcripting!");
@@ -209,26 +247,24 @@ download_transcript = function(file, req, res) {
 		console.log(err);
 		console.log(err1);
 		console.log(err2);
-	})
-	.on('progress', function(progress) {
-		console.log("Transcripting " + file.name);
+    })
+    .on('progress', function(progress) {
 
-		magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
-		if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
-			console.log("m3u8 Created.");
-
+    	magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
+    	if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
+			console.log("m3u8 Created. Now Transcripting " + file.name);
+			
 			first = false;
 		}
-		if (!first && minDL && sizetot > 15000000 && !response) {
+		if (!first && minDL && sizetot > 15000000) {
 			minDL = false
 			response = true
 			res.status(201).json({url: ngrokUrl});
 		}
-	})
+    })
 	.output('public/movies/' + m3u8name + '/' + m3u8name)
 	.on('end', () => {
 		console.log('Transcripting done!');
-		
 		const path = file.path.split('/');
 
 		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
@@ -238,7 +274,8 @@ download_transcript = function(file, req, res) {
 			});
 		}
 	})
-	.run()
+	.run()			
 }
 
 module.exports = router;
+
