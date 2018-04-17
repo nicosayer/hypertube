@@ -41,8 +41,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 							magnetsCollection.update({magnet: magnet}, {$set: {date: Date.now()}});
 
-							if (result.path.substr(result.path.length - 5
-								) === ".m3u8") {
+							if (result.path.substr(result.path.length - 5) === ".m3u8") {
 								m3u8name = result.path
 							} else {
 								m3u8name = (result.path + ".m3u8").replace(/\s/g, "_");
@@ -57,7 +56,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 						engine.on('ready', function() {
 
-							console.log("readyyyyyyy")
+							console.log("Engine Ready!")
 
 							var size = 0
 							var file;
@@ -165,7 +164,14 @@ download_transcript = function(file, req, res) {
 	var response = false
 
 	const folderName = file.name.substring(0, file.name.length - 4);
-	const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
+	var m3u8name;
+
+	if (file.name.substr(file.name.length - 4) === ".mkv") {
+		m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
+	} else if (file.name.substr(file.name.length - 4) === ".avi") {
+		m3u8name = file.name.replace(".avi", ".m3u8").replace(/\s/g, "_");
+	}
+
 	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
 
 	setTimeout(() => {
@@ -226,8 +232,7 @@ download_transcript = function(file, req, res) {
 		const path = file.path.split('/');
 
 		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
-		if (fs.existsSync('public/movies/' + file.name)) {
-			console.log(path[0]);
+		if (fs.existsSync('public/movies/' + path[0])) {
 			rimraf('public/movies/' + path[0], function(err) {
 				if (err) console.log(err);
 			});
