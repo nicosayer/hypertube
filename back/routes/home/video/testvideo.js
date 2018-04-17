@@ -62,7 +62,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 						setTimeout(() => {
 							if (!response) {
 								response = true;
-								res.status(300).json({message: 'not enough seeders or slow connection'});
+								res.status(300).json({message: 'Not enough seeders or slow internet connection! Streaming impossible..'});
 							}
 						}, 115000)
 						engine.on('ready', function() {
@@ -119,14 +119,14 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 								} else if (ext === 'mkv' || ext === 'avi') {
 									download_transcript(user[id], req, res, time);
 								} else {
-									res.status(300).json({message: 'unhandled video content'});
+									res.status(300).json({message: 'Unhandled video content!'});
 								}
 							}
 						})
 					}
 				})
 			} else {
-				res.status(300).json({message: 'wrong magnet link'});
+				res.status(300).json({message: 'Incorrect magnet link!'});
 			}
 		} else {
 			if (ext === 'mp4' || ext === 'webm') {
@@ -189,7 +189,7 @@ download_transcript = function(file, req, res, time) {
 		if (!response) {
 			response = true;
 			if (first) {
-				res.status(300).json({message: 'not enough seeders or slow connection'});
+				res.status(300).json({message: 'Not enough seeders or slow internet connection! Streaming impossible..'});
 			}
 			else {
 				res.status(201).json({url: ngrokUrl});
