@@ -66,8 +66,6 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 							}
 						}, 115000)
 						engine.on('ready', function() {
-
-							console.log("readyyyyyyy")
 							
 							var time = timer.getTimeValues().seconds + 60 * timer.getTimeValues().minutes
 
@@ -168,7 +166,6 @@ download_no_transcript = function(file, req, res) {
 
 download_transcript = function(file, req, res, time) {
 
-	console.log(time)
 	var sizetot= 0 
 	var stream = file.createReadStream();
 	stream.on('data', (data) => {
@@ -208,7 +205,7 @@ download_transcript = function(file, req, res, time) {
 	    '-f hls'
 	])
 	.on('start', () => {
-		console.log("started transcripting!");
+		console.log("Started transcripting!");
 
 		magnetsCollection.update({magnet: magnet}, {$set: {downloaded: true}});
 
@@ -217,16 +214,11 @@ download_transcript = function(file, req, res, time) {
 		}
 	})
 	.on('error', function(err, err1, err2) {
-		console.log(err);
-		console.log(err1);
-		console.log(err2);
     })
     .on('progress', function(progress) {
-    	//console.log("Transcripting " + file.name);
 
     	magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
     	if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
-			console.log("m3u8 Created.");
 			
 			first = false;
 		}
@@ -243,9 +235,7 @@ download_transcript = function(file, req, res, time) {
 
 		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
 		if (fs.existsSync('public/movies/' + file.name)) {
-			console.log(path[0]);
 			rimraf('public/movies/' + path[0], function(err) {
-				if (err) console.log(err);
 			});
 		}
 	})
