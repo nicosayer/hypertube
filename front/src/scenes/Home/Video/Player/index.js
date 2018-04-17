@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
+import { NotificationManager } from 'react-notifications';
 
 import { updateProfileInfos } from '../../../../actions/me'
 
 import { fetchWrap } from '../../../../services/fetchWrap'
 
 import './style.css';
+import 'react-notifications/lib/notifications.css';
 
 class Player extends Component {
 
@@ -78,6 +80,7 @@ class Player extends Component {
 				})
 			})
 			.then((data) => {
+				console.log('subs',data)
 				if (this._isMounted) {
 					this.setState({
 						subtitles: data.sub
@@ -120,7 +123,11 @@ class Player extends Component {
 					})
 				}
 			})
-			.catch(error => console.log(error))
+			.catch(error => {
+				if (error && error.message) {
+					NotificationManager.error(error.message);
+				}
+			})
 		}
 	}
 

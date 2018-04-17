@@ -44,7 +44,8 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 							magnetsCollection.update({magnet: magnet}, {$set: {date: Date.now()}});
 
-							if (result.path.substr(result.path.length - 5) === ".m3u8") {
+							if (result.path.substr(result.path.length - 5
+								) === ".m3u8") {
 								m3u8name = result.path
 							} else {
 								m3u8name = (result.path + ".m3u8").replace(/\s/g, "_");
@@ -61,12 +62,12 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 						setTimeout(() => {
 							if (!response) {
 								response = true;
-								res.sendStatus(300)
+								res.status(300).json({message: 'not enough seeders or slow connection'});
 							}
 						}, 115000)
 						engine.on('ready', function() {
 
-							console.log("Engine Ready!")
+							console.log("readyyyyyyy")
 							
 							var time = timer.getTimeValues().seconds + 60 * timer.getTimeValues().minutes
 
@@ -110,22 +111,22 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 								}
 							})
 
-							user[id] = {file: file, engine: engine};
+							user[id] = file;
 							if (!response) {
 								response =  true
 								if (ext === 'mp4' || ext === 'webm') {
 									res.status(201).json({url: null});
 								} else if (ext === 'mkv' || ext === 'avi') {
-									download_transcript(user[id].file, req, res, time);
+									download_transcript(user[id], req, res, time);
 								} else {
-									res.status(300).json({message: 'unhandled video extension'});
+									res.status(300).json({message: 'unhandled video content'});
 								}
 							}
 						})
 					}
 				})
 			} else {
-				res.sendStatus(300)
+				res.status(300).json({message: 'wrong magnet link'});
 			}
 		} else {
 			if (ext === 'mp4' || ext === 'webm') {
@@ -137,21 +138,10 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 	}
 })
 
-download_no_transcript = function(user, req, res) {	
+download_no_transcript = function(file, req, res) {	
 
 	const range = req.headers.range
 	var parts;
-	var response = false;
-	var time = false;
-	const file = user.file
-	console.log(file)
-
-	setTimeout(() => {
-		if (!response) {
-			response = true;
-			res.sendStatus(300)
-		}
-	}, 115000)
 	
 	if (typeof range == 'undefined') {
 		parts = [0, file.length-1];
@@ -169,19 +159,8 @@ download_no_transcript = function(user, req, res) {
 	res.setHeader('Content-Length', 1 + end - start);
 	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
-	console.log(user.engine)
-	user.engine.on('upload', () => {
-		console.log('upload')
-	})
-	user.engine.on('download', () => {
-		console.log('download')
-		if (!response && time) {
-			response = true
-			stream.pipe(res)
-		}
-	})
 	setTimeout(() => {
-		time = true
+			stream.pipe(res)
 	}, 30000)
 
 }
@@ -189,6 +168,7 @@ download_no_transcript = function(user, req, res) {
 
 download_transcript = function(file, req, res, time) {
 
+	console.log(time)
 	var sizetot= 0 
 	var stream = file.createReadStream();
 	stream.on('data', (data) => {
@@ -202,21 +182,14 @@ download_transcript = function(file, req, res, time) {
 	var response = false
 
 	const folderName = file.name.substring(0, file.name.length - 4);
-	var m3u8name;
-
-	if (file.name.substr(file.name.length - 4) === ".mkv") {
-		m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
-	} else if (file.name.substr(file.name.length - 4) === ".avi") {
-		m3u8name = file.name.replace(".avi", ".m3u8").replace(/\s/g, "_");
-	}
-
+	const m3u8name = file.name.replace(".mkv", ".m3u8").replace(/\s/g, "_");
 	const ngrokUrl = url + '/movies/' + m3u8name + '/' + m3u8name;
 
 	setTimeout(() => {
 		if (!response) {
 			response = true;
 			if (first) {
-				res.sendStatus(300)
+				res.status(300).json({message: 'not enough seeders or slow connection'});
 			}
 			else {
 				res.status(201).json({url: ngrokUrl});
@@ -249,10 +222,11 @@ download_transcript = function(file, req, res, time) {
 		console.log(err2);
     })
     .on('progress', function(progress) {
+    	//console.log("Transcripting " + file.name);
 
     	magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
     	if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
-			console.log("m3u8 Created. Now Transcripting " + file.name);
+			console.log("m3u8 Created.");
 			
 			first = false;
 		}
@@ -268,7 +242,8 @@ download_transcript = function(file, req, res, time) {
 		const path = file.path.split('/');
 
 		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
-		if (fs.existsSync('public/movies/' + path[0])) {
+		if (fs.existsSync('public/movies/' + file.name)) {
+			console.log(path[0]);
 			rimraf('public/movies/' + path[0], function(err) {
 				if (err) console.log(err);
 			});
