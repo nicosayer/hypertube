@@ -36,17 +36,23 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 				magnetsCollection.findOne({magnet: magnet}, function(err, result) {
 					if (result && ((result.downloaded && result.endDL) || (result.downloaded && Date.now() - result.dateProgress < 1000 * 60 * 2))) {
-						console.log('deja telecharge')
 						if (result.path) {
+							var m3u8name;
+
 							magnetsCollection.update({magnet: magnet}, {$set: {date: Date.now()}});
 
-							const m3u8name = result.path.replace(".mkv", ".m3u8").replace(/\s/g, "_")
+							if (result.path.substr(result.path.length - 5
+								) === ".m3u8") {
+								m3u8name = result.path
+							} else {
+								m3u8name = (result.path + ".m3u8").replace(/\s/g, "_");
+							}
+
 							res.status(201).json({url: url + '/movies/' + m3u8name + '/' + m3u8name})
 						} else {
 							res.sendStatus(300)
 						}
 					} else {
-						console.log('newwwwwwwwww')
 						var engine = torrentStream(magnet, {path: './public/movies'})
 
 						engine.on('ready', function() {
@@ -61,10 +67,12 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 									var path;
 									const paths = fileTmp.path.split('/');
 
-									if (fileTmp.name.substr(fileTmp.name.length - 3) === 'mkv') {
+									if (fileTmp.name.substr(fileTmp.name.length - 4) === '.mkv') {
 										path = paths[0].replace(".mkv", ".m3u8").replace(/\s/g, "_")
+									} else if (fileTmp.name.substr(fileTmp.name.length - 4) === '.avi') {
+										path = paths[0].replace(".avi", ".m3u8").replace(/\s/g, "_")
 									} else {
-										path = paths[0];
+										path = (paths[0] + ".m3u8").replace(/\s/g, "_");
 									}
 
 									magnetsCollection.update(
@@ -90,17 +98,15 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 									ext = file.name.substr(file.name.length - 3);			
 								}
 							})
-							engine.on('idle', () => {
-								magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
-							})
 
 							user[id] = file;
 
 							if (ext === 'mp4' || ext === 'webm') {
 								res.status(201).json({url: null});
-							} else if (ext === 'mkv') {
-								console.log("is NOT downloaded");
+							} else if (ext === 'mkv' || ext === 'avi') {
 								download_transcript(user[id], req, res);
+							} else{
+								res.sendStatus(300);
 							}
 						})
 					}
@@ -207,7 +213,7 @@ download_transcript = function(file, req, res) {
 			
 			first = false;
 		}
-		if (!first && minDL && sizetot > 15000000) {
+		if (!first && !response && minDL && sizetot > 15000000) {
 			minDL = false
 			response = true
 			res.status(201).json({url: ngrokUrl});
@@ -217,9 +223,12 @@ download_transcript = function(file, req, res) {
 	.on('end', () => {
 		console.log('Transcripting done!');
 		
+		const path = file.path.split('/');
+
 		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
 		if (fs.existsSync('public/movies/' + file.name)) {
-			rimraf('public/movies/' + file.name, function(err) {
+			console.log(path[0]);
+			rimraf('public/movies/' + path[0], function(err) {
 				if (err) console.log(err);
 			});
 		}
