@@ -69,7 +69,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 
 									magnetsCollection.update(
 										{magnet: magnet},
-										{$set:
+										{$set: 
 											{date: Date.now(), path: path}
 										},
 										{upsert: true}
@@ -87,7 +87,7 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 								if (fileTmp.length > size) {
 									size = fileTmp.length
 									file = fileTmp;
-									ext = file.name.substr(file.name.length - 3);
+									ext = file.name.substr(file.name.length - 3);			
 								}
 							})
 							engine.on('idle', () => {
@@ -95,12 +95,14 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 							})
 
 							user[id] = file;
-
+							console.log(ext)
 							if (ext === 'mp4' || ext === 'webm') {
 								res.status(201).json({url: null});
 							} else if (ext === 'mkv') {
 								console.log("is NOT downloaded");
 								download_transcript(user[id], req, res);
+							} else {
+								res.status(300).json({message: 'unhandled video extension'});
 							}
 						})
 					}
@@ -118,11 +120,11 @@ router.get('/:canal/:movieId/:magnet/:time', function(req, res, next) {
 	}
 })
 
-download_no_transcript = function(file, req, res) {
+download_no_transcript = function(file, req, res) {	
 
 	const range = req.headers.range
 	var parts;
-
+	
 	if (typeof range == 'undefined') {
 		parts = [0, file.length-1];
 	} else {
@@ -139,14 +141,18 @@ download_no_transcript = function(file, req, res) {
 	res.setHeader('Content-Length', 1 + end - start);
 	res.setHeader('Content-Range', `bytes ${start}-${end}/${file.length}`);
 	res.statusCode = 206;
-	stream.pipe(res);
+	console.log('setTimeout')
+	setTimeout(() => {
+		console.log('piping')
+		stream.pipe(res);
+	}, 30000)
 
 }
 
 
 download_transcript = function(file, req, res) {
 
-	var sizetot= 0
+	var sizetot= 0 
 	var stream = file.createReadStream();
 	stream.on('data', (data) => {
 		sizetot += data.length
@@ -175,14 +181,14 @@ download_transcript = function(file, req, res) {
 	}, 105000)
 
 	ffmpeg(stream, { timeout: 432000 }).addOptions([
-		'-profile:v baseline',
-		'-level 3.0',
-		'-s 1280x720',
-		'-start_number 0',
-		'-hls_time 2',
-		'-hls_list_size 0',
-		'-hls_playlist_type vod',
-		'-f hls'
+	    '-profile:v baseline',
+	    '-level 3.0', 
+	    '-s 1280x720',
+	    '-start_number 0',
+	    '-hls_time 2',
+	    '-hls_list_size 0',
+	    '-hls_playlist_type vod',
+	    '-f hls'
 	])
 	.on('start', () => {
 		console.log("started transcripting!");
@@ -197,26 +203,26 @@ download_transcript = function(file, req, res) {
 		console.log(err);
 		console.log(err1);
 		console.log(err2);
-	})
-	.on('progress', function(progress) {
-		console.log("Transcripting " + file.name);
+    })
+    .on('progress', function(progress) {
+    	//console.log("Transcripting " + file.name);
 
-		magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
-		if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
+    	magnetsCollection.update({magnet: magnet}, {$set: {dateProgress: Date.now()}});
+    	if (first && fs.existsSync('public/movies/' + m3u8name + '/' + m3u8name)) {
 			console.log("m3u8 Created.");
-
+			
 			first = false;
 		}
-		if (!first && minDL && sizetot > 15000000 && !response) {
+		if (!first && minDL && sizetot > 15000000) {
 			minDL = false
 			response = true
 			res.status(201).json({url: ngrokUrl});
 		}
-	})
+    })
 	.output('public/movies/' + m3u8name + '/' + m3u8name)
 	.on('end', () => {
 		console.log('Transcripting done!');
-
+		
 		magnetsCollection.update({magnet: magnet}, {$set: {endDL: true}});
 		if (fs.existsSync('public/movies/' + file.name)) {
 			rimraf('public/movies/' + file.name, function(err) {
@@ -224,7 +230,8 @@ download_transcript = function(file, req, res) {
 			});
 		}
 	})
-	.run()
+	.run()			
 }
 
 module.exports = router;
+
