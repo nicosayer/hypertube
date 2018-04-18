@@ -55,7 +55,11 @@ class Video extends Component {
 							})
 						}
 					})
-					.catch(err => this.setState({loading: false}))
+					.catch(err => {
+						if (this._isMounted) {
+							this.setState({loading: false})
+						}
+					})
 				}
 				else if (movieInfo.id && this.props.canal === 'tv') {
 					fetchWrap('https://api.themoviedb.org/3/tv/' + movieInfo.id + '/external_ids?api_key=fc97ca1225d5b618b7a69f5a20a132d8')
@@ -73,7 +77,11 @@ class Video extends Component {
 									})
 								}
 							})
-							.catch(err => this.setState({loading: false}))
+							.catch(err => {
+						if (this._isMounted) {
+							this.setState({loading: false})
+						}
+					})
 						}
 						else if (this._isMounted) {
 							this.setState({
@@ -83,7 +91,11 @@ class Video extends Component {
 							})
 						}
 					})
-					.catch(err => this.setState({loading: false}))
+					.catch(err => {
+						if (this._isMounted) {
+							this.setState({loading: false})
+						}
+					})
 				}
 				else if (this._isMounted) {
 					this.setState({
@@ -93,9 +105,17 @@ class Video extends Component {
 					})
 				}
 			})
-			.catch(err => this.setState({loading: false}))
+			.catch(err => {
+						if (this._isMounted) {
+							this.setState({loading: false})
+						}
+					})
 		})
-		.catch(err => this.setState({loading: false}))
+		.catch(err => {
+						if (this._isMounted) {
+							this.setState({loading: false})
+						}
+					})
 	}
 
 	componentWillUnmount() {
@@ -108,19 +128,23 @@ class Video extends Component {
 			block: 'start',
 			inline: 'start'
 		});
+		if (this._isMounted) {
 		this.setState({
 			seasonNumber
 		});
+	}
 	}
 
 	selectEpisode(magnet, episodeNumber) {
 		if (!episodeNumber) {
 			episodeNumber = 0;
 		}
-		this.setState({
+		if (this._isMounted) {
+			this.setState({
 			magnet: encodeURIComponent(magnet),
 			episodeNumber
 		})
+		}
 	}
 
 	render() {
@@ -149,7 +173,7 @@ class Video extends Component {
 		this.state.torrentInfo.data.movies[0].torrents
 		.filter(torrent => torrent.seeds >= 0 && torrent.quality !== '3D')
 		.map((torrent, key) =>
-		<div key={key} className='torrentQualityButton' onClick={() => (this.selectEpisode('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'))}>
+		<div key={key} className='torrentQualityButton' onClick={() => this.selectEpisode('magnet:?xt=urn:btih:' + torrent.hash + '&dn=' + torrent.title_long + '&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969')}>
 			{torrent.quality}
 			<div className='fontGrey'>{torrent.size}</div>
 		</div>)
