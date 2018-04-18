@@ -159,7 +159,7 @@ download_no_transcript = function(file, req, res) {
 	res.statusCode = 206;
 	setTimeout(() => {
 			stream.pipe(res)
-	}, 30000)
+	}, 15000)
 
 }
 
