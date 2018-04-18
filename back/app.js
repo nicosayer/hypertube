@@ -56,7 +56,7 @@ app.use('/home/video/addComment', require('./routes/home/video/addComment'));
 app.use('/home/video/getComments', require('./routes/home/video/getComments'));
 
 
-app.use('/video', require('./routes/home/video/testvideo'));
+app.use('/video', require('./routes/home/video/video'));
 
 app.use('/sub', require('./routes/home/video/findSubtitles'));
 
